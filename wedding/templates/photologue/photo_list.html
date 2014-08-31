@@ -1,0 +1,45 @@
+{% extends "photologue/root.html" %}
+{% load url from future %}
+
+{% block title %}Photo Album{% endblock %}
+
+{% block navbar_right %}
+    {% if object_list_len > 20 %}
+        <li style="color:white;"><a href="">Max Photos Added</a></li>
+    {% else %}
+        <li><a href="/homepage/photo-album/create/">Add Photos (Max: 20)</a></li>
+    {% endif %}
+{% endblock navbar_right %}
+
+{% block sidebar %}
+    {% for page in page_list %}
+        {% if page.title == 'Photo Album' %}
+            <a href="{% url 'gallery' %}">{{page.title}}</a>
+        {% else %}
+            <a href="{% url 'page_detail' slug=page.slug %}">{{page.title}}</a>
+        {% endif %}
+    {% endfor %}
+{% endblock sidebar %}
+
+{% block content %}
+{% if object_list %}
+    {% for photo in object_list %}
+        <div style="width: 1000px;">
+            <div class="gallery-photo" style="float: left; width: 200px;">
+                <a href="{{ photo.get_absolute_url }}"><img src="{{ photo.get_thumbnail_url }}" alt="{{ photo.title }}"/></a><br><br><br><br>
+            </div>
+        </div>
+    {% endfor %}
+{% else %}
+<p>No photos were found.</p>
+{% endif %}
+
+<!--
+{% if is_paginated %}
+<p>{{ paginator.count }} photos total.</p>
+<div id="page_controls">
+    <p>{% if page_obj.has_previous %}<a href="{% url 'pl-photo-list' page_obj.previous_page_number %}">Previous</a> | {% endif %} page {{ page_obj.number }} of {{ paginator.num_pages }} {% if page_obj.has_next %}| <a href="{% url 'pl-photo-list' page_obj.next_page_number %}">Next</a>{% endif %}</p>
+</div>
+{% endif %}
+-->
+{% endblock %}

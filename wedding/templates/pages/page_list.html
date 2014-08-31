@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block navbar_right %}
+    <li><a href="{% url 'page_update' slug=object_list.values.0.slug %}">Edit Page</a></li>
+{% endblock navbar_right %}
+
+{% block sidebar %}
+
+    {% for page in object_list %}
+        <a href="{% url 'page_detail' slug=page.slug %}">{{page.title}}</a>
+    {% endfor %}
+
+{% endblock sidebar %}
