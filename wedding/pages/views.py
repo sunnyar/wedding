@@ -4,11 +4,14 @@ import json
 from django.http import HttpResponse
 from django.views.generic import DetailView, ListView, UpdateView
 from .models import Page
+from .models import Address, PhotoAlbum
 from .forms import PageForm
+from .forms import AddressForm, RsvpForm
 from photologue.models import Photo
 from .forms import PhotoForm
-from django.core.urlresolvers import reverse
+from django.core.urlresolvers import reverse, reverse_lazy
 from django.views.generic.edit import CreateView
+from django.views.generic.edit import DeleteView
 from photologue.views import PhotoListView
 from django.utils.text import slugify
 
@@ -28,13 +31,28 @@ class PageUpdateView(UpdateView) :
     model = Page
     form_class = PageForm
 
+    def get_context_data(self, **kwargs):
+        context = super(PageUpdateView, self).get_context_data(**kwargs)
+        context['user'] = self.request.user
+        return context
+
 class PhotoUpdateView(UpdateView) :
     model = Photo
     form_class = PhotoForm
 
+    def get_context_data(self, **kwargs):
+        context = super(PageUpdateView, self).get_context_data(**kwargs)
+        context['user'] = self.request.user
+        return context
+
 class PhotoCreateView(CreateView):
     model = Photo
     form_class = PhotoForm
+
+    def get_context_data(self, **kwargs):
+        context = super(PageUpdateView, self).get_context_data(**kwargs)
+        context['user'] = self.request.user
+        return context
 
     def form_valid(self, form):
         isvalid = super(PhotoCreateView, self).form_valid(form)
@@ -48,6 +66,15 @@ class PhotoCreateView(CreateView):
     def get_success_url(self):
         return reverse('gallery')
 
+class PhotoDeleteView(DeleteView) :
+    model = Photo
+    success_url = reverse_lazy('gallery')
+
+    def get_context_data(self, **kwargs):
+        context = super(PageUpdateView, self).get_context_data(**kwargs)
+        context['user'] = self.request.user
+        return context
+
 class GalleryListView(PhotoListView) :
     paginate_by = 20
 
@@ -58,10 +85,35 @@ class GalleryListView(PhotoListView) :
         return context
 
 
-def show_map(request) :
+class AddressListView(ListView) :
 
-    page_list = Page.objects.all()
-    events    = ['Reception', 'Ceremony', 'Hotel']
-    addresses = ['111A/102, Ashok Nagar, Kanpur', 'Kanha Continental, Kanpur', 'Hotel Landmark, Kanpur']
-    map_events_list = zip(events, addresses)
-    return render_to_response('pages/show_map.html', locals(), context_instance=RequestContext(request))
+    model = Address
+    queryset = Address.objects.all()
+
+    def get_context_data(self, **kwargs):
+        context = super(AddressListView, self).get_context_data(**kwargs)
+        context['page_list'] = Page.objects.all()
+        events    = ['Reception', 'Ceremony', 'Hotel']
+        #addresses = ['111A/102, Ashok Nagar, Kanpur-208012, U.P', 'Kanha Continental, Kanpur-208012, U.P', 'Hotel Landmark, Kanpur']
+        addresses = Address.objects.all()
+        context['map_events_list'] = zip(events, addresses)
+        return context
+
+class AddressUpdateView(UpdateView) :
+    model = Address
+    form_class = AddressForm
+
+    def get_context_data(self, **kwargs):
+        context = super(PageUpdateView, self).get_context_data(**kwargs)
+        context['user'] = self.request.user
+        return context
+
+def rsvp_reply(request) :
+    if request.method == 'POST':
+        form = RsvpForm(request.POST)
+        if form.is_valid() :
+            form.save(commit=False)
+            form.save()
+            return render_to_response('pages/thanks.html',locals(), context_instance=RequestContext(request))
+    else :
+        pass

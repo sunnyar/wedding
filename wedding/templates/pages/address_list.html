@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% load easy_maps_tags cache %}
+
+{% block title %}Map of Events{% endblock title %}
+
+{% block sidebar %}
+    {% for page in page_list %}
+        <a href="{% url 'page_detail' slug=page.slug %}">{{page.title}}</a>
+    {% endfor %}
+{% endblock sidebar %}
+
+{% block content %}
+    {% for event, address in map_events_list %}
+        <div style="width: 1000px;">
+            <div style="float: left; width: 320px;">
+                {% cache 600 my_map address %}
+                    {% easy_map address 300 400 %}
+                {% endcache %}
+                <h3><b>{{event | capfirst }}</b></h3>
+                {{address}}<br>
+                {% if user.is_authenticated %}
+                    <form>
+                        <input type="button" value="Edit Address" onClick="window.location.href='/homepage/address/edit/{{address.pk}}'">
+                    </form>
+                {% endif %}
+            </div>
+        </div>
+    {% endfor %}
+{% endblock content %}

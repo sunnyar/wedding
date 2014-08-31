@@ -26,7 +26,16 @@
     {% for photo in object_list %}
         <div style="width: 1000px;">
             <div class="gallery-photo" style="float: left; width: 200px;">
-                <a href="{{ photo.get_absolute_url }}"><img src="{{ photo.get_thumbnail_url }}" alt="{{ photo.title }}"/></a><br><br><br><br>
+                <a href="{{ photo.get_absolute_url }}"><img src="{{ photo.get_thumbnail_url }}" alt="{{ photo.title }}"/></a>
+                {% if user.is_authenticated %}
+                    <form action="{% url 'photo_update' pk=photo.pk %}">
+                        <input type="submit" value="Edit Photo">
+                    </form>
+                    <form action="{% url 'photo_delete' pk=photo.pk %}">
+                        <input type="submit" value="Delete Photo">
+                    </form>
+                {% endif %}
+                <br><br><br><br>
             </div>
         </div>
     {% endfor %}

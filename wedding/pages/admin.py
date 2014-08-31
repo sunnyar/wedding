@@ -1,11 +1,32 @@
 from django.contrib import admin
-from .models import Page
+from .models import Page, Address, Rsvp
+from settings import STATIC_URL
+from localflavor.in_.forms import INStateSelect
 
 class PageAdmin(admin.ModelAdmin) :
     class Media :
-        js = ('/static/tiny_mce/tiny_mce.js', '/static/tiny_mce/textareas.js',)
+        js = (STATIC_URL + 'tiny_mce/tinymce.min.js', STATIC_URL + 'tiny_mce/textareas.js',)
 
     model = Page
     prepopulated_fields = {'slug': ('title',), }
 
+class AddressAdmin(admin.ModelAdmin) :
+
+    model = Address
+
+    def formfield_for_dbfield(self, db_field, **kwargs):
+        if db_field.name == 'state':
+            kwargs['widget'] = INStateSelect()
+#        if db_field.name == 'zip_code':
+#            kwargs['widget'] = INZipCodeField()
+
+        return super(AddressAdmin, self).formfield_for_dbfield(db_field, **kwargs)
+
+class RsvpAdmin(admin.ModelAdmin) :
+
+    model = Rsvp
+    list_display = ['first_name', 'last_name']
+
 admin.site.register(Page, PageAdmin)
+admin.site.register(Address, AddressAdmin)
+admin.site.register(Rsvp, RsvpAdmin)
