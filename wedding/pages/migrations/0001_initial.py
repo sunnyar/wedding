@@ -11,18 +11,53 @@ class Migration(SchemaMigration):
         # Adding model 'Page'
         db.create_table(u'pages_page', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('user', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['auth.User'], unique=True)),
+            ('user', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['auth.User'])),
             ('title', self.gf('django.db.models.fields.CharField')(max_length=100)),
             ('slug', self.gf('django.db.models.fields.SlugField')(max_length=50)),
+            ('image', self.gf('django.db.models.fields.files.ImageField')(max_length=100, null=True, blank=True)),
             ('body', self.gf('django.db.models.fields.TextField')()),
             ('created', self.gf('django.db.models.fields.DateTimeField')()),
         ))
         db.send_create_signal(u'pages', ['Page'])
 
+        # Adding model 'Address'
+        db.create_table(u'pages_address', (
+            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('street', self.gf('django.db.models.fields.TextField')()),
+            ('city', self.gf('django.db.models.fields.CharField')(max_length=64)),
+            ('state', self.gf('django.db.models.fields.CharField')(max_length=20)),
+            ('zip_code', self.gf('django.db.models.fields.CharField')(max_length=10)),
+        ))
+        db.send_create_signal(u'pages', ['Address'])
+
+        # Adding model 'Rsvp'
+        db.create_table(u'pages_rsvp', (
+            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('first_name', self.gf('django.db.models.fields.CharField')(max_length=15)),
+            ('last_name', self.gf('django.db.models.fields.CharField')(max_length=15)),
+        ))
+        db.send_create_signal(u'pages', ['Rsvp'])
+
+        # Adding model 'PhotoContent'
+        db.create_table(u'pages_photocontent', (
+            (u'photo_ptr', self.gf('django.db.models.fields.related.OneToOneField')(to=orm['photologue.Photo'], unique=True, primary_key=True)),
+            ('user', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['auth.User'])),
+        ))
+        db.send_create_signal(u'pages', ['PhotoContent'])
+
 
     def backwards(self, orm):
         # Deleting model 'Page'
         db.delete_table(u'pages_page')
+
+        # Deleting model 'Address'
+        db.delete_table(u'pages_address')
+
+        # Deleting model 'Rsvp'
+        db.delete_table(u'pages_rsvp')
+
+        # Deleting model 'PhotoContent'
+        db.delete_table(u'pages_photocontent')
 
 
     models = {
@@ -62,14 +97,71 @@ class Migration(SchemaMigration):
             'model': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '100'})
         },
+        u'pages.address': {
+            'Meta': {'object_name': 'Address'},
+            'city': ('django.db.models.fields.CharField', [], {'max_length': '64'}),
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'state': ('django.db.models.fields.CharField', [], {'max_length': '20'}),
+            'street': ('django.db.models.fields.TextField', [], {}),
+            'zip_code': ('django.db.models.fields.CharField', [], {'max_length': '10'})
+        },
         u'pages.page': {
             'Meta': {'object_name': 'Page'},
             'body': ('django.db.models.fields.TextField', [], {}),
             'created': ('django.db.models.fields.DateTimeField', [], {}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'image': ('django.db.models.fields.files.ImageField', [], {'max_length': '100', 'null': 'True', 'blank': 'True'}),
             'slug': ('django.db.models.fields.SlugField', [], {'max_length': '50'}),
             'title': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-            'user': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['auth.User']", 'unique': 'True'})
+            'user': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['auth.User']"})
+        },
+        u'pages.photocontent': {
+            'Meta': {'ordering': "['-date_added']", 'object_name': 'PhotoContent', '_ormbases': [u'photologue.Photo']},
+            u'photo_ptr': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['photologue.Photo']", 'unique': 'True', 'primary_key': 'True'}),
+            'user': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['auth.User']"})
+        },
+        u'pages.rsvp': {
+            'Meta': {'object_name': 'Rsvp'},
+            'first_name': ('django.db.models.fields.CharField', [], {'max_length': '15'}),
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'last_name': ('django.db.models.fields.CharField', [], {'max_length': '15'})
+        },
+        u'photologue.photo': {
+            'Meta': {'ordering': "['-date_added']", 'object_name': 'Photo'},
+            'caption': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
+            'crop_from': ('django.db.models.fields.CharField', [], {'default': "'center'", 'max_length': '10', 'blank': 'True'}),
+            'date_added': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
+            'date_taken': ('django.db.models.fields.DateTimeField', [], {'null': 'True', 'blank': 'True'}),
+            'effect': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'photo_related'", 'null': 'True', 'to': u"orm['photologue.PhotoEffect']"}),
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'image': ('django.db.models.fields.files.ImageField', [], {'max_length': '100'}),
+            'is_public': ('django.db.models.fields.BooleanField', [], {'default': 'True'}),
+            'sites': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'to': u"orm['sites.Site']", 'null': 'True', 'blank': 'True'}),
+            'slug': ('django.db.models.fields.SlugField', [], {'unique': 'True', 'max_length': '50'}),
+            'tags': ('tagging.fields.TagField', [], {}),
+            'title': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '50'}),
+            'view_count': ('django.db.models.fields.PositiveIntegerField', [], {'default': '0'})
+        },
+        u'photologue.photoeffect': {
+            'Meta': {'object_name': 'PhotoEffect'},
+            'background_color': ('django.db.models.fields.CharField', [], {'default': "'#FFFFFF'", 'max_length': '7'}),
+            'brightness': ('django.db.models.fields.FloatField', [], {'default': '1.0'}),
+            'color': ('django.db.models.fields.FloatField', [], {'default': '1.0'}),
+            'contrast': ('django.db.models.fields.FloatField', [], {'default': '1.0'}),
+            'description': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
+            'filters': ('django.db.models.fields.CharField', [], {'max_length': '200', 'blank': 'True'}),
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'name': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '30'}),
+            'reflection_size': ('django.db.models.fields.FloatField', [], {'default': '0'}),
+            'reflection_strength': ('django.db.models.fields.FloatField', [], {'default': '0.6'}),
+            'sharpness': ('django.db.models.fields.FloatField', [], {'default': '1.0'}),
+            'transpose_method': ('django.db.models.fields.CharField', [], {'max_length': '15', 'blank': 'True'})
+        },
+        u'sites.site': {
+            'Meta': {'ordering': "(u'domain',)", 'object_name': 'Site', 'db_table': "u'django_site'"},
+            'domain': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'name': ('django.db.models.fields.CharField', [], {'max_length': '50'})
         }
     }
 

@@ -12,6 +12,11 @@ https://docs.djangoproject.com/en/1.6/ref/settings/
 import os
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'sunnyarora07@gmail.com'
+EMAIL_HOST_PASSWORD = 'humtum29@july'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.6/howto/deployment/checklist/
@@ -24,8 +29,12 @@ DEBUG = True
 
 TEMPLATE_DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['http://sunnyarora07.pythonanywhere.com/']
 
+# auth and allauth settings
+LOGIN_URL = '/accounts/login/'
+LOGIN_REDIRECT_URL = '/homepage/welcome'
+ACCOUNT_LOGOUT_REDIRECT_URL = '/accounts/login/'
 
 # Application definition
 
@@ -37,6 +46,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sites',
+    'localflavor',
     'easy_maps',
     'photologue',
     'south',
@@ -45,6 +55,9 @@ INSTALLED_APPS = (
     'filebrowser',
     'tinymce',
     'wedding.pages',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
 )
 
 SITE_ID = 1
@@ -127,9 +140,35 @@ TINYMCE_JS_ROOT = os.path.join(STATIC_ROOT, "tiny_mce")
 TINYMCE_SPELLCHECKER = True
 TINYMCE_COMPRESSOR = True
 
+
 TINYMCE_DEFAULT_CONFIG = {
     'plugins': "table,spellchecker,paste,searchreplace",
     'theme': "advanced",
     'cleanup_on_startup': True,
     'custom_undo_redo_levels': 10,
 }
+"""
+TINYMCE_DEFAULT_CONFIG = {
+            "relative_urls": "false",
+            "theme": "modern",
+            "theme_advanced_buttons1": "formatselect,bold,italic,underline,link,unlink,bullist,undo,code,image",
+            "theme_advanced_buttons2": "",
+            "theme_advanced_buttons3": "",
+            "plugins": "paste",
+            "height": "550px",
+            "width": "750px",
+        }
+"""
+
+
+import django.conf.global_settings as DEFAULT_SETTINGS
+
+TEMPLATE_CONTEXT_PROCESSORS = DEFAULT_SETTINGS.TEMPLATE_CONTEXT_PROCESSORS + (
+    # 'allauth' specific context processors
+    "allauth.account.context_processors.account",
+    "allauth.socialaccount.context_processors.socialaccount",
+)
+AUTHENTICATION_BACKENDS = DEFAULT_SETTINGS.AUTHENTICATION_BACKENDS + (
+    # 'allauth' specific authentication methods, such as login by e-mail
+    "allauth.account.auth_backends.AuthenticationBackend",
+)

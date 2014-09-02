@@ -1,6 +1,6 @@
 from django import forms
 from .models import Page
-from .models import Address, Rsvp
+from .models import Address, Rsvp, PhotoContent
 from tinymce.widgets import TinyMCE
 from photologue.models import Photo
 from localflavor.in_.forms import INStateSelect
@@ -16,7 +16,7 @@ class PageForm(forms.ModelForm):
 class PhotoForm(forms.ModelForm):
 
     class Meta:
-        model = Photo
+        model = PhotoContent
         fields = ('image', 'title', 'caption', 'crop_from', 'tags',)
 
 

@@ -7,70 +7,65 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
     <meta name="author" content="">
+    <link rel="icon" href="../../favicon.ico">
 
-    <title>Wedding Site</title>
+    <title>Wedding Website</title>
 
     <!-- Bootstrap core CSS -->
     <link href="{{STATIC_URL}}bootstrap/css/bootstrap.min.css" rel="stylesheet">
 
     <!-- Custom styles for this template -->
-    <link href="{{STATIC_URL}}css/dashboard.css" rel="stylesheet">
+    <link href="{{STATIC_URL}}css/jumbotron-narrow.css" rel="stylesheet">
 
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
       <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
-
     {% block head %}{% endblock %}
   </head>
 
   <body>
 
-    <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-      <div class="container-fluid">
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="navbar-brand" href="/homepage/welcome">My Wedding</a>
-        </div>
-        <div class="navbar-collapse collapse">
-          <ul class="nav navbar-nav navbar-right">
-            {% block navbar_right %} {% endblock %}
-          </ul>
-          <form class="navbar-form navbar-right">
-            <input type="text" class="form-control" placeholder="Search...">
-          </form>
-        </div>
+    <div class="container">
+      <div class="header">
+        <ul class="nav nav-pills pull-right">
+            <li><a href="#">Contact Us</a></li>
+          <li>{% block navbar_right %}{% endblock %}</li>
+          <li style='color:#428bca'>
+            Share
+            <!-- Go to www.addthis.com/dashboard to customize your tools -->
+            <div class="addthis_sharing_toolbox"></div>
+        </li>
+        </ul>
+        <h3 class="text-muted"><a href='/' style='text-decoration: none;'><b>Wedding Bells</b></a></h3>
+        <h2 class='mark text-center text-success'>Jack & Jill Wedding, 25th Dec 2014</h2>
       </div>
-    </div>
 
-    <div class="container-fluid">
-      <div class="row">
-        <div class="col-sm-3 col-md-2 sidebar">
-          <ul class="nav nav-sidebar">
-            <li>{% block sidebar %} {% endblock %}</li>
-          </ul>
+        <div class="row">
+            <div class="col-sm-3 sidebar">
+                <ul class="nav nav-sidebar">
+                    <li><img src="{% static 'img/base_image.png' %}" width="150" height="70"/></li>
+                    <li>{% block sidebar %} {% endblock %}</li>
+                </ul>
+            </div>
+            <div class="col-sm-offset-3 main">
+                <h1 class="page-header">{% block title %}{% endblock %}</h1>
+                {% block content %} {% endblock %}
+            </div>
         </div>
-        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-          <h1 class="page-header">{% block title %}{% endblock %}</h1>
-          {% block content %} {% endblock %}
-          </div>
-        </div>
+
+      <div class="footer">
+        <p>&copy; Company 2014</p>
       </div>
-    </div>
 
-    <!-- Bootstrap core JavaScript
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-    <script src="{{STATIC_URL}}bootstrap/js/bootstrap.min.js"></script>
-    <script src="{{STATIC_URL}}bootstrap/js/docs.min.js"></script>
+    </div> <!-- /container -->
+
+
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-    <script src="{{STATIC_URL}}bootstrap/js/ie10-viewport-bug-workaround.js"></script>
+    <script src="{{STATIC_URL}}bootstap/js/ie10-viewport-bug-workaround.js"></script>
+    <!-- Go to www.addthis.com/dashboard to customize your tools -->
+    <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5404ad8148071059"></script>
+
   </body>
 </html>

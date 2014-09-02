@@ -8,6 +8,7 @@ class Page(models.Model):
     user  = models.ForeignKey(User)
     title = models.CharField(max_length=100)
     slug  = models.SlugField()
+    image = models.ImageField("Heading Image", upload_to="images/", null=True, blank=True)
     body  = models.TextField()
     created = models.DateTimeField()
 
@@ -18,8 +19,8 @@ class Page(models.Model):
         self.slug = slugify(self.title)
         super(Page, self).save(*args, **kwargs)
 
-    def get_absolute_url(self) :
-        return reverse("page_detail", kwargs={"slug": str(self.slug)})
+    #def get_absolute_url(self) :
+    #    return reverse("page_detail", kwargs={"username" : str(self.user), "slug": str(self.slug)})
 
 
 class Address(models.Model) :
@@ -41,8 +42,6 @@ class Rsvp(models.Model) :
     def __unicode__(self):
         return '%s %s' % (self.first_name, self.last_name)
 
-class PhotoAlbum(Photo) :
 
-    def get_absolute_url(self) :
-        super(PhotoAlbum, self).get_absolute_url()
-        return reverse("gallery")
+class PhotoContent(Photo) :
+    user  = models.ForeignKey(User)

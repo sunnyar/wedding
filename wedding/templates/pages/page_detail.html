@@ -1,14 +1,15 @@
 {% extends "pages/page_list.html" %}
 
 {% block navbar_right %}
-    {% if user.is_authenticated %}
-        <li><a href="{% url 'page_update' slug=object.slug %}">Edit Page</a></li>
+    {% if logged_user.is_authenticated %}
+        <li><a href="{% url 'page_update' username=logged_user.username slug=object.slug %}">Edit Page</a></li>
+        <li><a href="{% url 'account_logout' %}">Logout</a></li>
     {% endif %}
 {% endblock navbar_right %}
 
 {% block sidebar %}
     {% for page in all_objects %}
-        <a href="{% url 'page_detail' slug=page.slug %}">{{page.title}}</a>
+        <a href="{% url 'page_detail' username=logged_user slug=page.slug %}">{{page.title}}</a>
     {% endfor %}
 {% endblock %}
 
@@ -17,6 +18,19 @@
 {% endblock title%}
 
 {% block content %}
+    Hello {{logged_user}} HI{{object.image}} Hello Again
+    {% if object.image == '' %}
+        {% if object.title == 'Welcome' %}
+            <img src="{{MEDIA_URL}}images/default_welcome.jpg" width="540" height="320" alt="" title=""/>
+        {% elif  object.title == 'Our Proposal' %}
+            <img src="{{MEDIA_URL}}images/default_proposal.jpg" width="540" height="320" alt="" title=""/>
+        {% endif %}
+    {% else %}
+        {% if object.title == 'Welcome' or object.title == 'Our Proposal' %}
+            <img src="{{MEDIA_URL}}{{object.image}}" width="540" height="320" alt="" title=""/>
+        {% endif %}
+
+    {% endif %}
     {{ object.body | safe | linebreaks}}
 
     {% if page.title == 'RSVP' %}

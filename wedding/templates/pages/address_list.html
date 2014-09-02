@@ -11,11 +11,9 @@
 
 {% block content %}
     {% for event, address in map_events_list %}
-        <div style="width: 1000px;">
-            <div style="float: left; width: 320px;">
-                {% cache 600 my_map address %}
-                    {% easy_map address 300 400 %}
-                {% endcache %}
+        <div style="width: 700px;">
+            <div style="float: left; width: 200px;">
+                {% easy_map address 160 180 %}
                 <h3><b>{{event | capfirst }}</b></h3>
                 {{address}}<br>
                 {% if user.is_authenticated %}

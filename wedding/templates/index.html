@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block navbar_right %}
+    <li><a href="{% url 'account_signup' %}">Register</a></li>
+    <li><a href="{% url 'account_login' %}">Login</a></li>
+{% endblock navbar_right %}
+
+{% block sidebar %}
+    {% for page in wedding_pages %}
+        <a href='#'>{{page}}</a>
+    {% endfor %}
+{% endblock %}
+
+{% block title %}
+    Create your Wedding Site
+{% endblock title%}
+
+{% block content %}
+    We are here to create a cool Weddign site for you. Enjoy!!
+{% endblock content %}
