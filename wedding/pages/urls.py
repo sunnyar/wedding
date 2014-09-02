@@ -8,6 +8,7 @@ from .views import rsvp_reply
 from django.contrib.auth.decorators import login_required as auth
 
 urlpatterns = patterns('',
+        url(r'^(?P<username>[-\w\d]+)/info$', GalleryListView.as_view(), name='gallery'),
         url(r'^(?P<username>[-\w\d]+)/photo-album$', GalleryListView.as_view(), name='gallery'),
         url(r'^(?P<username>[-\w\d]+)/map-of-events$', AddressListView.as_view(), name='events_list'),
         url(r'^address/edit/(?P<username>[-\w\d]+)/(?P<pk>[\d]+)$', auth(AddressUpdateView.as_view()), name='address_update'),

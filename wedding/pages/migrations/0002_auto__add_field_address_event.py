@@ -8,57 +8,15 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        # Adding model 'Page'
-        db.create_table(u'pages_page', (
-            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('user', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['auth.User'])),
-            ('title', self.gf('django.db.models.fields.CharField')(max_length=100)),
-            ('slug', self.gf('django.db.models.fields.SlugField')(max_length=50)),
-            ('image', self.gf('django.db.models.fields.files.ImageField')(max_length=100, null=True, blank=True)),
-            ('body', self.gf('django.db.models.fields.TextField')()),
-            ('created', self.gf('django.db.models.fields.DateTimeField')()),
-        ))
-        db.send_create_signal(u'pages', ['Page'])
-
-        # Adding model 'Address'
-        db.create_table(u'pages_address', (
-            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('user', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['auth.User'])),
-            ('street', self.gf('django.db.models.fields.TextField')()),
-            ('city', self.gf('django.db.models.fields.CharField')(max_length=64)),
-            ('state', self.gf('django.db.models.fields.CharField')(max_length=20)),
-            ('zip_code', self.gf('django.db.models.fields.CharField')(max_length=10)),
-        ))
-        db.send_create_signal(u'pages', ['Address'])
-
-        # Adding model 'Rsvp'
-        db.create_table(u'pages_rsvp', (
-            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('first_name', self.gf('django.db.models.fields.CharField')(max_length=15)),
-            ('last_name', self.gf('django.db.models.fields.CharField')(max_length=15)),
-        ))
-        db.send_create_signal(u'pages', ['Rsvp'])
-
-        # Adding model 'PhotoContent'
-        db.create_table(u'pages_photocontent', (
-            (u'photo_ptr', self.gf('django.db.models.fields.related.OneToOneField')(to=orm['photologue.Photo'], unique=True, primary_key=True)),
-            ('user', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['auth.User'])),
-        ))
-        db.send_create_signal(u'pages', ['PhotoContent'])
+        # Adding field 'Address.event'
+        db.add_column(u'pages_address', 'event',
+                      self.gf('django.db.models.fields.CharField')(default=None, max_length=20),
+                      keep_default=False)
 
 
     def backwards(self, orm):
-        # Deleting model 'Page'
-        db.delete_table(u'pages_page')
-
-        # Deleting model 'Address'
-        db.delete_table(u'pages_address')
-
-        # Deleting model 'Rsvp'
-        db.delete_table(u'pages_rsvp')
-
-        # Deleting model 'PhotoContent'
-        db.delete_table(u'pages_photocontent')
+        # Deleting field 'Address.event'
+        db.delete_column(u'pages_address', 'event')
 
 
     models = {
@@ -101,6 +59,7 @@ class Migration(SchemaMigration):
         u'pages.address': {
             'Meta': {'object_name': 'Address'},
             'city': ('django.db.models.fields.CharField', [], {'max_length': '64'}),
+            'event': ('django.db.models.fields.CharField', [], {'max_length': '20'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'state': ('django.db.models.fields.CharField', [], {'max_length': '20'}),
             'street': ('django.db.models.fields.TextField', [], {}),

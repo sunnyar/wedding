@@ -18,11 +18,14 @@ from django.contrib.auth.decorators import login_required
 from datetime import datetime
 from collections import OrderedDict
 
-wedding_pages = OrderedDict([('Welcome' , 'Welcome to our Wedding'), ('About Us', ''),
+wedding_pages = OrderedDict([('HomePage', ''), ('Welcome' , 'Welcome to our Wedding'), ('About Us', ''),
     ('Our Proposal', ''), ('Ceremony', ''), ('Reception', ''), ('Wedding Party',  ''),
         ('Guest Information', ''), ('Photo Album', ''), ('Map of Events',  ''),
             ('RSVP', '')])
 
+address_dict = OrderedDict([('Ceremony' ,['Kanha Continental', 'Kanpur', 'UP', '208012']),
+                            ('Reception', ['111A/102, Ashok Nagar', 'Kanpur', 'UP', '208012']),
+                        ('Hotel', ['Landmark Towers', 'Kanpur', 'UP', '208012'])])
 
 def homepage(request) :
     return render_to_response('index.html', {'wedding_pages' : wedding_pages }, context_instance=RequestContext(request))
@@ -155,32 +158,49 @@ class GalleryListView(PhotoListView) :
 class AddressListView(ListView) :
 
     model = Address
-    queryset = Address.objects.all()
+    template_name = 'pages/address_list.html'
+
+    def get_queryset(self) :
+        queryset = Address.objects.filter(user=self.request.user)
+        for event, address in address_dict.items() :
+            if not Address.objects.filter(user=self.request.user, event=event).exists() :
+                Address.objects.create(user=self.request.user, event=event, street=address[0], city=address[1], state=address[2], zip_code=address[3])
+        return queryset
+
 
     def get_context_data(self, **kwargs):
         context = super(AddressListView, self).get_context_data(**kwargs)
-        context['page_list'] = Page.objects.all()
-        events    = ['Reception', 'Ceremony', 'Hotel']
-        addresses = Address.objects.all()
-        context['map_events_list'] = zip(events, addresses)
+        context['page_list'] = Page.objects.filter(user=self.request.user)
+        context['addresses'] = Address.objects.filter(user=self.request.user)
+        context['logged_user'] = self.request.user
+
         return context
 
 class AddressUpdateView(UpdateView) :
     model = Address
     form_class = AddressForm
+    template_name = 'pages/address_form.html'
+
+    def get_queryset(self) :
+        queryset = Address.objects.filter(user=self.request.user)
+        return queryset
 
     def get_context_data(self, **kwargs):
         context = super(AddressUpdateView, self).get_context_data(**kwargs)
-        context['user'] = self.request.user
-        context['all_objects'] = Page.objects.all()
+        context['logged_user'] = self.request.user
+        context['all_objects'] = Page.objects.filter(user=self.request.user)
         return context
+
+    def get_success_url(self) :
+        return reverse('events_list', kwargs={"username" : str(self.request.user)})
+
 
 def rsvp_reply(request) :
     if request.method == 'POST':
         form = RsvpForm(request.POST)
         if form.is_valid() :
             form.save(commit=False)
-            all_objects = Page.objects.all()
+            all_objects = Page.objects.filter(request.user)
             form.save()
             return render_to_response('pages/thanks.html',locals(), context_instance=RequestContext(request))
     else :
