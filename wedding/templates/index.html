@@ -7,14 +7,17 @@
 
 {% block sidebar %}
     {% for page in wedding_pages %}
-        <a href='#'>{{page}}</a>
+        {% if page != 'HomePage' %}
+            <a href='#'>{{page}}</a>
+        {% endif %}
     {% endfor %}
 {% endblock %}
 
 {% block title %}
-    Create your Wedding Site
+    <div class="page-header">
+    <h1><img src="{{MEDIA_URL}}images/default/text.png" width="540" height="100" alt="" title=""/></h1>
 {% endblock title%}
 
 {% block content %}
-    We are here to create a cool Weddign site for you. Enjoy!!
+    <img src="{{MEDIA_URL}}images/default/wedding.png" width="540" height="320" alt="" title=""/>
 {% endblock content %}

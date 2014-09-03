@@ -31,7 +31,7 @@ Hi
 Hey
     {% if object_list.values.0.image == '' %}
         {% if object_list.values.0.title == 'Welcome' %}
-            <img src="{{MEDIA_URL}}images/default_welcome.jpg" width="540" height="320" alt="" title=""/>
+            <img src="{{MEDIA_URL}}images/default/default_welcome.jpg" width="540" height="320" alt="" title=""/>
         {% endif %}
     {% else %}
         {% if object_list.values.0.title == 'Welcome' %}

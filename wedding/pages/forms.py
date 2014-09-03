@@ -36,7 +36,7 @@ class AddressForm(forms.ModelForm):
             'street': forms.Textarea(attrs={'cols': 30, 'rows': 5}),
             'state' : INStateSelect(),
         }
-
+        exclude = ("user",)
 class RsvpForm(forms.ModelForm):
 
     class Meta:

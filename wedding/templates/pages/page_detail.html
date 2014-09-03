@@ -14,7 +14,7 @@
 {% block sidebar %}
     {% for page in all_objects %}
         {% if page.title != 'HomePage' %}
-            <a href="{% url 'page_detail' username=logged_user slug=page.slug %}">{{page.title}}</a>
+            <a href="{% url 'page_detail' username=username slug=page.slug %}">{{page.title}}</a>
         {% endif %}
     {% endfor %}
 {% endblock %}
@@ -27,9 +27,9 @@
     Hello {{logged_user}} HI{{object.image}} Hello Again
     {% if object.image == '' %}
         {% if object.title == 'Welcome' %}
-            <img src="{{MEDIA_URL}}images/default_welcome.jpg" width="540" height="320" alt="" title=""/>
+            <img src="{{MEDIA_URL}}images/default/default_welcome.jpg" width="540" height="320" alt="" title=""/>
         {% elif  object.title == 'Our Proposal' %}
-            <img src="{{MEDIA_URL}}images/default_proposal.jpg" width="540" height="320" alt="" title=""/>
+            <img src="{{MEDIA_URL}}images/default/default_proposal.jpg" width="540" height="320" alt="" title=""/>
         {% endif %}
     {% else %}
         {% if object.title == 'Welcome' or object.title == 'Our Proposal' %}

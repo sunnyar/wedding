@@ -34,15 +34,20 @@ def homepage(request) :
 class PageListView(ListView) :
     model = Page
 
+
     def get_queryset(self) :
-        queryset = Page.objects.filter(user=self.request.user)
-        for page, body in wedding_pages.items() :
-            if not Page.objects.filter(user=self.request.user, title=page).exists() :
-                Page.objects.create(user=self.request.user, title=page, body=body, created=datetime.now())
+        username=self.kwargs['username']
+        queryset = Page.objects.filter(user__username=username)
+        #queryset = Page.objects.filter(user=self.request.user)
+        if self.request.user.is_authenticated :
+            for page, body in wedding_pages.items() :
+                if not Page.objects.filter(user=self.request.user, title=page).exists() :
+                    Page.objects.create(user=self.request.user, title=page, body=body, created=datetime.now())
         return queryset
 
     def get_context_data(self, **kwargs):
         context = super(PageListView, self).get_context_data(**kwargs)
+        context['username'] = self.kwargs['username']
         context['logged_user'] = self.request.user
         return context
 
@@ -50,14 +55,23 @@ class PageDetailView(DetailView) :
     model = Page
 
     def get_queryset(self) :
-        queryset = Page.objects.filter(user=self.request.user)
+        username = self.kwargs['username']
+        queryset = Page.objects.filter(user__username=username)
         return queryset
 
     def get_context_data(self, **kwargs):
         context = super(PageDetailView, self).get_context_data(**kwargs)
-        context['all_objects'] = Page.objects.filter(user=self.request.user)
-        context['logged_user'] = self.request.user
+        logged_user = self.request.user
+        username    = self.kwargs['username']
+
+        context['all_objects'] = Page.objects.filter(user__username=username)
+        context['username']    = self.kwargs['username']
+
+        if logged_user.is_authenticated :
+            context['logged_user'] = logged_user
+
         return context
+
 
 class PageUpdateView(UpdateView) :
     model = Page
@@ -75,6 +89,7 @@ class PageUpdateView(UpdateView) :
         context['logged_user'] = self.request.user
         context['all_objects'] = Page.objects.filter(user=self.request.user)
         return context
+
 
 class PhotoUpdateView(UpdateView) :
     model = PhotoContent
@@ -144,14 +159,20 @@ class GalleryListView(PhotoListView) :
     paginate_by = 20
 
     def get_queryset(self) :
-        queryset = PhotoContent.objects.filter(user=self.request.user)
+        username = self.kwargs['username']
+        queryset = PhotoContent.objects.filter(user__username=username)
         return queryset
 
     def get_context_data(self, **kwargs):
         context = super(GalleryListView, self).get_context_data(**kwargs)
-        context['object_list_len'] = len(PhotoContent.objects.filter(user=self.request.user))
-        context['page_list']       = Page.objects.filter(user=self.request.user)
-        context['logged_user']     = self.request.user
+        logged_user = self.request.user
+        username    = self.kwargs['username']
+
+        context['object_list_len'] = len(PhotoContent.objects.filter(user__username=username))
+        context['page_list']       = Page.objects.filter(user__username=username)
+        context['username']        = username
+        if logged_user.is_authenticated :
+            context['logged_user']     = self.request.user
         return context
 
 
@@ -161,20 +182,30 @@ class AddressListView(ListView) :
     template_name = 'pages/address_list.html'
 
     def get_queryset(self) :
-        queryset = Address.objects.filter(user=self.request.user)
-        for event, address in address_dict.items() :
-            if not Address.objects.filter(user=self.request.user, event=event).exists() :
-                Address.objects.create(user=self.request.user, event=event, street=address[0], city=address[1], state=address[2], zip_code=address[3])
+        username    = self.kwargs['username']
+        queryset = Address.objects.filter(user__username=username)
+
+        if self.request.user.is_authenticated :
+            if not Address.objects.filter(user__username=username).exists() :
+                for event, address in address_dict.items() :
+                    Address.objects.create(user__username=username, event=event, street=address[0], city=address[1], state=address[2], zip_code=address[3])
         return queryset
 
 
     def get_context_data(self, **kwargs):
         context = super(AddressListView, self).get_context_data(**kwargs)
-        context['page_list'] = Page.objects.filter(user=self.request.user)
-        context['addresses'] = Address.objects.filter(user=self.request.user)
-        context['logged_user'] = self.request.user
+        username    = self.kwargs['username']
+        logged_user = self.request.user
+
+        context['page_list'] = Page.objects.filter(user__username=username)
+        context['addresses'] = Address.objects.filter(user__username=username)
+        context['username']  = username
+
+        if logged_user.is_authenticated :
+            context['logged_user'] = logged_user
 
         return context
+
 
 class AddressUpdateView(UpdateView) :
     model = Address

@@ -7,7 +7,7 @@
 {% block sidebar %}
     {% for page in page_list %}
         {% if page.title != 'HomePage' %}
-            <a href="{% url 'page_detail' username=logged_user slug=page.slug %}">{{page.title}}</a>
+            <a href="{% url 'page_detail' username=username slug=page.slug %}">{{page.title}}</a>
         {% endif %}
     {% endfor %}
 {% endblock sidebar %}
