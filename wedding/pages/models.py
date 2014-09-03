@@ -5,6 +5,7 @@ from django.core.urlresolvers import reverse
 from photologue.models import Photo
 from datetime import datetime
 
+
 class Page(models.Model):
     user  = models.ForeignKey(User)
     title = models.CharField(max_length=100)
@@ -43,3 +44,23 @@ class Rsvp(models.Model) :
 
 class PhotoContent(Photo) :
     user  = models.ForeignKey(User)
+
+
+from django.core.exceptions import ValidationError
+from datetime import date
+
+def wedding_date_validator(value) :
+    if value <= date.today() :
+        raise ValidationError('Provide a Wedding Date after %s' % (date.today().strftime('%m-%d-%Y')))
+
+class Wedding(models.Model) :
+    user  = models.ForeignKey(User)
+    groom_first_name = models.CharField(verbose_name="Groom's First Name", max_length=20)
+    groom_last_name = models.CharField(verbose_name="Groom's Last Name", max_length=20)
+    bride_first_name = models.CharField(verbose_name="Bride's First Name", max_length=20)
+    bride_last_name = models.CharField(verbose_name="Bride's Last Name", max_length=20)
+    location = models.CharField(verbose_name="Wedding Location", max_length=20)
+    wedding_date = models.DateField(verbose_name='Wedding Date', validators=[wedding_date_validator])
+
+    def __unicode__(self):
+        return '%s %s & %s %s Wedding\n%s' % (self.groom_first_name, self.groom_last_name, self.bride_first_name, self.bride_last_name, self.wedding_date)

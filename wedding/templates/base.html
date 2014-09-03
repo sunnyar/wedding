@@ -28,19 +28,27 @@
   <body>
 
     <div class="container">
-      <div class="header">
-        <ul class="nav nav-pills pull-right">
-            <li><a href="#">Contact Us</a></li>
-          <li>{% block navbar_right %}{% endblock %}</li>
-          <li style='color:#428bca'>
-            Share
-            <!-- Go to www.addthis.com/dashboard to customize your tools -->
-            <div class="addthis_sharing_toolbox"></div>
-        </li>
-        </ul>
-        <h3 class="text-muted"><a href='/' style='text-decoration: none;'><b>Wedding Bells</b></a></h3>
+
+        <nav role="navigation" class="navbar navbar-inverse">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" data-target="#navbarCollapse" data-toggle="collapse" class="navbar-toggle">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                {% block brand %}<a href="/" class="navbar-brand">Wedding Bells</a>{% endblock %}
+            </div>
+            <!-- Collection of nav links, forms, and other content for toggling -->
+            <div id="navbarCollapse" class="collapse navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>{% block navbar_right %}{% endblock %}</li>
+                    <li><div class="addthis_sharing_toolbox"></div></li>
+                </ul>
+            </div>
+        </nav>
         {% block heading %} {% endblock %}
-      </div>
 
         <div class="row">
             <div class="col-sm-3 sidebar">

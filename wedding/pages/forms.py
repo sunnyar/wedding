@@ -1,17 +1,22 @@
 from django import forms
 from .models import Page
-from .models import Address, Rsvp, PhotoContent
+from .models import Address, Rsvp, PhotoContent, Wedding
 from tinymce.widgets import TinyMCE
 from photologue.models import Photo
 from localflavor.in_.forms import INStateSelect
+from django.forms.extras.widgets import SelectDateWidget
+from datetime import date
 
-class CoupleForm(forms.Form) :
+class WeddingForm(forms.ModelForm) :
 
-    groom_first_name = forms.CharField(label="Groom's First Name")
-    groom_last_name = forms.CharField(label="Groom's Last Name")
-    bride_first_name = forms.CharField(label="Bride's First Name")
-    bride_last_name = forms.CharField(label="Bride's Last Name")
-    wedding_date = forms.DateField()
+    class Meta :
+        model = Wedding
+        exclude = ('user',)
+        widgets = {
+                    'location' : INStateSelect(),
+                    'wedding_date': SelectDateWidget(years=range(2014, 2021)),
+        }
+
 
 class PageForm(forms.ModelForm):
 
@@ -37,6 +42,8 @@ class AddressForm(forms.ModelForm):
             'state' : INStateSelect(),
         }
         exclude = ("user",)
+
+
 class RsvpForm(forms.ModelForm):
 
     class Meta:

@@ -7,8 +7,13 @@
     {% endif %}
 {% endblock navbar_right %}
 
+{% block brand %}<a href='/' class="navbar-brand">Wedding Bells</a>{% endblock %}
+
 {% block heading %}
-    <h2 class='mark text-center text-success'>Jack and Jill Wedding</h2>
+    <h2 class='mark text-center text-success'>
+        {{wedding_objects.values.0.groom_first_name}} &  {{wedding_objects.values.0.bride_first_name}} Wedding<br>
+        {{wedding_objects.values.0.wedding_date}}
+    </h2>
 {% endblock %}
 
 {% block sidebar %}
@@ -24,7 +29,6 @@
 {% endblock title%}
 
 {% block content %}
-    Hello {{logged_user}} HI{{object.image}} Hello Again
     {% if object.image == '' %}
         {% if object.title == 'Welcome' %}
             <img src="{{MEDIA_URL}}images/default/default_welcome.jpg" width="540" height="320" alt="" title=""/>
@@ -39,7 +43,7 @@
     {% endif %}
     {{ object.body | safe | linebreaks}}
 
-    {% if page.title == 'RSVP' %}
+    {% if object.title == 'RSVP' %}
         <form method="post" action="/homepage/rsvp/thanks" enctype="multipart/form-data">
             {% csrf_token %}
             First Name: <input type="text" name="first_name"><br><br>
@@ -47,4 +51,5 @@
             <input type="submit" value="Submit">
         </form>
     {% endif %}
+
 {% endblock content %}

@@ -6,10 +6,6 @@
     {% endif %}
 {% endblock navbar_right %}
 
-{% block heading %}
-    <h2 class='mark text-center text-success'>Jack and Jill Wedding</h2>
-{% endblock %}
-
 {% block sidebar %}
     {% for page in object_list.values %}
         {% if page.title != 'HomePage' %}
@@ -22,13 +18,7 @@
     {{ object_list.values.0.title }}
 {% endblock title%}
 
-
 {% block content %}
-Hello
-{{object_list}}
-Hi
-{{username}}
-Hey
     {% if object_list.values.0.image == '' %}
         {% if object_list.values.0.title == 'Welcome' %}
             <img src="{{MEDIA_URL}}images/default/default_welcome.jpg" width="540" height="320" alt="" title=""/>
@@ -40,4 +30,9 @@ Hey
     {% endif %}
 
     {{ object_list.values.0.body | safe | linebreaks}}
+
+
+    {% if page.title == 'HomePage' %}
+        {{form.as_p}}
+    {% endif %}
 {% endblock content %}

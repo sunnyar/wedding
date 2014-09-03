@@ -3,11 +3,12 @@ from .views import PageDetailView
 from .views import PageListView, GalleryListView, AddressListView
 from .views import PageUpdateView, AddressUpdateView, PhotoUpdateView
 from .views import PhotoCreateView
-from .views import PhotoDeleteView
+from .views import PhotoDeleteView, HomePageFormView
 from .views import rsvp_reply
 from django.contrib.auth.decorators import login_required as auth
 
 urlpatterns = patterns('',
+        url(r'^profile$', HomePageFormView.as_view(), name='profile_form'),
         url(r'^(?P<username>[-\w\d]+)/info$', GalleryListView.as_view(), name='gallery'),
         url(r'^(?P<username>[-\w\d]+)/photo-album$', GalleryListView.as_view(), name='gallery'),
         url(r'^(?P<username>[-\w\d]+)/map-of-events$', AddressListView.as_view(), name='events_list'),
