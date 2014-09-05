@@ -18,14 +18,14 @@ from django.contrib.auth.decorators import login_required
 from datetime import datetime
 from collections import OrderedDict
 
-wedding_pages = OrderedDict([('HomePage', '<center><h1>This is your Home Page.</h1><center><br><br><p><font size="5">Start creating your website and edit the pages as per your need and information to your near and dear ones</font></p>'),
+wedding_pages = OrderedDict([('HomePage', '<center><h1>My Home Page.</h1><center><br><p><font size="3">Start creating your website and edit the pages as per your need and information.<br> Share with your near and dear ones</font></p><br><p><b>Demo :</b></p>'),
     ('Welcome' , '<center><b>Welcome to our wedding website !!</b><center><br><br><p>We can\'t wait to get married. We\'re so excited to share our special day with our friends and family!</p>'),
-    ('About Us', '<h2>About Bride</h2><br><p><></p><br><br><h2>About Groom</h2><br><p><></p><br><br><h2>How We Met</h2><br><p><></p>'),
-    ('Our Proposal', '<h2>When It Happened</h2><br><p>Date you met / Got Engaged</p><br><br><h2>How We Got Engaged</h2><br><p>Some memories of your Love Story</p>'),
-    ('Ceremony', '<h2>Ceremony</h2><br><p>Address</p><br><br><h2>Information For Our Guests</h2><br><p><></p><br><br><h2>Driving Directions</h2><br><p><></p><br><br><h2>Additional Information</h2><br><p><></p>'),
-    ('Reception', '<h2>Reception</h2><br><p>Address</p><br><br><h2>Information For Our Guests</h2><br><p><></p><br><br><h2>Driving Directions</h2><br><p><></p><br><br><h2>Additional Information</h2><br><p><></p>'),
-    ('Wedding Party',  '<h2>Our Wedding Party</h2><br><br><p>Details about the party and family details</p>'),
-    ('Guest Information', '<h2>Hotel Accommodations</h2><br><br><p>Hotel details/Contact no/Address</p><br><br><br><h2>Things To Do in the Area</h2><br><br><>'),
+    ('About Us', '<h2>About the Groom</h2><br><p>Tell your guests about your partner.</p><br><h2>About the Bride</h2><br><p>Tell your guests about your partner.</p><br><h2>How We Met</h2><br><p>Tell your guests a little about how you met.</p>'),
+    ('Our Proposal', '<h2>When It Happened</h2><br><p>Date you met / Got Engaged</p><br><br><h2>How We Got Engaged</h2><br><p>Some memories of your Love Story, a little about how you met.</p>'),
+    ('Ceremony', '<h2>Information For Our Guests</h2><br><p>Provide information about the event.</p><br><h2>Driving Directions</h2><br><p>Give guests directions to the event.</p><br><h2>Additional Information</h2><br><p>Tell your guests any additional information you want them to know.</p>'),
+    ('Reception', '<h2>Information For Our Guests</h2><br><p>Provide information about the event.</p><br><h2>Driving Directions</h2><br><p>Give guests directions to the event.</p><br><h2>Additional Information</h2><br><p><Tell your guests any additional information you want them to know.</p>'),
+    ('Wedding Party', '<h2>Our Wedding Party</h2><br><p>Details about the party and family</p>'),
+    ('Guest Information', '<h2>Hotel Accommodations</h2><br><p>Hotel details/Contact no/Address</p><br><br><h2>Things To Do in the Area</h2><br><br><p>Tell your guests what they can do in the area.</p><br><h2>Additional information</h2><br><p>Tell your guests any additional information you want them to know.</p>'),
     ('Photo Album', ''), ('Map of Events',  ''),
     ('RSVP', '<h2>RSVP Information</h2><br><br><p>To RSVP online to Jack and Jill\'s wedding, enter your name in the box below.<br>Only enter one name in your party as it appeared on your invitation using the following format: Jack Smith</p><br><br><p>Do not enter prefixes such as Mr., Mrs., Dr., etc.</p><br><br>')])
 
@@ -37,6 +37,9 @@ address_dict = OrderedDict([('Ceremony' ,['Kanha Continental', 'Kanpur', 'UP', '
 def homepage(request) :
     return render_to_response('index.html', {'wedding_pages' : wedding_pages }, context_instance=RequestContext(request))
 
+@login_required
+def user_profile(request):
+    return HttpResponseRedirect(reverse('profile_form', kwargs={"username" : request.user.username}))
 
 class HomePageFormView(FormView):
 
@@ -44,7 +47,7 @@ class HomePageFormView(FormView):
     form_class = WeddingForm
 
     def get_success_url(self):
-        return reverse("home", kwargs={"username" : self.request.user})
+        return reverse("page_list", kwargs={"username" : self.request.user})
 
     def get_context_data(self, **kwargs):
         context = super(HomePageFormView, self).get_context_data(**kwargs)
@@ -90,6 +93,7 @@ class PageListView(ListView) :
         context = super(PageListView, self).get_context_data(**kwargs)
         context['username'] = self.kwargs['username']
         context['logged_user'] = self.request.user
+        context['wedding_objects'] = Wedding.objects.filter(user__username=self.kwargs['username'])
         return context
 
 class PageDetailView(DetailView) :
@@ -212,7 +216,9 @@ class GalleryListView(PhotoListView) :
 
         context['object_list_len'] = len(PhotoContent.objects.filter(user__username=username))
         context['page_list']       = Page.objects.filter(user__username=username)
+        context['wedding_objects'] = Wedding.objects.filter(user__username=username)
         context['username']        = username
+
         if logged_user.is_authenticated :
             context['logged_user']     = self.request.user
         return context
@@ -230,7 +236,7 @@ class AddressListView(ListView) :
         if self.request.user.is_authenticated :
             if not Address.objects.filter(user__username=username).exists() :
                 for event, address in address_dict.items() :
-                    Address.objects.create(user__username=username, event=event, street=address[0], city=address[1], state=address[2], zip_code=address[3])
+                    Address.objects.create(user=self.request.user, event=event, street=address[0], city=address[1], state=address[2], zip_code=address[3])
         return queryset
 
 
@@ -241,6 +247,7 @@ class AddressListView(ListView) :
 
         context['page_list'] = Page.objects.filter(user__username=username)
         context['addresses'] = Address.objects.filter(user__username=username)
+        context['wedding_objects'] = Wedding.objects.filter(user__username=username)
         context['username']  = username
 
         if logged_user.is_authenticated :

@@ -12,8 +12,9 @@ https://docs.djangoproject.com/en/1.6/ref/settings/
 import os
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'sunnyarora07@gmail.com'
+EMAIL_HOST_USER = 'sunnyaroraster@gmail.com'
 EMAIL_HOST_PASSWORD = ''
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
@@ -33,9 +34,12 @@ ALLOWED_HOSTS = ['http://sunnyarora07.pythonanywhere.com/']
 
 # auth and allauth settings
 LOGIN_URL = '/accounts/login/'
-LOGIN_REDIRECT_URL = '/homepage/welcome'
+LOGIN_REDIRECT_URL = '/profile/'
 ACCOUNT_LOGOUT_REDIRECT_URL = '/accounts/login/'
 
+#ACCOUNT_AUTHENTICATION_METHOD = "username_email"
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_EMAIL_VERIFICATION = "mandatory"
 # Application definition
 
 INSTALLED_APPS = (

@@ -23,6 +23,22 @@
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
     {% block head %}{% endblock %}
+    <style>
+        body {
+             margin: 0;
+             background: url('/media/images/default/bg_image2.jpg');
+             background-size: 100% 100%;
+             background-repeat:no-repeat;
+            display: compact;
+             font: 13px/18px "Helvetica Neue", Helvetica, Arial, sans-serif;
+        }
+        a.href_color {
+          color: #000;
+          &:hover {
+             color: #000;
+           }
+        }
+    </style>
   </head>
 
   <body>
@@ -48,7 +64,7 @@
                 </ul>
             </div>
         </nav>
-        {% block heading %} {% endblock %}
+        {% block heading %} {% endblock %}<br>
 
         <div class="row">
             <div class="col-sm-3 sidebar">
@@ -58,13 +74,12 @@
                 </ul>
             </div>
             <div class="col-sm-offset-3 main">
-                <h1 class="page-header">{% block title %}{% endblock %}</h1>
                 {% block content %} {% endblock %}
             </div>
         </div>
 
       <div class="footer">
-        <p>&copy; Company 2014</p>
+        <p>&copy; Wedding Bells 2014</p>
       </div>
 
     </div> <!-- /container -->

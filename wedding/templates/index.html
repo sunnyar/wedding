@@ -8,16 +8,16 @@
 {% block sidebar %}
     {% for page in wedding_pages %}
         {% if page != 'HomePage' %}
-            <a href=''>{{page}}</a>
+            <a class='href_color' href=''>{{page}}</a>
         {% endif %}
     {% endfor %}
 {% endblock %}
 
 {% block title %}
     <div class="page-header">
-    <h1><img src="{{MEDIA_URL}}images/default/text.png" width="540" height="100" alt="" title=""/></h1>
+    <h1><img src="{{MEDIA_URL}}images/default/text.png" width="520" height="100" alt="" title=""/></h1>
 {% endblock title%}
 
 {% block content %}
-    <img src="{{MEDIA_URL}}images/default/wedding.png" width="540" height="320" alt="" title=""/>
+    <img src="{{MEDIA_URL}}images/default/wedding.png" width="520" height="320" alt="" title=""/>
 {% endblock content %}

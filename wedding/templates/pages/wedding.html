@@ -1,8 +1,8 @@
 {% extends 'base.html' %}
 
-
 {% block content %}
-    <h2>Provide your details below : </h2><br><br>
+    <a href="{% url 'page_list' username=username %}" class="btn btn-primary">Details Already Provided</a>
+    <h2>Provide your details : </h2><br>
     <form action="" method="post">{% csrf_token %}
         {% for field in form %}
             <div class="fieldWrapper">
@@ -16,7 +16,6 @@
             </div>
         </div><br>
         <button type="submit" class="btn btn-primary">Submit</button>
-        <a href="{% url 'home' username=username %}" class="btn btn-primary">Details Already Provided</a>
     </form>
 
 {% endblock %}
