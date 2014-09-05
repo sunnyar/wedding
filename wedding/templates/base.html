@@ -64,16 +64,16 @@
                 </ul>
             </div>
         </nav>
-        {% block heading %} {% endblock %}<br>
+        <h2 class='text-center' style='color:#FFCC33;font-style:italic;font-weight:bold'>{% block heading %} {% endblock %}<br></h2><br>
 
         <div class="row">
             <div class="col-sm-3 sidebar">
                 <ul class="nav nav-sidebar">
                     <li><img src="{% static 'img/base_image.png' %}" width="150" height="70"/></li>
-                    <li>{% block sidebar %} {% endblock %}</li>
+                    <li style='font-style: italic;font-weight: bold;'>{% block sidebar %} {% endblock %}</li>
                 </ul>
             </div>
-            <div class="col-sm-offset-3 main">
+            <div class="col-sm-offset-3 main" style='font-style: italic;font-weight: bold;'>
                 {% block content %} {% endblock %}
             </div>
         </div>
@@ -89,6 +89,6 @@
     <script src="{{STATIC_URL}}bootstap/js/ie10-viewport-bug-workaround.js"></script>
     <!-- Go to www.addthis.com/dashboard to customize your tools -->
     <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5404ad8148071059"></script>
-
+    <script src="http://api.html5media.info/1.1.5/html5media.min.js"></script>
   </body>
 </html>

@@ -1,5 +1,5 @@
 from django.conf.urls import patterns, url
-from .views import PageDetailView
+from .views import PageDetailView, GalleryDetailView
 from .views import PageListView, GalleryListView, AddressListView
 from .views import PageUpdateView, AddressUpdateView, PhotoUpdateView
 from .views import PhotoCreateView
@@ -11,8 +11,9 @@ urlpatterns = patterns('',
         url(r'^$', homepage, name='homepage'),
         url(r'^profile/$', user_profile),
         url(r'^profile/(?P<username>[-\w\d]+)$', HomePageFormView.as_view(), name='profile_form'),
-        url(r'^(?P<username>[-\w\d]+)/info$', GalleryListView.as_view(), name='gallery'),
-        url(r'^(?P<username>[-\w\d]+)/photo-album$', GalleryListView.as_view(), name='gallery'),
+        #url(r'^(?P<username>[-\w\d]+)/info$', GalleryListView.as_view(), name='gallery'),
+        url(r'^(?P<username>[-\w\d]+)/(?P<pk>[\d]+)/photo$', GalleryDetailView.as_view(), name='photo_detail'),
+        url(r'^(?P<username>[-\w\d]+)/photo-album$', GalleryListView.as_view(), name='photo_list'),
         url(r'^(?P<username>[-\w\d]+)/map-of-events$', AddressListView.as_view(), name='events_list'),
         url(r'^address/edit/(?P<username>[-\w\d]+)/(?P<pk>[\d]+)$', auth(AddressUpdateView.as_view()), name='address_update'),
         url(r'^(?P<username>[-\w\d]+)/homepage$', PageListView.as_view(), name='page_list'),

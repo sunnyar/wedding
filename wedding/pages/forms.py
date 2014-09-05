@@ -20,7 +20,7 @@ class WeddingForm(forms.ModelForm) :
 
 class PageForm(forms.ModelForm):
 
-    body = forms.CharField(widget=TinyMCE(attrs={'cols': 80, 'rows': 30}))
+    body = forms.CharField(widget=TinyMCE(attrs={'cols': 80, 'rows': 15}))
     class Meta:
         model = Page
         exclude = ("user", "slug", "created",)
