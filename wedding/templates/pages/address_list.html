@@ -1,29 +1,45 @@
 {% extends 'base.html' %}
+{% load split %}
 {% load easy_maps_tags cache %}
+{% load date_diff %}
 
 {% block title %}Map of Events{% endblock title %}
 
+{% block heading %}
+    <h2 class= 'text-center'>
+        {{wedding_objects.values.0.groom_first_name|capfirst}} &  {{wedding_objects.values.0.bride_first_name|capfirst}}<br>
+        {{wedding_objects.values.0.wedding_date}} • {{wedding_objects.values.0.wedding_date | date_diff}} day{{wedding_objects.values.0.wedding_date | date_diff|pluralize}} to go !!<br>
+        {% if logged_user.is_authenticated %}
+            <a href="{% url 'profile_form' username=username %}" class="btn btn-primary">Edit</a>
+        {% endif %}
+    </h2>
+{% endblock %}
+
 {% block sidebar %}
     {% for page in page_list %}
-        <a href="{% url 'page_detail' slug=page.slug %}">{{page.title}}</a>
+        {% if logged_user.is_authenticated %}
+            <a class='href_color' href="{% url 'page_detail' username=username slug=page.slug %}">{{page.title}}</a>
+        {% elif page.title != 'HomePage' %}
+            <a class='href_color' href="{% url 'page_detail' username=username slug=page.slug %}">{{page.title}}</a>
+        {% endif %}
     {% endfor %}
 {% endblock sidebar %}
 
 {% block content %}
-    {% for event, address in map_events_list %}
-        <div style="width: 1000px;">
-            <div style="float: left; width: 320px;">
-                {% cache 600 my_map address %}
-                    {% easy_map address 300 400 %}
-                {% endcache %}
-                <h3><b>{{event | capfirst }}</b></h3>
-                {{address}}<br>
-                {% if user.is_authenticated %}
-                    <form>
-                        <input type="button" value="Edit Address" onClick="window.location.href='/homepage/address/edit/{{address.pk}}'">
-                    </form>
-                {% endif %}
+    {% for map_of_events in addresses %}
+        {% for event, address in map_of_events|split %}
+            <div style="width: 700px;">
+                <div style="float: left; width: 200px;">
+                    {% easy_map address 160 220 %}
+                    <h3><b>{{event | capfirst }}</b></h3>
+                    {{address}}<br>
+                    {% if logged_user.is_authenticated %}
+                        <form>
+                            <a href="{% url 'address_update' username=username pk=map_of_events.pk %}" class="btn btn-primary">Edit</a>
+                        </form>
+                    {% endif %}
+                </div>
             </div>
-        </div>
+        {% endfor %}
     {% endfor %}
 {% endblock content %}

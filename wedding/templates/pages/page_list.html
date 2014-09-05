@@ -1,13 +1,38 @@
 {% extends "base.html" %}
+{% load date_diff %}
 
 {% block navbar_right %}
-    <li><a href="{% url 'page_update' slug=object_list.values.0.slug %}">Edit Page</a></li>
+    {% if logged_user.is_authenticated %}
+        <li><a href="{% url 'account_logout' %}" class="btn btn-primary">Logout</a></li>
+    {% endif %}
 {% endblock navbar_right %}
 
+{% block heading %}
+    <h2 class='text-center'>
+        {{wedding_objects.values.0.groom_first_name|capfirst}} &  {{wedding_objects.values.0.bride_first_name|capfirst}}<br>
+        {{wedding_objects.values.0.wedding_date}} • {{wedding_objects.values.0.wedding_date | date_diff}} day{{wedding_objects.values.0.wedding_date | date_diff|pluralize}} to go !!
+        {% if logged_user.is_authenticated %}
+            <a href="{% url 'profile_form' username=username %}" class="btn btn-primary">Edit</a>
+        {% endif %}
+    </h2>
+{% endblock %}
+
 {% block sidebar %}
-
-    {% for page in object_list %}
-        <a href="{% url 'page_detail' slug=page.slug %}">{{page.title}}</a>
+    {% for page in object_list.values %}
+        {% if logged_user.is_authenticated %}
+            <a class='href_color' href="{% url 'page_detail' username=logged_user slug=page.slug %}">{{page.title}}</a>
+        {% elif page.title != 'HomePage' %}
+            <a class='href_color' href="{% url 'page_detail' username=logged_user slug=page.slug %}">{{page.title}}</a>
+        {% endif %}
     {% endfor %}
-
 {% endblock sidebar %}
+
+{% block content %}
+
+    {{ object_list.values.0.body | safe | linebreaks}}
+
+    {% if object_list.values.0.title == 'HomePage' %}
+        <img src="{{MEDIA_URL}}images/default/edit_info.jpg" width="540" height="320" alt="" title=""/>
+    {% endif %}
+
+{% endblock content %}

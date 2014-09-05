@@ -1,0 +1,346 @@
+[
+{
+    "pk": 1,
+    "model": "pages.page",
+    "fields": {
+        "body": "Welcome to our Wedding",
+        "created": "2014-09-02T19:42:38.876Z",
+        "image": "",
+        "title": "Welcome",
+        "user": 1,
+        "slug": "welcome"
+    }
+},
+{
+    "pk": 2,
+    "model": "pages.page",
+    "fields": {
+        "body": "",
+        "created": "2014-09-02T19:42:38.907Z",
+        "image": "",
+        "title": "About Us",
+        "user": 1,
+        "slug": "about-us"
+    }
+},
+{
+    "pk": 3,
+    "model": "pages.page",
+    "fields": {
+        "body": "",
+        "created": "2014-09-02T19:42:38.932Z",
+        "image": "",
+        "title": "Our Proposal",
+        "user": 1,
+        "slug": "our-proposal"
+    }
+},
+{
+    "pk": 4,
+    "model": "pages.page",
+    "fields": {
+        "body": "",
+        "created": "2014-09-02T19:42:38.961Z",
+        "image": "",
+        "title": "Ceremony",
+        "user": 1,
+        "slug": "ceremony"
+    }
+},
+{
+    "pk": 5,
+    "model": "pages.page",
+    "fields": {
+        "body": "",
+        "created": "2014-09-02T19:42:38.986Z",
+        "image": "",
+        "title": "Reception",
+        "user": 1,
+        "slug": "reception"
+    }
+},
+{
+    "pk": 6,
+    "model": "pages.page",
+    "fields": {
+        "body": "",
+        "created": "2014-09-02T19:42:39.009Z",
+        "image": "",
+        "title": "Wedding Party",
+        "user": 1,
+        "slug": "wedding-party"
+    }
+},
+{
+    "pk": 7,
+    "model": "pages.page",
+    "fields": {
+        "body": "",
+        "created": "2014-09-02T19:42:39.033Z",
+        "image": "",
+        "title": "Guest Information",
+        "user": 1,
+        "slug": "guest-information"
+    }
+},
+{
+    "pk": 8,
+    "model": "pages.page",
+    "fields": {
+        "body": "",
+        "created": "2014-09-02T19:42:39.056Z",
+        "image": "",
+        "title": "Photo Album",
+        "user": 1,
+        "slug": "photo-album"
+    }
+},
+{
+    "pk": 9,
+    "model": "pages.page",
+    "fields": {
+        "body": "",
+        "created": "2014-09-02T19:42:39.078Z",
+        "image": "",
+        "title": "Map of Events",
+        "user": 1,
+        "slug": "map-of-events"
+    }
+},
+{
+    "pk": 10,
+    "model": "pages.page",
+    "fields": {
+        "body": "<p>This is RSVP</p>",
+        "created": "2014-09-02T19:42:39Z",
+        "image": "",
+        "title": "RSVP",
+        "user": 1,
+        "slug": "rsvp"
+    }
+},
+{
+    "pk": 11,
+    "model": "pages.page",
+    "fields": {
+        "body": "",
+        "created": "2014-09-02T20:31:29.919Z",
+        "image": "",
+        "title": "HomePage",
+        "user": 1,
+        "slug": "homepage"
+    }
+},
+{
+    "pk": 12,
+    "model": "pages.page",
+    "fields": {
+        "body": "",
+        "created": "2014-09-02T21:13:37.916Z",
+        "image": "",
+        "title": "HomePage",
+        "user": 2,
+        "slug": "homepage"
+    }
+},
+{
+    "pk": 13,
+    "model": "pages.page",
+    "fields": {
+        "body": "Welcome to our Wedding",
+        "created": "2014-09-02T21:13:37.960Z",
+        "image": "",
+        "title": "Welcome",
+        "user": 2,
+        "slug": "welcome"
+    }
+},
+{
+    "pk": 14,
+    "model": "pages.page",
+    "fields": {
+        "body": "",
+        "created": "2014-09-02T21:13:37.985Z",
+        "image": "",
+        "title": "About Us",
+        "user": 2,
+        "slug": "about-us"
+    }
+},
+{
+    "pk": 15,
+    "model": "pages.page",
+    "fields": {
+        "body": "",
+        "created": "2014-09-02T21:13:38.017Z",
+        "image": "",
+        "title": "Our Proposal",
+        "user": 2,
+        "slug": "our-proposal"
+    }
+},
+{
+    "pk": 16,
+    "model": "pages.page",
+    "fields": {
+        "body": "",
+        "created": "2014-09-02T21:13:38.053Z",
+        "image": "",
+        "title": "Ceremony",
+        "user": 2,
+        "slug": "ceremony"
+    }
+},
+{
+    "pk": 17,
+    "model": "pages.page",
+    "fields": {
+        "body": "",
+        "created": "2014-09-02T21:13:38.085Z",
+        "image": "",
+        "title": "Reception",
+        "user": 2,
+        "slug": "reception"
+    }
+},
+{
+    "pk": 18,
+    "model": "pages.page",
+    "fields": {
+        "body": "",
+        "created": "2014-09-02T21:13:38.116Z",
+        "image": "",
+        "title": "Wedding Party",
+        "user": 2,
+        "slug": "wedding-party"
+    }
+},
+{
+    "pk": 19,
+    "model": "pages.page",
+    "fields": {
+        "body": "",
+        "created": "2014-09-02T21:13:38.168Z",
+        "image": "",
+        "title": "Guest Information",
+        "user": 2,
+        "slug": "guest-information"
+    }
+},
+{
+    "pk": 20,
+    "model": "pages.page",
+    "fields": {
+        "body": "",
+        "created": "2014-09-02T21:13:38.258Z",
+        "image": "",
+        "title": "Photo Album",
+        "user": 2,
+        "slug": "photo-album"
+    }
+},
+{
+    "pk": 21,
+    "model": "pages.page",
+    "fields": {
+        "body": "",
+        "created": "2014-09-02T21:13:38.383Z",
+        "image": "",
+        "title": "Map of Events",
+        "user": 2,
+        "slug": "map-of-events"
+    }
+},
+{
+    "pk": 22,
+    "model": "pages.page",
+    "fields": {
+        "body": "",
+        "created": "2014-09-02T21:13:38.407Z",
+        "image": "",
+        "title": "RSVP",
+        "user": 2,
+        "slug": "rsvp"
+    }
+},
+{
+    "pk": 2,
+    "model": "pages.address",
+    "fields": {
+        "city": "Kanpur",
+        "state": "UP",
+        "street": "111A/102, Ashok Nagar",
+        "user": 1,
+        "event": "Reception",
+        "zip_code": "208012"
+    }
+},
+{
+    "pk": 3,
+    "model": "pages.address",
+    "fields": {
+        "city": "Kanpur",
+        "state": "UP",
+        "street": "Landmark Towers",
+        "user": 1,
+        "event": "Hotel",
+        "zip_code": "208012"
+    }
+},
+{
+    "pk": 4,
+    "model": "pages.address",
+    "fields": {
+        "city": "Kanpur",
+        "state": "UP",
+        "street": "Kanha Continental",
+        "user": 2,
+        "event": "Ceremony",
+        "zip_code": "208012"
+    }
+},
+{
+    "pk": 5,
+    "model": "pages.address",
+    "fields": {
+        "city": "Kanpur",
+        "state": "UP",
+        "street": "111A/102, Ashok Nagar",
+        "user": 2,
+        "event": "Reception",
+        "zip_code": "208012"
+    }
+},
+{
+    "pk": 6,
+    "model": "pages.address",
+    "fields": {
+        "city": "Kanpur",
+        "state": "UP",
+        "street": "Lanmark Towers",
+        "user": 2,
+        "event": "Hotel",
+        "zip_code": "208012"
+    }
+},
+{
+    "pk": 7,
+    "model": "pages.address",
+    "fields": {
+        "city": "Kanpur",
+        "state": "UP",
+        "street": "Kanha Continental",
+        "user": 1,
+        "event": "Ceremony",
+        "zip_code": "208012"
+    }
+},
+{
+    "pk": 1,
+    "model": "pages.photocontent",
+    "fields": {
+        "user": 1,
+        "sites": []
+    }
+}
+]
