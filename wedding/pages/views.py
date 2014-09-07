@@ -4,7 +4,7 @@ import json
 from django.http import HttpResponse, HttpResponseRedirect
 from django.views.generic import DetailView, ListView, UpdateView
 from .models import Page, PhotoContent, Wedding
-from .models import Address
+from .models import Address, Rsvp
 from .forms import PageForm
 from .forms import AddressForm, RsvpForm, PhotoForm, WeddingForm
 from photologue.models import Photo
@@ -17,6 +17,8 @@ from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from datetime import datetime
 from collections import OrderedDict
+from django.core.mail import send_mail
+from allauth.account.views import EmailAddress
 
 wedding_pages = OrderedDict([('HomePage', '<center><h1>My Home Page.</h1></center><br><p><font size="3">Start creating your website and edit the pages as per your need and information.<br> Share with your near and dear ones</font></p><br><p><b>Demo :</b></p>'),
     ('Welcome' , '<center><b>Welcome to our wedding website !!</b><center><br><p>We can\'t wait to get married. We\'re so excited to share our special day with our friends and family!</p>'),
@@ -26,8 +28,7 @@ wedding_pages = OrderedDict([('HomePage', '<center><h1>My Home Page.</h1></cente
     ('Reception', '<h2>Information For Our Guests</h2><br><p>Provide information about the event.</p><br><h2>Driving Directions</h2><br><p>Give guests directions to the event.</p><br><h2>Additional Information</h2><br><p><Tell your guests any additional information you want them to know.</p>'),
     ('Wedding Party', '<h2>Our Wedding Party</h2><br><p>Details about the party and family</p>'),
     ('Guest Information', '<h2>Hotel Accommodations</h2><br><p>Hotel details/Contact no/Address</p><br><br><h2>Things To Do in the Area</h2><br><br><p>Tell your guests what they can do in the area.</p><br><h2>Additional information</h2><br><p>Tell your guests any additional information you want them to know.</p>'),
-    ('Photo Album', ''), ('Map of Events',  ''),
-    ('RSVP', '<h2>RSVP Information</h2><br><br><p>To RSVP online to Jack and Jill\'s wedding, enter your name in the box below.<br>Only enter one name in your party as it appeared on your invitation using the following format: Jack Smith</p><br><br><p>Do not enter prefixes such as Mr., Mrs., Dr., etc.</p><br><br>')])
+    ('Photo Album', ''), ('Map of Events',  ''), ('RSVP', '')])
 
 address_dict = OrderedDict([('Ceremony' ,['Kanha Continental', 'Kanpur', 'UP', '208012']),
                             ('Reception', ['111A/102, Ashok Nagar', 'Kanpur', 'UP', '208012']),
@@ -298,16 +299,14 @@ class AddressUpdateView(UpdateView) :
         return reverse('events_list', kwargs={"username" : str(self.request.user)})
 
 
-def rsvp_reply(request) :
-    if request.method == 'POST':
-        form = RsvpForm(request.POST)
-        if form.is_valid() :
-            form.save(commit=False)
-            all_objects = Page.objects.filter(request.user)
-            form.save()
-            return render_to_response('pages/thanks.html',locals(), context_instance=RequestContext(request))
-    else :
-        pass
+def rsvp_thanks(request, username) :
+    wedding_objects = Wedding.objects.filter(user__username=username)
+    all_objects     = Page.objects.filter(user__username=username)
+
+    if request.user.is_authenticated() :
+        logged_user     = request.user
+
+    return render_to_response('pages/thanks.html',locals(), context_instance=RequestContext(request))
 
 
 class RsvpFormView(FormView):
@@ -316,31 +315,62 @@ class RsvpFormView(FormView):
     form_class = RsvpForm
 
     def get_success_url(self):
-        return reverse("page_detail", kwargs={"username" : self.kwargs['username'], "slug" : self.kwargs['slug']})
+        return reverse("rsvp_thanks", kwargs={"username" : self.kwargs['username']})
 
     def get_context_data(self, **kwargs):
         context = super(RsvpFormView, self).get_context_data(**kwargs)
-        context['wedding_objects'] = Wedding.objects.filter(user=self.request.user)
-        context['username'] = self.request.user
+        logged_user = self.request.user
+        username    = self.kwargs['username']
+
+        context['wedding_objects'] = Wedding.objects.filter(user__username=username)
+        context['username'] = username
+        context['wedding_objects'] = Wedding.objects.filter(user__username=username)
+        context['all_objects']     = Page.objects.filter(user__username=username)
+
+        if logged_user.is_authenticated() :
+            context['logged_user']     = logged_user
         return context
 
     def form_valid(self, form):
         # This method is called when valid form data has been POSTed.
         # It should return an HttpResponse.
-        if not Wedding.objects.filter(user=self.request.user).exists() :
-            Wedding.objects.create(user=self.request.user,
-                groom_first_name=form.cleaned_data['groom_first_name'],
-                groom_last_name=form.cleaned_data['groom_last_name'],
-                bride_first_name=form.cleaned_data['bride_first_name'],
-                bride_last_name=form.cleaned_data['bride_last_name'],
-                location=form.cleaned_data['location'],
-                wedding_date=form.cleaned_data['wedding_date'])
+        form.save(commit=False)
+        first_name = form.cleaned_data['first_name']
+        last_name  = form.cleaned_data['last_name']
+        email      = form.cleaned_data['email']
+        response   = form.cleaned_data['response']
+        username   = self.kwargs['username']
+        user_email = EmailAddress.objects.get(user__username=username).email
+        wedding_objects = Wedding.objects.filter(user__username=username)
+        groom_name = wedding_objects.values()[0]['groom_first_name']
+        bride_name = wedding_objects.values()[0]['bride_first_name']
+
+        rsvp_queryset = Rsvp.objects.filter(first_name=first_name, last_name=last_name, email=email)
+
+        if rsvp_queryset.exists() :
+            Rsvp.objects.update(first_name=first_name, last_name=last_name, email=email, response=response)
         else :
-            Wedding.objects.all().update(user=self.request.user,
-                groom_first_name=form.cleaned_data['groom_first_name'],
-                groom_last_name=form.cleaned_data['groom_last_name'],
-                bride_first_name=form.cleaned_data['bride_first_name'],
-                bride_last_name=form.cleaned_data['bride_last_name'],
-                location=form.cleaned_data['location'],
-                wedding_date=form.cleaned_data['wedding_date'])
-        return super(HomePageFormView, self).form_valid(form)
+            form.save()
+
+        email_format = [
+            ['Name', 'Email', 'Attending'],
+            ['%s %s' % (first_name, last_name) , '%s' % (email), '%s' %(response)],
+        ]
+        message = ''
+        spacing = 2
+        widths = [max(len(value) for value in column) + spacing for column in zip(*email_format)]
+        for line in email_format :
+            message += ''.join('%-*s' % item for item in zip(widths, line)) + '\n'
+
+        email_message =  '''Dear %s & %s,
+
+            The following guests have submitted an online RSVP for your wedding.
+
+            %s''' % (groom_name, bride_name, message)
+
+        try :
+            send_mail('RSVP Update', email_message , user_email, ['sunnyarora07@gmail.com'])
+        except Exception as e :
+            print "Exception has occured !!", e
+            raise
+        return super(RsvpFormView, self).form_valid(form)

@@ -48,3 +48,4 @@ class RsvpForm(forms.ModelForm):
 
     class Meta:
         model = Rsvp
+        widgets = {'response': forms.RadioSelect}

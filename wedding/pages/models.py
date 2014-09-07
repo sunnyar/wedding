@@ -36,10 +36,12 @@ class Address(models.Model) :
 
 class Rsvp(models.Model) :
     first_name = models.CharField(max_length=15)
-    last_name = models.CharField(max_length=15)
+    last_name  = models.CharField(max_length=15)
+    email      = models.EmailField()
+    response   = models.CharField(verbose_name="Are you attending ?", max_length=15, choices=(('yes', 'Yes'), ('no', 'No')), default=('tentative', 'Tentative'))
 
     def __unicode__(self):
-        return '%s %s' % (self.first_name, self.last_name)
+        return '%s %s responsed %s to attend your wedding' % (self.first_name, self.last_name, self.response)
 
 
 class PhotoContent(Photo) :
