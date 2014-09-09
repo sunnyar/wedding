@@ -1,9 +1,24 @@
 {% extends 'base.html' %}
 
+{% block head %}
+    <script>
+        function validateForm() {
+            var x = document.forms["myForm"]["user_domain"].value;
+            if (x==null || x=="") {
+                alert("Domain must be filled out");
+                return false;
+            }
+            if ( /^[a-z_]+$/i.test (x)) {
+                alert("Domain must have a '-'");
+                return false;
+            }
+        }
+    </script>
+{% endblock head %}
+
 {% block content %}
-    <a href="{% url 'page_list' username=username %}" class="btn btn-primary">Details Already Provided</a>
     <h2>Provide your details : </h2><br>
-    <form action="" method="post">{% csrf_token %}
+    <form name="myForm" action="" onsubmit="return validateForm()" method="post">{% csrf_token %}
         {% for field in form %}
             <div class="fieldWrapper">
             </div>

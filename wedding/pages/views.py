@@ -4,7 +4,7 @@ import json
 from django.http import HttpResponse, HttpResponseRedirect
 from django.views.generic import DetailView, ListView, UpdateView
 from .models import Page, PhotoContent, Wedding
-from .models import Address, Rsvp
+from .models import Address, Rsvp, UserProfile
 from .forms import PageForm
 from .forms import AddressForm, RsvpForm, PhotoForm, WeddingForm
 from photologue.models import Photo
@@ -36,10 +36,14 @@ address_dict = OrderedDict([('Ceremony' ,['Kanha Continental', 'Kanpur', 'UP', '
 
 
 def homepage(request) :
-    return render_to_response('index.html', {'wedding_pages' : wedding_pages}, context_instance=RequestContext(request))
+    logged_user = request.user
+    return render_to_response('index.html', {'wedding_pages' : wedding_pages, 'logged_user' : logged_user}, context_instance=RequestContext(request))
 
 @login_required
 def user_profile(request):
+    #if Wedding.objects.filter(user=request.user).exists() :
+    #    return HttpResponseRedirect(reverse("page_list", kwargs={"username" : request.user}))
+    #else :
     return HttpResponseRedirect(reverse('profile_form', kwargs={"username" : request.user.username}))
 
 class HomePageFormView(FormView):
@@ -48,6 +52,8 @@ class HomePageFormView(FormView):
     form_class = WeddingForm
 
     def get_success_url(self):
+        domain = UserProfile.objects.filter(user=self.request.user)
+        user_domain = domain.values().get(user=self.request.user)['user_domain']
         return reverse("page_list", kwargs={"username" : self.request.user})
 
     def get_context_data(self, **kwargs):
@@ -67,6 +73,8 @@ class HomePageFormView(FormView):
                 bride_last_name=form.cleaned_data['bride_last_name'],
                 location=form.cleaned_data['location'],
                 wedding_date=form.cleaned_data['wedding_date'])
+            UserProfile.objects.create(user=self.request.user,
+                user_domain=form.cleaned_data['user_domain'])
         else :
             Wedding.objects.all().update(user=self.request.user,
                 groom_first_name=form.cleaned_data['groom_first_name'],
@@ -75,6 +83,9 @@ class HomePageFormView(FormView):
                 bride_last_name=form.cleaned_data['bride_last_name'],
                 location=form.cleaned_data['location'],
                 wedding_date=form.cleaned_data['wedding_date'])
+            UserProfile.objects.all().update(user=self.request.user,
+                user_domain=form.cleaned_data['user_domain'])
+
         return super(HomePageFormView, self).form_valid(form)
 
 

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Page, Address, Rsvp, PhotoContent, Wedding
+from .models import Page, Address, Rsvp, PhotoContent, Wedding, UserProfile
 from settings import STATIC_URL
 from localflavor.in_.forms import INStateSelect
 
@@ -33,8 +33,15 @@ class RsvpAdmin(admin.ModelAdmin) :
     model = Rsvp
     list_display = ['first_name', 'last_name']
 
+
+class UserProfileAdmin(admin.ModelAdmin) :
+
+    model = UserProfile
+
+
 admin.site.register(Page, PageAdmin)
 admin.site.register(PhotoContent, PhotoContentAdmin)
 admin.site.register(Wedding, WeddingAdmin)
 admin.site.register(Address, AddressAdmin)
 admin.site.register(Rsvp, RsvpAdmin)
+admin.site.register(UserProfile, UserProfileAdmin)

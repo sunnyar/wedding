@@ -9,6 +9,7 @@ from datetime import date
 
 class WeddingForm(forms.ModelForm) :
 
+    user_domain = forms.CharField(help_text='Choose your domain(e.g: karan-shruti, karan-and-shruti, karan-&-shruti)')
     class Meta :
         model = Wedding
         exclude = ('user',)

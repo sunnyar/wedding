@@ -6,6 +6,13 @@ from photologue.models import Photo
 from datetime import datetime
 
 
+class UserProfile(models.Model) :
+    user        = models.OneToOneField(User, related_name='profile')
+    user_domain = models.CharField(max_length=20, default='jack-and-jill')
+
+    def __unicode__(self) :
+        return '%s has %s domain' % (self.user, self.user_domain)
+
 class Page(models.Model):
     user  = models.ForeignKey(User)
     title = models.CharField(max_length=100)
@@ -38,7 +45,7 @@ class Rsvp(models.Model) :
     first_name = models.CharField(max_length=15)
     last_name  = models.CharField(max_length=15)
     email      = models.EmailField()
-    response   = models.CharField(verbose_name="Are you attending ?", max_length=15, choices=(('yes', 'Yes'), ('no', 'No')), default=('tentative', 'Tentative'))
+    response   = models.CharField(verbose_name="Will you and your family be attending ?", max_length=15, choices=(('yes', 'Yes'), ('no', 'No')), default=('tentative', 'Tentative'))
 
     def __unicode__(self):
         return '%s %s responsed %s to attend your wedding' % (self.first_name, self.last_name, self.response)

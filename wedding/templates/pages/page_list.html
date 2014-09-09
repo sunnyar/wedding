@@ -3,7 +3,7 @@
 
 {% block navbar_right %}
     {% if logged_user.is_authenticated %}
-        <li><a href="{% url 'account_logout' %}" class="btn btn-primary">Logout</a></li>
+        <li class="active"><a href="{% url 'account_logout' %}" class="btn">Logout</a></li>
     {% endif %}
 {% endblock navbar_right %}
 
