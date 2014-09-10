@@ -73,3 +73,20 @@ class Wedding(models.Model) :
 
     def __unicode__(self):
         return '%s %s & %s %s Wedding\n%s' % (self.groom_first_name, self.groom_last_name, self.bride_first_name, self.bride_last_name, self.wedding_date)
+
+
+class Contact(models.Model) :
+    full_name = models.CharField(verbose_name="Full Name", max_length=50)
+    phone_num = models.CharField(verbose_name="Phone Number", max_length=20)
+    email     = models.EmailField(verbose_name="Email Address")
+    message   = models.TextField(verbose_name="Message")
+    created   = models.DateTimeField()
+
+    def __unicode__(self):
+        return '%s (%s)' % (self.full_name, self.email)
+
+    def save(self, *args, **kwargs):
+        ''' On save, update timestamps '''
+        if not self.id:
+            self.created = datetime.datetime.today()
+        return super(Contact, self).save(*args, **kwargs)

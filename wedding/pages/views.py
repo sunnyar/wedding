@@ -6,7 +6,7 @@ from django.views.generic import DetailView, ListView, UpdateView
 from .models import Page, PhotoContent, Wedding
 from .models import Address, Rsvp, UserProfile
 from .forms import PageForm
-from .forms import AddressForm, RsvpForm, PhotoForm, WeddingForm
+from .forms import AddressForm, RsvpForm, PhotoForm, WeddingForm, ContactForm
 from photologue.models import Photo
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.views.generic.edit import CreateView
@@ -39,12 +39,22 @@ def homepage(request) :
     logged_user = request.user
     return render_to_response('index.html', {'wedding_pages' : wedding_pages, 'logged_user' : logged_user}, context_instance=RequestContext(request))
 
+
+def contact_us(request) :
+    return render_to_response('contact.html', locals(), context_instance=RequestContext(request))
+
+def contact_thanks(request) :
+    return render_to_response('contact_thanks.html', context_instance=RequestContext(request))
+
+def about_us(request) :
+    return render_to_response('about.html', locals(), context_instance=RequestContext(request))
+
 @login_required
 def user_profile(request):
-    #if Wedding.objects.filter(user=request.user).exists() :
-    #    return HttpResponseRedirect(reverse("page_list", kwargs={"username" : request.user}))
-    #else :
-    return HttpResponseRedirect(reverse('profile_form', kwargs={"username" : request.user.username}))
+    if Wedding.objects.filter(user=request.user).exists() :
+        return HttpResponseRedirect(reverse("page_list", kwargs={"username" : request.user}))
+    else :
+        return HttpResponseRedirect(reverse('profile_form', kwargs={"username" : request.user.username}))
 
 class HomePageFormView(FormView):
 
@@ -73,8 +83,6 @@ class HomePageFormView(FormView):
                 bride_last_name=form.cleaned_data['bride_last_name'],
                 location=form.cleaned_data['location'],
                 wedding_date=form.cleaned_data['wedding_date'])
-            UserProfile.objects.create(user=self.request.user,
-                user_domain=form.cleaned_data['user_domain'])
         else :
             Wedding.objects.all().update(user=self.request.user,
                 groom_first_name=form.cleaned_data['groom_first_name'],
@@ -83,8 +91,6 @@ class HomePageFormView(FormView):
                 bride_last_name=form.cleaned_data['bride_last_name'],
                 location=form.cleaned_data['location'],
                 wedding_date=form.cleaned_data['wedding_date'])
-            UserProfile.objects.all().update(user=self.request.user,
-                user_domain=form.cleaned_data['user_domain'])
 
         return super(HomePageFormView, self).form_valid(form)
 
@@ -385,3 +391,30 @@ class RsvpFormView(FormView):
             print "Exception has occured !!", e
             raise
         return super(RsvpFormView, self).form_valid(form)
+
+
+class ContactFormView(FormView):
+
+    template_name = 'contact.html'
+    form_class = ContactForm
+
+    def get_success_url(self):
+        return reverse("contact_thanks")
+
+    def form_valid(self, form):
+        # This method is called when valid form data has been POSTed.
+        # It should return an HttpResponse.
+        form.save(commit=False)
+        full_name = form.cleaned_data['full_name']
+        phone_num = form.cleaned_data['phone_num']
+        email     = form.cleaned_data['email']
+        message   = 'Full Name : ' + full_name + '\nPhone Number : ' + phone_num + '\nEmail : ' + email + '\nMessage : '
+        message   += form.cleaned_data['message']
+        form.save()
+
+        try :
+            send_mail('Website Query', message , 'sunnyaroraster@gmail.com', ['sunnyaroraster@gmail.com'])
+        except Exception as e :
+            print "Exception has occured !!", e
+            raise
+        return super(ContactFormView, self).form_valid(form)

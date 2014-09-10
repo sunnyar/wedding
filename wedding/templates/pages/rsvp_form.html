@@ -17,9 +17,9 @@
 {% block sidebar %}
     {% for page in all_objects %}
         {% if logged_user.is_authenticated %}
-            <a class='href_color' href="{% url 'page_detail' username=username slug=page.slug %}">{{page.title}}</a>
+            <a class='href_color' href="{% url 'page_detail' username=username slug=page.slug %}">{{page.title}}</a><br>
         {% elif page.title != 'HomePage' %}
-            <a class='href_color' href="{% url 'page_detail' username=username slug=page.slug %}">{{page.title}}</a>
+            <a class='href_color' href="{% url 'page_detail' username=username slug=page.slug %}">{{page.title}}</a><br>
         {% endif %}
     {% endfor %}
 {% endblock %}

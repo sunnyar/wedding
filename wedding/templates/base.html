@@ -19,8 +19,13 @@
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
 
+    <!-- Custom CSS -->
+    <link href="{{STATIC_URL}}css/modern-business.css" rel="stylesheet">
+
+    <!-- Custom Fonts -->
+    <link href="{{STATIC_URL}}font-awesome-4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
     <!-- Custom styles for this template -->
-    <link href="{{STATIC_URL}}css/jumbotron-narrow.css" rel="stylesheet">
 
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
@@ -31,7 +36,7 @@
     <style>
         body {
             margin: 0;
-            background: url('/media/images/default/bg_image2.jpg');
+            background: url('/media/images/default/abc.jpg');
             background-size: 100% 100%;
             background-repeat:no-repeat;
             display: compact;
@@ -64,6 +69,8 @@
             <div class="collapse navbar-collapse" id="navbarCollapse">
                 <ul class="nav navbar-nav navbar-right">
                     {% block navbar_right %}{% endblock %}
+                    <li class="active"><a href="/about/">About</a></li>
+                    <li class="active"><a href="/contact/">Contact</a></li>
                     <li class="active"><div class="addthis_sharing_toolbox"></div></li>
                 </ul>
             </div>
@@ -71,35 +78,80 @@
     </nav>
     <hr>
 
-    <div class="container">
-        <div class="row">
-            <h2 class='text-center' style='color:#FFCC33;font-style:italic;font-weight:bold'>{% block heading %} {% endblock %}<br></h2><br>
-            <div class="col-xs-3 sidebar">
-                <ul class="nav nav-sidebar">
-                    <li><img src="{% static 'img/base_image.png' %}" width="150" height="70"/></li>
-                    <li style='font-style: italic;font-weight: bold;'>{% block sidebar %} {% endblock %}</li>
-                </ul>
+    <!-- Header Carousel -->
+    <header id="myCarousel" class="carousel slide">
+        <!-- Indicators -->
+        <ol class="carousel-indicators">
+            <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+            <li data-target="#myCarousel" data-slide-to="1"></li>
+            <li data-target="#myCarousel" data-slide-to="2"></li>
+        </ol>
+
+        <!-- Wrapper for slides -->
+        <div class="carousel-inner">
+            <div class="item active">
+                <div class="fill" style="background-image:url('/media/images/default/slide_1.jpg');"></div>
+                <div class="carousel-caption">
+                    <h2></h2>
+                </div>
             </div>
-            <div class="col-xs-offset-3 main" style='font-style: italic;font-weight: bold;'>
-                {% block content %} {% endblock %}
+            <div class="item">
+                <div class="fill" style="background-image:url('/media/images/default/slide_2.jpg');"></div>
+                <div class="carousel-caption">
+                    <h2></h2>
+                </div>
+            </div>
+            <div class="item">
+                <div class="fill" style="background-image:url('/media/images/default/slide_3.jpg');"></div>
+                <div class="carousel-caption">
+                    <h2></h2>
+                </div>
             </div>
         </div>
 
-        <hr>
+        <!-- Controls -->
+        <a class="left carousel-control" href="#myCarousel" data-slide="prev">
+            <span class="icon-prev"></span>
+        </a>
+        <a class="right carousel-control" href="#myCarousel" data-slide="next">
+            <span class="icon-next"></span>
+        </a>
+    </header>
+    <hr>
+
+    <div class='container'>
         <div class="row">
-            <div class="col-sm-12">
-                <footer>
-                    <p>Copyright © 2014 Wedding Bells</p>
-                </footer>
+
+            <div class="col-xs-2 sidebar">
+                <a href='/'><img class="img-responsive" src="{{MEDIA_URL}}images/default/heart.jpg"/></a><br>
+                <ul class="nav nav-sidebar">
+                    <li style='font-style: italic;font-weight: bold;'>{% block sidebar %} {% endblock %}</li>
+                </ul>
+            </div>
+            <div class="col-xs-9" style='font-style: italic;font-weight: bold;'>
+                <h2 class='text-center' style='color:#FFCC33;font-style:italic;font-weight:bold'>{% block heading %} {% endblock %}<br></h2><br>
+                {% block content %} {% endblock %}
             </div>
         </div>
-    </div> <!-- /container -->
+    </div>
+
+    <hr>
+    <div class="panel-footer clearfix">
+        <div class="pull-right">
+    	    <a href="/">Home</a>
+            <a href="/themes/">Themes</a>
+        	<a href="/terms/">Terms of use</a>
+        	<a href="/privacy/">Privacy policy</a>
+        	<a href="/contact/">Contact us</a>
+        </div>
+        <p>Copyright © 2014 Wedding Bells</p>
+    </div>
 
 
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
     <script src="{{STATIC_URL}}bootstap/js/ie10-viewport-bug-workaround.js"></script>
     <!-- Go to www.addthis.com/dashboard to customize your tools -->
-    <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5404ad8148071059"></script>
+    <!--script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5404ad8148071059"></script-->
     <script src="http://api.html5media.info/1.1.5/html5media.min.js"></script>
   </body>
 </html>

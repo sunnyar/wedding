@@ -1,15 +1,15 @@
 from django import forms
 from .models import Page
-from .models import Address, Rsvp, PhotoContent, Wedding
+from .models import Address, Rsvp, PhotoContent, Wedding, Contact
 from tinymce.widgets import TinyMCE
 from photologue.models import Photo
-from localflavor.in_.forms import INStateSelect
+from localflavor.in_.forms import INStateSelect, INPhoneNumberField
 from django.forms.extras.widgets import SelectDateWidget
 from datetime import date
 
 class WeddingForm(forms.ModelForm) :
 
-    user_domain = forms.CharField(help_text='Choose your domain(e.g: karan-shruti, karan-and-shruti, karan-&-shruti)')
+    #user_domain = forms.CharField(help_text='Choose your domain(e.g: karan-shruti, karan-and-shruti, karan-&-shruti)')
     class Meta :
         model = Wedding
         exclude = ('user',)
@@ -50,3 +50,13 @@ class RsvpForm(forms.ModelForm):
     class Meta:
         model = Rsvp
         widgets = {'response': forms.RadioSelect}
+
+
+class ContactForm(forms.ModelForm):
+
+    phone_num = INPhoneNumberField(label="Phone Number")
+    class Meta:
+        model = Contact
+        widgets = {
+            'message': forms.Textarea(attrs={'cols': 100, 'rows': 10}),
+        }

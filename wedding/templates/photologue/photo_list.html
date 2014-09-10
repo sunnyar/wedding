@@ -2,15 +2,30 @@
 {% load url from future %}
 {% load date_diff %}
 
+{% block head %}
+    <style>
+                /*!
+         * Start Bootstrap - Thumbnail Gallery HTML Template (http://startbootstrap.com)
+         * Code licensed under the Apache License v2.0.
+         * For details, see http://www.apache.org/licenses/LICENSE-2.0.
+         */
+
+        .thumb {
+            margin-bottom: 30px;
+        }
+    </style>
+{% endblock %}
+
 {% block title %}Photo Album{% endblock %}
 
 {% block navbar_right %}
     {% if logged_user.is_authenticated %}
         {% if object_list_len > 20 %}
-            <li style="color:white;"><a href="">Max Photos Added</a></li>
+            <li><a href="">Max Photos Added</a></li>
         {% else %}
-            <li><a href="{% url 'photo_create' username=logged_user.username %}" class="btn btn-primary">Add Photos (Max: 20)</a></li>
+            <li><a href="{% url 'photo_create' username=logged_user.username %}" class="btn">Add Photos (Max: 20)</a></li>
         {% endif %}
+        <li class="active"><a href="{% url 'account_logout' %}" class="btn">Logout</a></li>
     {% endif %}
 {% endblock navbar_right %}
 
@@ -26,42 +41,53 @@
     {% for page in page_list %}
         {% if logged_user.is_authenticated %}
             {% if page.title == 'Photo Album' %}
-                <a class='href_color' href="{% url 'photo_list' username=username %}">{{page.title}}</a>
+                <a class='href_color' href="{% url 'photo_list' username=username %}">{{page.title}}</a><br>
             {% else %}
-                <a class='href_color' href="{% url 'page_detail' username=username slug=page.slug %}">{{page.title}}</a>
+                <a class='href_color' href="{% url 'page_detail' username=username slug=page.slug %}">{{page.title}}</a><br>
             {% endif %}
         {% elif page.title != 'HomePage' %}
             {% if page.title == 'Photo Album' %}
-                <a class='href_color' href="{% url 'photo_list' username=username %}">{{page.title}}</a>
+                <a class='href_color' href="{% url 'photo_list' username=username %}">{{page.title}}</a><br>
             {% else %}
-                <a class='href_color' href="{% url 'page_detail' username=username slug=page.slug %}">{{page.title}}</a>
+                <a class='href_color' href="{% url 'page_detail' username=username slug=page.slug %}">{{page.title}}</a><br>
             {% endif %}
         {% endif %}
     {% endfor %}
 {% endblock %}
 
 {% block content %}
-    {% if object_list %}
-        {% for photo in object_list %}
-            <div style="width: 700px;">
-                <div class="photo_list-photo" style="float: left; width: 150px;">
-                    <a href="{% url 'photo_detail' username=username pk=photo.pk %}"><img src="{{ photo.get_thumbnail_url }}" alt="{{ photo.title }}"/></a><br>
-                    {{photo.title}}
-                    {% if logged_user.is_authenticated %}
-                        <form action="{% url 'photo_update' username=logged_user.username pk=photo.pk %}">
-                            <input type="submit" value="Edit Photo" class="btn btn-primary">
-                        </form>
-                        <form action="{% url 'photo_delete' username=logged_user.username pk=photo.pk %}">
-                            <input type="submit" value="Delete Photo" class="btn btn-primary">
-                        </form>
-                    {% endif %}
-                    <br><br><br><br>
-                </div>
+    <!-- Page Content -->
+    <div class="container">
+        <div class="row">
+
+            <div class="col-lg-12">
+                <h1 class="page-header">Photo Album</h1>
             </div>
-        {% endfor %}
-    {% else %}
-        <p>No photos are available.</p>
-    {% endif %}
+
+            {% if object_list %}
+                {% for photo in object_list %}
+                    <div class="col-lg-2 col-md-4 col-xs-6 thumb">
+                        <a href="{% url 'photo_detail' username=username pk=photo.pk %}">
+                            <img src="{{ photo.get_thumbnail_url }}" alt="{{ photo.title }}"/><br>
+                            {{photo.title}}
+                            {% if logged_user.is_authenticated %}
+                                <form action="{% url 'photo_update' username=logged_user.username pk=photo.pk %}">
+                                    <input type="submit" value="Edit Photo" class="btn btn-primary">
+                                </form>
+                                <form action="{% url 'photo_delete' username=logged_user.username pk=photo.pk %}">
+                                    <input type="submit" value="Delete Photo" class="btn btn-primary">
+                                </form>
+                            {% endif %}
+                        </a>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p>No photos are available.</p>
+            {% endif %}
+
+        </div>
+    </div>
+    <!-- /.container -->
 
     <!--
     {% if is_paginated %}

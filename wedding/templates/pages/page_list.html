@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "index.html" %}
 {% load date_diff %}
 
 {% block navbar_right %}
@@ -18,9 +18,9 @@
 {% block sidebar %}
     {% for page in object_list.values %}
         {% if logged_user.is_authenticated %}
-            <a class='href_color' href="{% url 'page_detail' username=logged_user slug=page.slug %}">{{page.title}}</a>
+            <a class='href_color' href="{% url 'page_detail' username=logged_user slug=page.slug %}">{{page.title}}</a><br>
         {% elif page.title != 'HomePage' %}
-            <a class='href_color' href="{% url 'page_detail' username=logged_user slug=page.slug %}">{{page.title}}</a>
+            <a class='href_color' href="{% url 'page_detail' username=logged_user slug=page.slug %}">{{page.title}}</a><br>
         {% endif %}
     {% endfor %}
 {% endblock sidebar %}
@@ -30,8 +30,7 @@
     {{ object_list.values.0.body | safe | linebreaks}}
 
     {% if object_list.values.0.title == 'HomePage' %}
-        <img src="{{MEDIA_URL}}images/default/edit_info.jpg" width="570" height="350" alt="" title=""/>
-        </video>
+        <img class="img-responsive" src="{{MEDIA_URL}}images/default/edit_info.jpg"/>
     {% endif %}
 
 {% endblock content %}

@@ -13,12 +13,18 @@
     {% endif %}
 {% endblock %}
 
+{% block navbar_right %}
+    {% if logged_user.is_authenticated %}
+        <li class="active"><a href="{% url 'account_logout' %}" class="btn">Logout</a></li>
+    {% endif %}
+{% endblock navbar_right %}
+
 {% block sidebar %}
     {% for page in page_list %}
         {% if logged_user.is_authenticated %}
-            <a class='href_color' href="{% url 'page_detail' username=username slug=page.slug %}">{{page.title}}</a>
+            <a class='href_color' href="{% url 'page_detail' username=username slug=page.slug %}">{{page.title}}</a><br>
         {% elif page.title != 'HomePage' %}
-            <a class='href_color' href="{% url 'page_detail' username=username slug=page.slug %}">{{page.title}}</a>
+            <a class='href_color' href="{% url 'page_detail' username=username slug=page.slug %}">{{page.title}}</a><br>
         {% endif %}
     {% endfor %}
 {% endblock sidebar %}
@@ -26,17 +32,16 @@
 {% block content %}
     {% for map_of_events in addresses %}
         {% for event, address in map_of_events|split %}
-            <div style="width: 700px;">
-                <div style="float: left; width: 170px;">
-                    {% easy_map address 160 220 %}
-                    <h3><b>{{event | capfirst }}</b></h3>
-                    {{address}}<br>
-                    {% if logged_user.is_authenticated %}
-                        <form>
-                            <a href="{% url 'address_update' username=username pk=map_of_events.pk %}" class="btn btn-primary">Edit</a>
-                        </form>
-                    {% endif %}
-                </div>
+            <div class="col-xs-4">
+                {% easy_map address 260 400 %}
+                <h3><b>{{event | capfirst }}</b></h3>
+                {{address}}<br>
+                {% if logged_user.is_authenticated %}
+                    <form>
+                        <a href="{% url 'address_update' username=username pk=map_of_events.pk %}" class="btn btn-primary">Edit</a>
+                    </form>
+                {% endif %}
+
             </div>
         {% endfor %}
     {% endfor %}

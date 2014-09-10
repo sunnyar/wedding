@@ -1,4 +1,4 @@
-{% extends "pages/page_list.html" %}
+{% extends "index.html" %}
 {% load date_diff %}
 
 {% block navbar_right %}
@@ -15,9 +15,9 @@
 {% block sidebar %}
     {% for page in all_objects %}
         {% if logged_user.is_authenticated %}
-            <a class='href_color' href="{% url 'page_detail' username=username slug=page.slug %}">{{page.title}}</a>
+            <a class='href_color' href="{% url 'page_detail' username=username slug=page.slug %}">{{page.title}}</a><br>
         {% elif page.title != 'HomePage' %}
-            <a class='href_color' href="{% url 'page_detail' username=username slug=page.slug %}">{{page.title}}</a>
+            <a class='href_color' href="{% url 'page_detail' username=username slug=page.slug %}">{{page.title}}</a><br>
         {% endif %}
     {% endfor %}
 {% endblock %}
@@ -33,13 +33,13 @@
 {% block content %}
     {% if object.image == '' %}
         {% if object.title == 'Welcome' %}
-            <img src="{{MEDIA_URL}}images/default/default_welcome.jpg" width="520" height="320" alt="" title=""/>
+            <img class="img-responsive" src="{{MEDIA_URL}}images/default/default_welcome.jpg"/>
         {% elif  object.title == 'Our Proposal' %}
-            <img src="{{MEDIA_URL}}images/default/default_proposal.jpg" width="520" height="320" alt="" title=""/>
+            <img class="img-responsive" src="{{MEDIA_URL}}images/default/default_welcome.jpg"/>
         {% endif %}
     {% else %}
         {% if object.title == 'Welcome' or object.title == 'Our Proposal' %}
-            <img src="{{MEDIA_URL}}{{object.image}}" width="540" height="320" alt="" title=""/>
+            <img class="img-responsive" src="{{MEDIA_URL}}{{object.image}}"/>
         {% endif %}
 
     {% endif %}
@@ -47,15 +47,6 @@
 
     {% if object.title == 'HomePage' %}
         <img src="{{MEDIA_URL}}images/default/edit_info.jpg" width="540" height="320" alt="" title=""/>
-    {% endif %}
-
-    {% if object.title == 'RSVP' %}
-        <form method="post" action="/homepage/rsvp/thanks" enctype="multipart/form-data">
-            {% csrf_token %}
-            First Name: <input type="text" name="first_name"><br><br>
-            Last Name: <input type="text" name="last_name"><br><br>
-            <input type="submit" value="Submit">
-        </form>
     {% endif %}
 
 {% endblock content %}

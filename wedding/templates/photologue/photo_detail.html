@@ -3,6 +3,12 @@
 
 {% load photologue_tags %}
 
+{% block navbar_right %}
+    {% if logged_user.is_authenticated %}
+        <li class="active"><a href="{% url 'account_logout' %}" class="btn">Logout</a></li>
+    {% endif %}
+{% endblock navbar_right %}
+
 {% block heading %}
     {{wedding_objects.values.0.groom_first_name|capfirst}} &  {{wedding_objects.values.0.bride_first_name|capfirst}}<br>
     {{wedding_objects.values.0.wedding_date}} • {{wedding_objects.values.0.wedding_date | date_diff}} day{{wedding_objects.values.0.wedding_date | date_diff|pluralize}} to go !!<br>
@@ -15,15 +21,15 @@
     {% for page in page_list %}
         {% if logged_user.is_authenticated %}
             {% if page.title == 'Photo Album' %}
-                <a class='href_color' href="{% url 'photo_list' username=username %}">{{page.title}}</a>
+                <a class='href_color' href="{% url 'photo_list' username=username %}">{{page.title}}</a><br>
             {% else %}
-                <a class='href_color' href="{% url 'page_detail' username=username slug=page.slug %}">{{page.title}}</a>
+                <a class='href_color' href="{% url 'page_detail' username=username slug=page.slug %}">{{page.title}}</a><br>
             {% endif %}
         {% elif page.title != 'HomePage' %}
             {% if page.title == 'Photo Album' %}
-                <a class='href_color' href="{% url 'photo_list' username=username %}">{{page.title}}</a>
+                <a class='href_color' href="{% url 'photo_list' username=username %}">{{page.title}}</a><br>
             {% else %}
-                <a class='href_color' href="{% url 'page_detail' username=username slug=page.slug %}">{{page.title}}</a>
+                <a class='href_color' href="{% url 'page_detail' username=username slug=page.slug %}">{{page.title}}</a><br>
             {% endif %}
         {% endif %}
     {% endfor %}
