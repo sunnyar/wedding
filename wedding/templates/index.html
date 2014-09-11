@@ -62,9 +62,9 @@
                     <ul class="nav navbar-nav navbar-right">
                         {% if not logged_user.is_authenticated %}
                             <li class="active"><a href="{% url 'account_signup' %}">Join Free</a></li>
+                            <li class="active"><a href="{% url 'account_login' %}">Login</a></li>
                         {% endif %}
-                        <li class="active"><a href="{% url 'account_login' %}">Login</a></li>
-                        {% block navbar_right %}{% endblock %}
+                        {% block navbar_right %}<li class="active"><a href="{% url 'account_login' %}">Login</a></li>{% endblock %}
                         <li class="active"><a href="/about/">About</a></li>
                         <li class="active"><a href="/contact/">Contact</a></li>
                         <li class="active"><div class="addthis_sharing_toolbox"></div></li>

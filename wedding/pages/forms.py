@@ -1,6 +1,7 @@
 from django import forms
 from .models import Page
-from .models import Address, Rsvp, PhotoContent, Wedding, Contact
+from .models import Address, Rsvp, PhotoContent
+from .models import Wedding, Contact, Theme
 from tinymce.widgets import TinyMCE
 from photologue.models import Photo
 from localflavor.in_.forms import INStateSelect, INPhoneNumberField
@@ -60,3 +61,11 @@ class ContactForm(forms.ModelForm):
         widgets = {
             'message': forms.Textarea(attrs={'cols': 100, 'rows': 10}),
         }
+
+
+class ThemeForm(forms.ModelForm):
+
+    class Meta :
+        model = Theme
+        widgets = {'name': forms.RadioSelect}
+        exclude = ('user',)

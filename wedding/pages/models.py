@@ -90,3 +90,19 @@ class Contact(models.Model) :
         if not self.id:
             self.created = datetime.datetime.today()
         return super(Contact, self).save(*args, **kwargs)
+
+
+class Theme(models.Model) :
+    user  = models.ForeignKey(User)
+    name  = models.CharField(verbose_name="Theme Name", max_length=10,
+            choices=(('default', 'Default'), ('theme1', 'Theme1'), ('theme2', 'Theme2'), ('theme3', 'Theme3'),
+                ('theme4', 'Theme4'), ('theme5', 'Theme5'), ('theme6', 'Theme6'),
+                ('theme7', 'Theme7'), ('theme8', 'Theme8'), ('theme9', 'Theme9'),
+                ('theme10', 'Theme10'), ('theme11', 'Theme11'), ('theme12', 'Theme12'),
+                ('theme13', 'Theme13'), ('theme14', 'Theme14'), ('theme15', 'Theme15'),
+                ('theme16', 'Theme16'), ('theme17', 'Theme17'), ('theme18', 'Theme18'),
+                ('theme19', 'Theme19'), ('theme20', 'Theme20'), ('theme21', 'Theme21'),
+                ('theme22', 'Theme22'), ('theme23', 'Theme23'), ('theme24', 'Theme24'),
+                ('theme25', 'Theme25'), ('theme26', 'Theme26'), ('theme27', 'Theme27'),
+                ('theme28', 'Theme28'), ('theme29', 'Theme29'), ('theme30', 'Theme30'),)
+            , default=('default', 'Default'))

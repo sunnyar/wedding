@@ -4,6 +4,7 @@
 {% block navbar_right %}
     {% if logged_user.is_authenticated %}
         <li class="active"><a href="{% url 'account_logout' %}" class="btn">Logout</a></li>
+        <li class="active"><a href="{% url 'theme_form' username=logged_user.username %}" class="btn">Select Themes</a></li>
     {% endif %}
 {% endblock navbar_right %}
 

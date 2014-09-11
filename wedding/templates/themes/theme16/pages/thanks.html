@@ -1,0 +1,27 @@
+{% extends "themes/theme16/index.html" %}
+{% load date_diff %}
+
+{% block sidebar %}
+    {% for page in all_objects %}
+        {% if logged_user.is_authenticated %}
+            <a class='href_color' href="{% url 'page_detail' username=username slug=page.slug %}">{{page.title}}</a>
+        {% elif page.title != 'HomePage' %}
+            <a class='href_color' href="{% url 'page_detail' username=username slug=page.slug %}">{{page.title}}</a>
+        {% endif %}
+    {% endfor %}
+{% endblock %}
+
+{% block heading %}
+    {{wedding_objects.values.0.groom_first_name|capfirst}} &  {{wedding_objects.values.0.bride_first_name|capfirst}}<br>
+    {{wedding_objects.values.0.wedding_date}} • {{wedding_objects.values.0.wedding_date | date_diff}} day{{wedding_objects.values.0.wedding_date | date_diff|pluralize}} to go !!<br>
+    {% if logged_user.is_authenticated %}
+        <a href="{% url 'profile_form' username=username %}" class="btn btn-primary">Edit</a>
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+<h2>RSVP Information</h2><br>
+
+<p>Thank you for your RSVP.<br>
+{{wedding_objects.values.0.groom_first_name|capfirst}} &  {{wedding_objects.values.0.bride_first_name|capfirst}} have been notified of your response.</p>
+{% endblock content %}

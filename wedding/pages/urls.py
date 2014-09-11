@@ -3,7 +3,7 @@ from .views import PageDetailView, GalleryDetailView
 from .views import PageListView, GalleryListView, AddressListView
 from .views import PageUpdateView, AddressUpdateView, PhotoUpdateView
 from .views import PhotoCreateView
-from .views import PhotoDeleteView, HomePageFormView, RsvpFormView, ContactFormView
+from .views import PhotoDeleteView, HomePageFormView, RsvpFormView, ContactFormView, ThemeFormView
 from .views import rsvp_thanks, user_profile, homepage, about_us, contact_thanks
 from django.contrib.auth.decorators import login_required as auth
 
@@ -13,6 +13,7 @@ urlpatterns = patterns('',
         url(r'^contact/thanks/$', contact_thanks, name='contact_thanks'),
         url(r'^about/$', about_us, name='about'),
         url(r'^profile/$', user_profile),
+        url(r'^(?P<username>[-\w\d]+)/theme$', ThemeFormView.as_view(), name='theme_form'),
         url(r'^profile/(?P<username>[-\w\d]+)$', HomePageFormView.as_view(), name='profile_form'),
         #url(r'^(?P<username>[-\w\d]+)/info$', GalleryListView.as_view(), name='gallery'),
         url(r'^(?P<username>[-\w\d]+)/(?P<pk>[\d]+)/photo$', GalleryDetailView.as_view(), name='photo_detail'),

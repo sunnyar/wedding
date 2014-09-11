@@ -1,0 +1,42 @@
+{% extends "themes/theme22/index.html" %}
+{% load staticfiles %}
+{% load date_diff %}
+
+{% block head %}
+    {{form.media}}
+{% endblock %}
+
+{% block heading %}
+    {{wedding_objects.values.0.groom_first_name|capfirst}} &  {{wedding_objects.values.0.bride_first_name|capfirst}}<br>
+    {{wedding_objects.values.0.wedding_date}} • {{wedding_objects.values.0.wedding_date | date_diff}} day{{wedding_objects.values.0.wedding_date | date_diff|pluralize}} to go !!<br>
+    {% if logged_user.is_authenticated %}
+        <a href="{% url 'profile_form' username=username %}" class="btn btn-primary">Edit</a>
+    {% endif %}
+{% endblock %}
+
+{% block sidebar %}
+    {% for page in all_objects %}
+        {% if logged_user.is_authenticated %}
+            <a class='href_color' href="{% url 'page_detail' username=username slug=page.slug %}">{{page.title}}</a><br>
+        {% elif page.title != 'HomePage' %}
+            <a class='href_color' href="{% url 'page_detail' username=username slug=page.slug %}">{{page.title}}</a><br>
+        {% endif %}
+    {% endfor %}
+{% endblock %}
+
+{% block content %}
+    <h2>RSVP Information</h2><br><br>
+    <p>To RSVP online to {{wedding_objects.values.0.groom_first_name|capfirst}} &  {{wedding_objects.values.0.bride_first_name|capfirst}} wedding, enter your name in the box below.<br>
+    Only enter one name in your party as it appeared on your invitation using the following format: Mohit Sharma</p><br>
+    <p>Do not enter prefixes such as Mr., Mrs., Dr., etc.</p><br>
+
+    <form method="post" action="" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="row">
+            <div class="col-xs-4">
+                {{form.as_p}}
+            </div>
+        </div><br>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+{% endblock content %}

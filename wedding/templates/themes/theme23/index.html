@@ -1,0 +1,226 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="">
+        <meta name="author" content="">
+        <link rel="icon" href="../../favicon.ico">
+
+        <title>Wedding Website</title>
+
+        <!-- Bootstrap core CSS -->
+        <link href="{{STATIC_URL}}css/bootstrap.min.css" rel="stylesheet">
+
+        <!-- Custom CSS -->
+        <link href="{{STATIC_URL}}css/modern-business.css" rel="stylesheet">
+
+        <!-- Custom Fonts -->
+        <link href="{{STATIC_URL}}font-awesome-4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+        <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!--[if lt IE 9]>
+          <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+          <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+        <![endif]-->
+        {% block head %}{% endblock %}
+        <style>
+            @import url('/static/css/bootstrap.min.css');
+
+            body{
+                background: url('/media/images/themes/theme23.jpg') no-repeat center center fixed;
+                -webkit-background-size: cover;
+                -moz-background-size: cover;
+                -o-background-size: cover;
+                background-size: 100% 100%;
+            }
+            a.href_color {
+                color: #000;
+                &:hover {
+                color: #000;
+                }
+            }
+        </style>
+    </head>
+
+    <body>
+        <nav id="myNavbar" class="navbar navbar-default navbar-inverse navbar-fixed-top" role="navigation">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbarCollapse">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="/">Wedding Bells</a>
+                </div>
+                <!-- Collect the nav links, forms, and other content for toggling -->
+                <div class="collapse navbar-collapse" id="navbarCollapse">
+                    <ul class="nav navbar-nav navbar-right">
+                        {% if not logged_user.is_authenticated %}
+                            <li class="active"><a href="{% url 'account_signup' %}">Join Free</a></li>
+                        {% endif %}
+                        {% block navbar_right %}
+                            <li class="active"><a href="{% url 'account_login' %}">Login</a></li>
+                        {% endblock %}
+                        <li class="active"><a href="/about/">About</a></li>
+                        <li class="active"><a href="/contact/">Contact</a></li>
+                        <li class="active"><div class="addthis_sharing_toolbox"></div></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <hr>
+
+
+        <!-- Header Carousel -->
+        <header id="myCarousel" class="carousel slide">
+            <!-- Indicators -->
+            <ol class="carousel-indicators">
+                <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+                <li data-target="#myCarousel" data-slide-to="1"></li>
+                <li data-target="#myCarousel" data-slide-to="2"></li>
+            </ol>
+
+            <!-- Wrapper for slides -->
+            <div class="carousel-inner">
+                <div class="item active">
+                    <div class="fill" style="background-image:url('/media/images/default/slide_1.jpg');"></div>
+                    <div class="carousel-caption">
+                        <h2></h2>
+                    </div>
+                </div>
+                <div class="item">
+                    <div class="fill" style="background-image:url('/media/images/default/slide_2.jpg');"></div>
+                    <div class="carousel-caption">
+                        <h2></h2>
+                    </div>
+                </div>
+                <div class="item">
+                    <div class="fill" style="background-image:url('/media/images/default/slide_3.jpg');"></div>
+                    <div class="carousel-caption">
+                        <h2></h2>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Controls -->
+            <a class="left carousel-control" href="#myCarousel" data-slide="prev">
+                <span class="icon-prev"></span>
+            </a>
+            <a class="right carousel-control" href="#myCarousel" data-slide="next">
+                <span class="icon-next"></span>
+            </a>
+        </header>
+        <hr>
+
+        <div class='container'>
+            <div class="row">
+                <div class="col-xs-2 sidebar">
+                    <a href='/'><img class="img-responsive" src="{{MEDIA_URL}}images/default/heart.jpg"/></a>
+                    <ul class="nav nav-sidebar">
+                        <li style='font-style: italic;font-weight: bold;'>{% block sidebar %} {% endblock %}</li>
+                    </ul>
+                </div>
+                <div class="col-xs-9" style='font-style: italic;font-weight: bold;'>
+                    <h2 class='text-center' style='color:#FFCC33;font-style:italic;font-weight:bold'>{% block heading %} {% endblock %}<br></h2><br>
+
+                    {% block content %}
+
+                        <!--img class="img-responsive" src="{{MEDIA_URL}}images/default/text.png"/-->
+                        <center><i><h2>Create your own free responsive wedding website.<br>
+                        Your wedding. Your website. Your way.</h2></i><br><br>
+                        <p>Wedding Bells is a revolutionary new way of organising your wedding with your guests.<br>
+                            Share your wedding with your guests, tell your story, upload photos by creating a fun, secure and innovative website. Easy to create, and fully customisable to match your wedding theme - you will love it!
+                        </p></center><hr>
+                        <!--img class="img-responsive" src="{{MEDIA_URL}}images/default/wedding.png" alt="" title=""/-->
+
+                        <div class="col-xs-12">
+                            <h1 class="page-header">
+                                Welcome to Wedding Bells
+                            </h1>
+                        </div>
+                        <div class="col-xs-4">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h4><i class="fa fa-fw fa-check"></i>Create your own</h4>
+                                </div>
+                                <div class="panel-body">
+                                    <p></p>
+                                    <a href="#" class="btn btn-default">Learn More</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-4">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h4><i class="fa fa-fw fa-plus"></i>Themes</h4>
+                                </div>
+                                <div class="panel-body">
+                                    <p></p>
+                                    <a href="#" class="btn btn-default">Learn More</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-4">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h4><i class="fa fa-fw fa-compass"></i>Easy to Use</h4>
+                                </div>
+                                <div class="panel-body">
+                                    <p></p>
+                                    <a href="#" class="btn btn-default">Learn More</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-xs-12">
+                            <h2 class="page-header">Some Of Our Most Popular Features</h2>
+                        </div>
+                        <div class="col-xs-6">
+                            <p></p>
+                            <ul>
+                                <li><strong>RSVP Online</strong></li><br>
+                                <li>Shared Online Photo Album</li><br>
+                                <li>Custom Maps With Your Suggested Hotels</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-8">
+                            <!--img class="img-responsive" src="{{MEDIA_URL}}images/default/edit_info.jpg" alt=""-->
+                        </div>
+                    {% endblock %}
+                </div>
+            </div>
+            <!-- /.row -->
+        </div>
+        <!-- /.container -->
+
+        <hr>
+        <div class="panel-footer clearfix">
+            <div class="pull-right">
+        	    <a href="/">Home</a>
+                <a href="/themes/">Themes</a>
+            	<a href="/terms/">Terms of use</a>
+            	<a href="/privacy/">Privacy policy</a>
+            	<a href="/contact/">Contact us</a>
+            </div>
+            <p>Copyright © 2014 Wedding Bells</p>
+        </div>
+
+
+
+        <!-- jQuery Version 1.11.0 -->
+        <script src="{{STATIC_URL}}js/jquery-1.11.0.js"></script>
+
+        <!-- Bootstrap Core JavaScript -->
+        <script src="{{STATIC_URL}}js/bootstrap.min.js"></script>
+
+        <!-- Go to www.addthis.com/dashboard to customize your tools -->
+        <!--script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5404ad8148071059"></script-->
+        <script src="http://api.html5media.info/1.1.5/html5media.min.js"></script>
+    </body>
+</html>

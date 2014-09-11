@@ -1,0 +1,101 @@
+{% extends "themes/theme19/index.html" %}
+{% load url from future %}
+{% load date_diff %}
+
+{% block head %}
+    <style>
+                /*!
+         * Start Bootstrap - Thumbnail Gallery HTML Template (http://startbootstrap.com)
+         * Code licensed under the Apache License v2.0.
+         * For details, see http://www.apache.org/licenses/LICENSE-2.0.
+         */
+
+        .thumb {
+            margin-bottom: 30px;
+        }
+    </style>
+{% endblock %}
+
+{% block title %}Photo Album{% endblock %}
+
+{% block navbar_right %}
+    {% if logged_user.is_authenticated %}
+        {% if object_list_len > 20 %}
+            <li><a href="">Max Photos Added</a></li>
+        {% else %}
+            <li><a href="{% url 'photo_create' username=logged_user.username %}" class="btn">Add Photos (Max: 20)</a></li>
+        {% endif %}
+        <li class="active"><a href="{% url 'theme_form' username=logged_user.username %}" class="btn">Select Themes</a></li>
+        <li class="active"><a href="{% url 'account_logout' %}" class="btn">Logout</a></li>
+    {% endif %}
+{% endblock navbar_right %}
+
+{% block heading %}
+    {{wedding_objects.values.0.groom_first_name|capfirst}} &  {{wedding_objects.values.0.bride_first_name|capfirst}}<br>
+    {{wedding_objects.values.0.wedding_date}} • {{wedding_objects.values.0.wedding_date | date_diff}} day{{wedding_objects.values.0.wedding_date | date_diff|pluralize}} to go !!<br>
+    {% if logged_user.is_authenticated %}
+        <a href="{% url 'profile_form' username=username %}" class="btn btn-primary">Edit</a>
+    {% endif %}
+{% endblock %}
+
+{% block sidebar %}
+    {% for page in page_list %}
+        {% if logged_user.is_authenticated %}
+            {% if page.title == 'Photo Album' %}
+                <a class='href_color' href="{% url 'photo_list' username=username %}">{{page.title}}</a><br>
+            {% else %}
+                <a class='href_color' href="{% url 'page_detail' username=username slug=page.slug %}">{{page.title}}</a><br>
+            {% endif %}
+        {% elif page.title != 'HomePage' %}
+            {% if page.title == 'Photo Album' %}
+                <a class='href_color' href="{% url 'photo_list' username=username %}">{{page.title}}</a><br>
+            {% else %}
+                <a class='href_color' href="{% url 'page_detail' username=username slug=page.slug %}">{{page.title}}</a><br>
+            {% endif %}
+        {% endif %}
+    {% endfor %}
+{% endblock %}
+
+{% block content %}
+    <!-- Page Content -->
+    <div class="container">
+        <div class="row">
+
+            <div class="col-lg-12">
+                <h1 class="page-header">Photo Album</h1>
+            </div>
+
+            {% if object_list %}
+                {% for photo in object_list %}
+                    <div class="col-lg-2 col-md-4 col-xs-6 thumb">
+                        <a href="{% url 'photo_detail' username=username pk=photo.pk %}">
+                            <img src="{{ photo.get_thumbnail_url }}" alt="{{ photo.title }}"/><br>
+                            {{photo.title}}
+                            {% if logged_user.is_authenticated %}
+                                <form action="{% url 'photo_update' username=logged_user.username pk=photo.pk %}">
+                                    <input type="submit" value="Edit Photo" class="btn btn-primary">
+                                </form>
+                                <form action="{% url 'photo_delete' username=logged_user.username pk=photo.pk %}">
+                                    <input type="submit" value="Delete Photo" class="btn btn-primary">
+                                </form>
+                            {% endif %}
+                        </a>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p>No photos are available.</p>
+            {% endif %}
+
+        </div>
+    </div>
+    <!-- /.container -->
+
+    <!--
+    {% if is_paginated %}
+    <p>{{ paginator.count }} photos total.</p>
+    <div id="page_controls">
+        <p>{% if page_obj.has_previous %}<a href="{% url 'pl-photo-list' page_obj.previous_page_number %}">Previous</a> | {% endif %} page {{ page_obj.number }} of {{ paginator.num_pages }} {% if page_obj.has_next %}| <a href="{% url 'pl-photo-list' page_obj.next_page_number %}">Next</a>{% endif %}</p>
+    </div>
+    {% endif %}
+    -->
+{% endblock %}

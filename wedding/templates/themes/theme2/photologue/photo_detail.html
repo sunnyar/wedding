@@ -1,0 +1,56 @@
+{% extends "themes/theme2/index.html" %}
+{% load date_diff %}
+
+{% load photologue_tags %}
+
+{% block navbar_right %}
+    {% if logged_user.is_authenticated %}
+        <li class="active"><a href="{% url 'theme_form' username=logged_user.username %}" class="btn">Select Themes</a></li>
+        <li class="active"><a href="{% url 'account_logout' %}" class="btn">Logout</a></li>
+    {% endif %}
+{% endblock navbar_right %}
+
+{% block heading %}
+    {{wedding_objects.values.0.groom_first_name|capfirst}} &  {{wedding_objects.values.0.bride_first_name|capfirst}}<br>
+    {{wedding_objects.values.0.wedding_date}} • {{wedding_objects.values.0.wedding_date | date_diff}} day{{wedding_objects.values.0.wedding_date | date_diff|pluralize}} to go !!<br>
+    {% if logged_user.is_authenticated %}
+        <a href="{% url 'profile_form' username=username %}" class="btn btn-primary">Edit</a>
+    {% endif %}
+{% endblock %}
+
+{% block sidebar %}
+    {% for page in page_list %}
+        {% if logged_user.is_authenticated %}
+            {% if page.title == 'Photo Album' %}
+                <a class='href_color' href="{% url 'photo_list' username=username %}">{{page.title}}</a><br>
+            {% else %}
+                <a class='href_color' href="{% url 'page_detail' username=username slug=page.slug %}">{{page.title}}</a><br>
+            {% endif %}
+        {% elif page.title != 'HomePage' %}
+            {% if page.title == 'Photo Album' %}
+                <a class='href_color' href="{% url 'photo_list' username=username %}">{{page.title}}</a><br>
+            {% else %}
+                <a class='href_color' href="{% url 'page_detail' username=username slug=page.slug %}">{{page.title}}</a><br>
+            {% endif %}
+        {% endif %}
+    {% endfor %}
+{% endblock sidebar %}
+
+
+{% block content %}
+    <a href="{% url 'photo_list' username=username %}" class="btn btn-primary">Back</a>
+    <h1>{{ object.title }}</h1>
+    <div class="gallery-photo">
+        <a href="{{ object.image.url }}"><img src="{{ object.get_display_url }}" class="{% block gallery-photo-class %}{% endblock %}" alt="{{ object.title }}"/></a>
+        {% if object.caption %}<p>{{ object.caption }}</p>{% endif %}
+    </div>
+    {% if object.public_galleries %}
+    <h2>This photo is found in the following galleries:</h2>
+    <ol>
+    {% for gallery in object.public_galleries %}
+        <li>{%previous_in_gallery object gallery%} <a href="{{ gallery.get_absolute_url }}">{{ gallery.title }}</a> {%next_in_gallery object gallery%}</li>
+    {% endfor %}
+    </ol>
+    {% endif %}
+
+{% endblock %}

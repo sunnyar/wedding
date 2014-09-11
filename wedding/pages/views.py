@@ -4,8 +4,8 @@ import json
 from django.http import HttpResponse, HttpResponseRedirect
 from django.views.generic import DetailView, ListView, UpdateView
 from .models import Page, PhotoContent, Wedding
-from .models import Address, Rsvp, UserProfile
-from .forms import PageForm
+from .models import Address, Rsvp, UserProfile, Theme
+from .forms import PageForm, ThemeForm
 from .forms import AddressForm, RsvpForm, PhotoForm, WeddingForm, ContactForm
 from photologue.models import Photo
 from django.core.urlresolvers import reverse, reverse_lazy
@@ -37,7 +37,46 @@ address_dict = OrderedDict([('Ceremony' ,['Kanha Continental', 'Kanpur', 'UP', '
 
 def homepage(request) :
     logged_user = request.user
-    return render_to_response('index.html', {'wedding_pages' : wedding_pages, 'logged_user' : logged_user}, context_instance=RequestContext(request))
+    return render_to_response('themes/default/index.html', {'wedding_pages' : wedding_pages, 'logged_user' : logged_user}, context_instance=RequestContext(request))
+
+
+class ThemeFormView(FormView):
+
+    template_name = 'themes/select_theme.html'
+    form_class    = ThemeForm
+
+    def get_success_url(self):
+        return reverse("page_list", kwargs={"username" : self.request.user})
+
+    def get_context_data(self, **kwargs):
+        context = super(ThemeFormView, self).get_context_data(**kwargs)
+        logged_user = self.request.user
+        username    = self.kwargs['username']
+
+        context['username']  = username
+        theme_num            = range(1, 16)
+        themes = []
+        for i in range(1, 16) :
+            themes.append('theme%s' % i)
+
+        context['all_themes'] = zip(theme_num, themes)
+
+        if logged_user.is_authenticated :
+            context['logged_user'] = logged_user
+
+        return context
+
+    def form_valid(self, form):
+        # This method is called when valid form data has been POSTed.
+        # It should return an HttpResponse.
+        if not Theme.objects.filter(user__username).exists() :
+            Theme.objects.create(user__username,
+                name=form.cleaned_data['name'])
+        else :
+            Theme.objects.all().update(user__username,
+                name=form.cleaned_data['name'])
+
+        return super(ThemeFormView, self).form_valid(form)
 
 
 def contact_us(request) :
@@ -62,21 +101,21 @@ class HomePageFormView(FormView):
     form_class = WeddingForm
 
     def get_success_url(self):
-        domain = UserProfile.objects.filter(user=self.request.user)
-        user_domain = domain.values().get(user=self.request.user)['user_domain']
+        domain = UserProfile.objects.filter(user__username)
+        user_domain = domain.values().get(user__username)['user_domain']
         return reverse("page_list", kwargs={"username" : self.request.user})
 
     def get_context_data(self, **kwargs):
         context = super(HomePageFormView, self).get_context_data(**kwargs)
-        context['wedding_objects'] = Wedding.objects.filter(user=self.request.user)
+        context['wedding_objects'] = Wedding.objects.filter(user__username)
         context['username'] = self.request.user
         return context
 
     def form_valid(self, form):
         # This method is called when valid form data has been POSTed.
         # It should return an HttpResponse.
-        if not Wedding.objects.filter(user=self.request.user).exists() :
-            Wedding.objects.create(user=self.request.user,
+        if not Wedding.objects.filter(user__username).exists() :
+            Wedding.objects.create(user__username,
                 groom_first_name=form.cleaned_data['groom_first_name'],
                 groom_last_name=form.cleaned_data['groom_last_name'],
                 bride_first_name=form.cleaned_data['bride_first_name'],
@@ -84,7 +123,7 @@ class HomePageFormView(FormView):
                 location=form.cleaned_data['location'],
                 wedding_date=form.cleaned_data['wedding_date'])
         else :
-            Wedding.objects.all().update(user=self.request.user,
+            Wedding.objects.all().update(user__username,
                 groom_first_name=form.cleaned_data['groom_first_name'],
                 groom_last_name=form.cleaned_data['groom_last_name'],
                 bride_first_name=form.cleaned_data['bride_first_name'],
@@ -98,13 +137,21 @@ class HomePageFormView(FormView):
 class PageListView(ListView) :
     model = Page
 
+    def get_template_names(self):
+        if Theme.objects.filter(user__username).exists() :
+            theme_selected = Theme.objects.filter(user__username)
+            template_name = 'themes/%s/pages/page_list.html' % (theme_selected.values()[0]['name'])
+        else :
+            template_name = 'themes/default/pages/page_list.html'
+        return [template_name]
+
     def get_queryset(self) :
         username=self.kwargs['username']
         queryset = Page.objects.filter(user__username=username)
         if self.request.user.is_authenticated :
             for page, body in wedding_pages.items() :
-                if not Page.objects.filter(user=self.request.user, title=page).exists() :
-                    Page.objects.create(user=self.request.user, title=page, body=body, created=datetime.now())
+                if not Page.objects.filter(user__username, title=page).exists() :
+                    Page.objects.create(user__username, title=page, body=body, created=datetime.now())
         return queryset
 
     def get_context_data(self, **kwargs):
@@ -116,6 +163,15 @@ class PageListView(ListView) :
 
 class PageDetailView(DetailView) :
     model = Page
+
+    def get_template_names(self):
+        username = self.kwargs['username']
+        if Theme.objects.filter(user__username=username).exists() :
+            theme_selected = Theme.objects.filter(user__username=username)
+            template_name = 'themes/%s/pages/page_detail.html' % (theme_selected.values()[0]['name'])
+        else :
+            template_name = 'themes/default/pages/page_detail.html'
+        return [template_name]
 
     def get_queryset(self) :
         username = self.kwargs['username']
@@ -141,8 +197,16 @@ class PageUpdateView(UpdateView) :
     model = Page
     form_class = PageForm
 
+    def get_template_names(self):
+        if Theme.objects.filter(user__username).exists() :
+            theme_selected = Theme.objects.filter(user__username)
+            template_name = 'themes/%s/pages/page_form.html' % (theme_selected.values()[0]['name'])
+        else :
+            template_name = 'themes/default/pages/page_form.html'
+        return [template_name]
+
     def get_queryset(self) :
-        queryset = Page.objects.filter(user=self.request.user)
+        queryset = Page.objects.filter(user__username)
         return queryset
 
     def get_success_url(self):
@@ -151,23 +215,30 @@ class PageUpdateView(UpdateView) :
     def get_context_data(self, **kwargs):
         context = super(PageUpdateView, self).get_context_data(**kwargs)
         context['logged_user'] = self.request.user
-        context['all_objects'] = Page.objects.filter(user=self.request.user)
+        context['all_objects'] = Page.objects.filter(user__username)
         return context
 
 
 class PhotoUpdateView(UpdateView) :
     model = PhotoContent
     form_class = PhotoForm
-    template_name = 'photologue/photo_form.html'
+
+    def get_template_names(self):
+        if Theme.objects.filter(user__username).exists() :
+            theme_selected = Theme.objects.filter(user__username)
+            template_name = 'themes/%s/photologue/photo_form.html' % (theme_selected.values()[0]['name'])
+        else :
+            template_name = 'themes/default/photologue/photo_form.html'
+        return [template_name]
 
     def get_queryset(self) :
-        queryset = PhotoContent.objects.filter(user=self.request.user)
+        queryset = PhotoContent.objects.filter(user__username)
         return queryset
 
     def get_context_data(self, **kwargs):
         context = super(PhotoUpdateView, self).get_context_data(**kwargs)
         context['logged_user'] = self.request.user
-        context['all_objects'] = Page.objects.filter(user=self.request.user)
+        context['all_objects'] = Page.objects.filter(user__username)
         return context
 
     def get_success_url(self):
@@ -177,12 +248,19 @@ class PhotoUpdateView(UpdateView) :
 class PhotoCreateView(CreateView):
     model = PhotoContent
     form_class = PhotoForm
-    template_name = 'photologue/photo_form.html'
+
+    def get_template_names(self):
+        if Theme.objects.filter(user__username).exists() :
+            theme_selected = Theme.objects.filter(user__username)
+            template_name = 'themes/%s/photologue/photo_form.html' % (theme_selected.values()[0]['name'])
+        else :
+            template_name = 'themes/default/photologue/photo_form.html'
+        return [template_name]
 
     def get_context_data(self, **kwargs):
         context = super(PhotoCreateView, self).get_context_data(**kwargs)
         context['logged_user'] = self.request.user
-        context['all_objects'] = Page.objects.filter(user=self.request.user)
+        context['all_objects'] = Page.objects.filter(user__username)
         return context
 
     def form_valid(self, form):
@@ -201,16 +279,23 @@ class PhotoCreateView(CreateView):
 class PhotoDeleteView(DeleteView) :
     model = PhotoContent
     #success_url = reverse_lazy('photo_list', kwargs={"username" : str(request.user)})
-    template_name = 'photologue/photo_confirm_delete.html'
+
+    def get_template_names(self):
+        if Theme.objects.filter(user__username).exists() :
+            theme_selected = Theme.objects.filter(user__username)
+            template_name = 'themes/%s/photologue/photo_confirm_delete.html' % (theme_selected.values()[0]['name'])
+        else :
+            template_name = 'themes/default/photologue/photo_confirm_delete.html'
+        return [template_name]
 
     def get_queryset(self) :
-        queryset = PhotoContent.objects.filter(user=self.request.user)
+        queryset = PhotoContent.objects.filter(user__username)
         return queryset
 
     def get_context_data(self, **kwargs):
         context = super(PhotoDeleteView, self).get_context_data(**kwargs)
         context['logged_user'] = self.request.user
-        context['all_objects'] = Page.objects.filter(user=self.request.user)
+        context['all_objects'] = Page.objects.filter(user__username)
         return context
 
     def get_success_url(self) :
@@ -219,8 +304,17 @@ class PhotoDeleteView(DeleteView) :
 
 class GalleryListView(PhotoListView) :
     model = PhotoContent
-    template_name = 'photologue/photo_list.html'
     paginate_by = 20
+
+    def get_template_names(self):
+        username = self.kwargs['username']
+        if Theme.objects.filter(user__username=username).exists() :
+            theme_selected = Theme.objects.filter(user__username=username)
+            template_name = 'themes/%s/photologue/photo_list.html' % (theme_selected.values()[0]['name'])
+        else :
+            template_name = 'themes/default/photologue/photo_list.html'
+        return [template_name]
+
 
     def get_queryset(self) :
         username = self.kwargs['username']
@@ -243,7 +337,15 @@ class GalleryListView(PhotoListView) :
 
 class GalleryDetailView(PhotoDetailView) :
     model = PhotoContent
-    template_name = 'photologue/photo_detail.html'
+
+    def get_template_names(self):
+        username = self.kwargs['username']
+        if Theme.objects.filter(user__username=username).exists() :
+            theme_selected = Theme.objects.filter(user__username=username)
+            template_name = 'themes/%s/photologue/photo_detail.html' % (theme_selected.values()[0]['name'])
+        else :
+            template_name = 'themes/default/photologue/photo_detail.html'
+        return [template_name]
 
     def get_queryset(self) :
         username = self.kwargs['username']
@@ -268,7 +370,15 @@ class GalleryDetailView(PhotoDetailView) :
 class AddressListView(ListView) :
 
     model = Address
-    template_name = 'pages/address_list.html'
+
+    def get_template_names(self):
+        username = self.kwargs['username']
+        if Theme.objects.filter(user__username=username).exists() :
+            theme_selected = Theme.objects.filter(user__username=username)
+            template_name = 'themes/%s/pages/address_list.html' % (theme_selected.values()[0]['name'])
+        else :
+            template_name = 'themes/default/pages/address_list.html'
+        return [template_name]
 
     def get_queryset(self) :
         username    = self.kwargs['username']
@@ -277,7 +387,7 @@ class AddressListView(ListView) :
         if self.request.user.is_authenticated :
             if not Address.objects.filter(user__username=username).exists() :
                 for event, address in address_dict.items() :
-                    Address.objects.create(user=self.request.user, event=event, street=address[0], city=address[1], state=address[2], zip_code=address[3])
+                    Address.objects.create(user__username, event=event, street=address[0], city=address[1], state=address[2], zip_code=address[3])
         return queryset
 
 
@@ -300,16 +410,23 @@ class AddressListView(ListView) :
 class AddressUpdateView(UpdateView) :
     model = Address
     form_class = AddressForm
-    template_name = 'pages/address_form.html'
+
+    def get_template_names(self):
+        if Theme.objects.filter(user__username).exists() :
+            theme_selected = Theme.objects.filter(user__username)
+            template_name = 'themes/%s/pages/address_form.html' % (theme_selected.values()[0]['name'])
+        else :
+            template_name = 'themes/default/pages/address_form.html'
+        return [template_name]
 
     def get_queryset(self) :
-        queryset = Address.objects.filter(user=self.request.user)
+        queryset = Address.objects.filter(user__username)
         return queryset
 
     def get_context_data(self, **kwargs):
         context = super(AddressUpdateView, self).get_context_data(**kwargs)
         context['logged_user'] = self.request.user
-        context['all_objects'] = Page.objects.filter(user=self.request.user)
+        context['all_objects'] = Page.objects.filter(user__username)
         return context
 
     def get_success_url(self) :
@@ -328,8 +445,16 @@ def rsvp_thanks(request, username) :
 
 class RsvpFormView(FormView):
 
-    template_name = 'pages/rsvp_form.html'
     form_class = RsvpForm
+
+    def get_template_names(self):
+        username = self.kwargs['username']
+        if Theme.objects.filter(user__username=username).exists() :
+            theme_selected = Theme.objects.filter(user__username=username)
+            template_name = 'themes/%s/pages/rsvp_form.html' % (theme_selected.values()[0]['name'])
+        else :
+            template_name = 'themes/default/pages/rsvp_form.html'
+        return [template_name]
 
     def get_success_url(self):
         return reverse("rsvp_thanks", kwargs={"username" : self.kwargs['username']})

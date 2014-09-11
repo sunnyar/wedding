@@ -1,0 +1,26 @@
+{% extends "themes/theme25/index.html" %}
+{% load staticfiles %}
+
+{% block navbar_right %}
+    {% if logged_user.is_authenticated %}
+        <li class="active"><a href="{% url 'theme_form' username=logged_user.username %}" class="btn">Select Themes</a></li>
+        <li class="active"><a href="{% url 'account_logout' %}" class="btn">Logout</a></li>
+    {% endif %}
+{% endblock navbar_right %}
+
+{% block sidebar %}
+    {% for page in all_objects %}
+        <a href="{% url 'page_detail' username=logged_user.username slug=page.slug %}">{{page.title}}</a><br>
+    {% endfor %}
+{% endblock %}
+
+{% block content %}
+    <form method="post" action="" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="Update">
+    </form>
+{% endblock content %}
+<body>
+</body>
+</html>

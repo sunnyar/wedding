@@ -1,0 +1,19 @@
+{% extends "themes/theme28/index.html" %}
+
+{% block sidebar %}
+    {% for page in all_objects %}
+        <a href="{% url 'page_detail' username=logged_user.username slug=page.slug %}">{{page.title}}</a><br>
+    {% endfor %}
+{% endblock %}
+
+{% block content %}
+
+    <p>Are you sure you want to delete "{{ object.title }}"?</p>
+
+    <form method="post" action="{% url 'photo_delete' username=logged_user.username pk=object.pk %}">
+        {% csrf_token %}
+        <a href="{% url 'gallery' username=logged_user.username %}">Go back</a>
+        <p><input type="submit" value="Confirm deletion" /></p>
+    </form>
+
+{% endblock %}

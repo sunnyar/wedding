@@ -1,0 +1,37 @@
+{% extends "themes/theme12/index.html" %}
+{% load date_diff %}
+
+{% block navbar_right %}
+    {% if logged_user.is_authenticated %}
+        <li class="active"><a href="{% url 'theme_form' username=logged_user.username %}" class="btn">Select Themes</a></li>
+        <li class="active"><a href="{% url 'account_logout' %}" class="btn">Logout</a></li>
+    {% endif %}
+{% endblock navbar_right %}
+
+{% block heading %}
+    {{wedding_objects.values.0.groom_first_name|capfirst}} &  {{wedding_objects.values.0.bride_first_name|capfirst}}<br>
+    {{wedding_objects.values.0.wedding_date}} • {{wedding_objects.values.0.wedding_date | date_diff}} day{{wedding_objects.values.0.wedding_date | date_diff|pluralize}} to go !!<br>
+    {% if logged_user.is_authenticated %}
+        <a href="{% url 'profile_form' username=username %}" class="btn btn-primary">Edit</a>
+    {% endif %}
+{% endblock %}
+
+{% block sidebar %}
+    {% for page in object_list.values %}
+        {% if logged_user.is_authenticated %}
+            <a class='href_color' href="{% url 'page_detail' username=logged_user slug=page.slug %}">{{page.title}}</a><br>
+        {% elif page.title != 'HomePage' %}
+            <a class='href_color' href="{% url 'page_detail' username=logged_user slug=page.slug %}">{{page.title}}</a><br>
+        {% endif %}
+    {% endfor %}
+{% endblock sidebar %}
+
+{% block content %}
+
+    {{ object_list.values.0.body | safe | linebreaks}}
+
+    {% if object_list.values.0.title == 'HomePage' %}
+        <img class="img-responsive" src="{{MEDIA_URL}}images/default/edit_info.jpg"/>
+    {% endif %}
+
+{% endblock content %}

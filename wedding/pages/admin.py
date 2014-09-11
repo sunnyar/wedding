@@ -1,5 +1,6 @@
 from django.contrib import admin
-from .models import Page, Address, Rsvp, PhotoContent, Wedding, UserProfile, Contact
+from .models import Page, Address, Rsvp, PhotoContent
+from .models import Wedding, UserProfile, Contact, Theme
 from settings import STATIC_URL
 from localflavor.in_.forms import INStateSelect, INPhoneNumberField
 
@@ -46,6 +47,12 @@ class ContactAdmin(admin.ModelAdmin) :
     ordering = ['-created']
 
 
+class ThemeAdmin(admin.ModelAdmin) :
+
+    model = Theme
+    list_display = ('user', 'name',)
+
+
 admin.site.register(Page, PageAdmin)
 admin.site.register(PhotoContent, PhotoContentAdmin)
 admin.site.register(Wedding, WeddingAdmin)
@@ -53,3 +60,4 @@ admin.site.register(Address, AddressAdmin)
 admin.site.register(Rsvp, RsvpAdmin)
 admin.site.register(UserProfile, UserProfileAdmin)
 admin.site.register(Contact, ContactAdmin)
+admin.site.register(Theme, ThemeAdmin)
