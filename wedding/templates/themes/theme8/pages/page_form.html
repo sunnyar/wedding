@@ -12,9 +12,18 @@
 {% endblock %}
 
 {% block content %}
-    <form method="post" action="" enctype="multipart/form-data">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <input type="submit" value="Update">
-    </form>
+    <div class='container'>
+        <div class="row">
+            <div class='col-lg-9 col-md-10 col-xs-5 body_color'>
+                <form method="post" action="" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {% for field in form %}
+                        {{ field.label_tag }}<br>
+                        {{ field }}<br><br>
+                    {% endfor %}
+                    <input type="submit" value="Update">
+                </form>
+            </div>
+        </div>
+    </div>
 {% endblock content %}

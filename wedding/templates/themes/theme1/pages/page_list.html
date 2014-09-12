@@ -4,7 +4,7 @@
 {% block navbar_right %}
     {% if logged_user.is_authenticated %}
         <li class="active"><a href="{% url 'account_logout' %}" class="btn">Logout</a></li>
-        <li class="active"><a href="{% url 'theme_form' username=logged_user.username %}" class="btn">Select Themes</a></li>
+        <li class="active"><a href="{% url 'theme_form' username=logged_user.username %}" class="btn">Themes</a></li>
     {% endif %}
 {% endblock navbar_right %}
 
@@ -28,10 +28,12 @@
 
 {% block content %}
 
-    {{ object_list.values.0.body | safe | linebreaks}}
+    <div class='col-lg-9 col-md-10 col-xs-8 body_color'>
+        {{ object_list.values.0.body | safe | linebreaks}}
 
-    {% if object_list.values.0.title == 'HomePage' %}
-        <img class="img-responsive" src="{{MEDIA_URL}}images/default/edit_info.jpg"/>
-    {% endif %}
+        {% if object_list.values.0.title == 'HomePage' %}
+            <img class="img-responsive" src="{{MEDIA_URL}}images/default/edit_info.jpg"/>
+        {% endif %}
+    </div>
 
 {% endblock content %}

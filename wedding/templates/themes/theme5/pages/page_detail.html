@@ -6,8 +6,8 @@
         {% if page.title != 'HomePage' %}
             <li class="active"><a href="{% url 'page_update' username=logged_user.username slug=object.slug %}" class="btn">Edit Page</a></li>
         {% endif %}
-        <li class="active"><a href="{% url 'theme_form' username=logged_user.username %}" class="btn">Select Themes</a></li>
         <li class="active"><a href="{% url 'account_logout' %}" class="btn">Logout</a></li>
+        <li class="active"><a href="{% url 'theme_form' username=logged_user.username %}" class="btn">Themes</a></li>
     {% endif %}
 {% endblock navbar_right %}
 
@@ -32,22 +32,23 @@
 {% endblock %}
 
 {% block content %}
-    {% if object.image == '' %}
-        {% if object.title == 'Welcome' %}
-            <img class="img-responsive" src="{{MEDIA_URL}}images/default/default_welcome.jpg"/>
-        {% elif  object.title == 'Our Proposal' %}
-            <img class="img-responsive" src="{{MEDIA_URL}}images/default/default_welcome.jpg"/>
+    <div class='col-lg-8 col-md-10 col-xs-8 body_color'>
+        {% if object.image == '' %}
+            {% if object.title == 'Welcome' %}
+                <img class="img-responsive" src="{{MEDIA_URL}}images/default/default_welcome.jpg"/>
+            {% elif  object.title == 'Our Proposal' %}
+                <img class="img-responsive" src="{{MEDIA_URL}}images/default/default_welcome.jpg"/>
+            {% endif %}
+        {% else %}
+            {% if object.title == 'Welcome' or object.title == 'Our Proposal' %}
+                <img class="img-responsive" src="{{MEDIA_URL}}{{object.image}}"/>
+            {% endif %}
+
         {% endif %}
-    {% else %}
-        {% if object.title == 'Welcome' or object.title == 'Our Proposal' %}
-            <img class="img-responsive" src="{{MEDIA_URL}}{{object.image}}"/>
+        {{ object.body | safe | linebreaks}}
+
+        {% if object.title == 'HomePage' %}
+            <img src="{{MEDIA_URL}}images/default/edit_info.jpg" width="540" height="320" alt="" title=""/>
         {% endif %}
-
-    {% endif %}
-    {{ object.body | safe | linebreaks}}
-
-    {% if object.title == 'HomePage' %}
-        <img src="{{MEDIA_URL}}images/default/edit_info.jpg" width="540" height="320" alt="" title=""/>
-    {% endif %}
-
+    </div>
 {% endblock content %}

@@ -20,8 +20,14 @@
 {% endblock %}
 
 {% block content %}
-<h2>RSVP Information</h2><br>
+    <div class='container'>
+        <div class="row">
+            <div class="col-lg-8 col-md-4 col-xs-8 body_color">
+                <h2>RSVP Information</h2><br>
 
-<p>Thank you for your RSVP.<br>
-{{wedding_objects.values.0.groom_first_name|capfirst}} &  {{wedding_objects.values.0.bride_first_name|capfirst}} have been notified of your response.</p>
+                <p>Thank you for your RSVP.<br>
+                {{wedding_objects.values.0.groom_first_name|capfirst}} &  {{wedding_objects.values.0.bride_first_name|capfirst}} have been notified of your response.</p>
+            </div>
+        </div>
+    </div>
 {% endblock content %}

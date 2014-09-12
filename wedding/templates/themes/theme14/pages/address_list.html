@@ -15,7 +15,7 @@
 
 {% block navbar_right %}
     {% if logged_user.is_authenticated %}
-        <li class="active"><a href="{% url 'theme_form' username=logged_user.username %}" class="btn">Select Themes</a></li>
+        <li class="active"><a href="{% url 'theme_form' username=logged_user.username %}" class="btn">Themes</a></li>
         <li class="active"><a href="{% url 'account_logout' %}" class="btn">Logout</a></li>
     {% endif %}
 {% endblock navbar_right %}
@@ -31,19 +31,22 @@
 {% endblock sidebar %}
 
 {% block content %}
-    {% for map_of_events in addresses %}
-        {% for event, address in map_of_events|split %}
-            <div class="col-xs-4">
-                {% easy_map address 260 400 %}
-                <h3><b>{{event | capfirst }}</b></h3>
-                {{address}}<br>
-                {% if logged_user.is_authenticated %}
-                    <form>
-                        <a href="{% url 'address_update' username=username pk=map_of_events.pk %}" class="btn btn-primary">Edit</a>
-                    </form>
-                {% endif %}
-
-            </div>
-        {% endfor %}
-    {% endfor %}
+    <div class='container'>
+        <div class='row'>
+                {% for map_of_events in addresses %}
+                    {% for event, address in map_of_events|split %}
+                        <div class="col-lg-3 col-md-4 col-xs-5 body_color">
+                            {% easy_map address 200 400 %}
+                            <h3><b>{{event | capfirst }}</b></h3>
+                            {{address}}
+                            {% if logged_user.is_authenticated %}
+                                <form>
+                                    <a href="{% url 'address_update' username=username pk=map_of_events.pk %}" class="btn btn-primary">Edit</a>
+                                </form>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                {% endfor %}
+        </div>
+    </div>
 {% endblock content %}

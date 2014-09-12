@@ -1,4 +1,4 @@
-{% extends "index.html" %}
+{% extends "themes/default/index.html" %}
 {% load date_diff %}
 
 {% load photologue_tags %}
@@ -38,19 +38,24 @@
 
 
 {% block content %}
-    <a href="{% url 'photo_list' username=username %}" class="btn btn-primary">Back</a>
-    <h1>{{ object.title }}</h1>
-    <div class="gallery-photo">
-        <a href="{{ object.image.url }}"><img src="{{ object.get_display_url }}" class="{% block gallery-photo-class %}{% endblock %}" alt="{{ object.title }}"/></a>
-        {% if object.caption %}<p>{{ object.caption }}</p>{% endif %}
+    <div class='container'>
+        <div class='row'>
+            <div class="col-lg-3 col-md-4 col-xs-6 body_color">
+                <a href="{% url 'photo_list' username=username %}" class="btn btn-primary">Back</a>
+                <h1>{{ object.title }}</h1>
+                <div class="gallery-photo">
+                    <a href="{{ object.image.url }}"><img src="{{ object.get_display_url }}" class="{% block gallery-photo-class %}{% endblock %}" alt="{{ object.title }}"/></a>
+                    {% if object.caption %}<p>{{ object.caption }}</p>{% endif %}
+                </div>
+                {% if object.public_galleries %}
+                <h2>This photo is found in the following galleries:</h2>
+                <ol>
+                {% for gallery in object.public_galleries %}
+                    <li>{%previous_in_gallery object gallery%} <a href="{{ gallery.get_absolute_url }}">{{ gallery.title }}</a> {%next_in_gallery object gallery%}</li>
+                {% endfor %}
+                </ol>
+                {% endif %}
+            </div>
+        </div>
     </div>
-    {% if object.public_galleries %}
-    <h2>This photo is found in the following galleries:</h2>
-    <ol>
-    {% for gallery in object.public_galleries %}
-        <li>{%previous_in_gallery object gallery%} <a href="{{ gallery.get_absolute_url }}">{{ gallery.title }}</a> {%next_in_gallery object gallery%}</li>
-    {% endfor %}
-    </ol>
-    {% endif %}
-
 {% endblock %}
