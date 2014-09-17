@@ -4,6 +4,7 @@ from audiofield.models import AudioFile
 from .models import Wedding, UserProfile, Contact, Theme
 from settings import STATIC_URL
 from localflavor.in_.forms import INStateSelect, INPhoneNumberField
+from django_summernote.admin import SummernoteModelAdmin
 
 class AudioFileAdmin(admin.ModelAdmin) :
     model = AudioFile
@@ -27,10 +28,7 @@ class AudioFileAdmin(admin.ModelAdmin) :
         return actions
 
 
-class PageAdmin(admin.ModelAdmin) :
-    class Media :
-        js = ( STATIC_URL + 'tiny_mce/tiny_mce.js', STATIC_URL + 'tiny_mce/textareas.js')
-
+class PageAdmin(SummernoteModelAdmin) :
     model = Page
     prepopulated_fields = {'slug': ('title',), }
 

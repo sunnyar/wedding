@@ -48,8 +48,16 @@
             div.body_color {
                 color: #000;
             }
+            div.text_align
+            {
+                padding-left: 50px;
+            }
             header.carousel {
                 height: 50%;
+            }
+            ul.text_align
+            {
+                text-align: right
             }
         </style>
     </head>
@@ -127,19 +135,19 @@
 
         <div class='container'>
             <div class="row">
-                <div class="col-lg-2 col-md-2 col-xs-3 sidebar">
-                    <ul class="nav nav-sidebar">
+                <div class="col-lg-2 col-md-4 col-sm-6 col-xs-3 sidebar">
+                    <ul class="nav nav-sidebar text_align">
                         <li style='font-style: italic;font-weight: bold;'>{% block sidebar %} {% endblock %}</li>
                     </ul>
                 </div>
-                <div class="col-lg-9 col-md-9 col-xs-8 text-center" style='font-style: italic;font-weight: bold;'>
+                <div class="col-lg-8 col-md-4 col-sm-6 col-xs-8 text_align text-center" style='font-style: italic;font-weight: bold;'>
                     {% block heading %}
                     {% endblock %}
                 </div>
-
-                {% block content %}
-
-                {% endblock %}
+                <div class="col-lg-8 col-md-4 col-sm-6 col-xs-8 text_align body_color">
+                    {% block content %}
+                    {% endblock %}
+                </div>
             </div>
             <!-- /.row -->
         </div>

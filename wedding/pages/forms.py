@@ -8,6 +8,7 @@ from localflavor.in_.forms import INStateSelect, INPhoneNumberField
 from django.forms.extras.widgets import SelectDateWidget
 from datetime import date
 from audiofield.models import AudioFile
+from django_summernote.widgets import SummernoteWidget, SummernoteInplaceWidget
 
 class WeddingForm(forms.ModelForm) :
 
@@ -23,7 +24,7 @@ class WeddingForm(forms.ModelForm) :
 
 class PageForm(forms.ModelForm):
 
-    body = forms.CharField(widget=TinyMCE(attrs={'cols': 80, 'rows': 15}))
+    body = forms.CharField(widget=SummernoteWidget(attrs={'width': '100%', 'height': '400px'}))
     class Meta:
         model = Page
         exclude = ("user", "slug", "created",)

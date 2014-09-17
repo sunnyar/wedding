@@ -12,20 +12,14 @@
 {% endblock %}
 
 {% block content %}
-    <div class='container'>
-        <div class="row">
-            <div class='col-lg-9 col-md-10 col-xs-5 body_color'>
-                <form method="post" action="" enctype="multipart/form-data">
-                    {% csrf_token %}
-                    {% for field in form %}
-                        <div class='body_color'>
-                            {{ field.label_tag }}<br>
-                        </div>
-                        {{ field }}<br><br>
-                    {% endfor %}
-                    <input type="submit" value="Update">
-                </form>
+    <form method="post" action="" enctype="multipart/form-data">
+        {% csrf_token %}
+        {% for field in form %}
+            <div class='body_color'>
+                {{ field.label_tag }}<br>
             </div>
-        </div>
-    </div>
+            {{ field }}<br><br>
+        {% endfor %}
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
 {% endblock content %}

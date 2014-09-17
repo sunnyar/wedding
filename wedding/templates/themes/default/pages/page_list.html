@@ -30,18 +30,12 @@
 
 {% block content %}
 
-    <div class='container'>
-        <div class='row'>
-            <div class='col-lg-9 col-md-10 col-xs-8 body_color'>
-                {% if object_list.values.0.title == 'HomePage' %}
-                    <center><h1>My Home Page</h1><br>
-                    <p><font size="3">Start creating your website and edit the pages as per your need and information.<br>
-                    You can also check our demo site <a target='_blank' href="/sunnyarora07/welcome"><b>Here</b></a></font></p></center><br>
-                    <p><b>Edit Instructions :</b></p><br>
-                    <a href='{{MEDIA_URL}}images/default/edit_info.jpg' target='_blank' title='Edit Instructions'><img class="img-responsive" src="{{MEDIA_URL}}images/default/edit_info.jpg" title='Edit Instructions'/></a>
-                {% endif %}
-            </div>
-        </div>
-    </div>
+    {% if object_list.values.0.title == 'HomePage' %}
+        <center><h1>My Home Page</h1><br>
+        <p><font size="3">Start creating your website and edit the pages as per your need and information.<br>
+        You can also check our demo site <a target='_blank' href="/sunnyarora07/welcome"><b>Here</b></a></font></p></center><br>
+        <p><b>Edit Instructions :</b></p><br>
+        <a href='{{MEDIA_URL}}images/default/edit_info.jpg' target='_blank' title='Edit Instructions'><img class="img-responsive" src="{{MEDIA_URL}}images/default/edit_info.jpg" title='Edit Instructions'/></a>
+    {% endif %}
 
 {% endblock content %}

@@ -34,24 +34,18 @@
 {% endblock %}
 
 {% block content %}
-    <div class='container'>
-        <div class="row">
-            <div class="col-lg-8 col-md-4 col-xs-8 body_color">
-                <h2>RSVP Information</h2><br><br>
-                <p>To RSVP online to {{wedding_objects.values.0.groom_first_name|capfirst}} &  {{wedding_objects.values.0.bride_first_name|capfirst}} wedding, enter your name in the box below.<br>
-                Only enter one name in your party as it appeared on your invitation using the following format: Mohit Sharma</p><br>
-                <p>Do not enter prefixes such as Mr., Mrs., Dr., etc.</p><br>
+    <h2>RSVP Information</h2><br><br>
+    <p>To RSVP online to {{wedding_objects.values.0.groom_first_name|capfirst}} &  {{wedding_objects.values.0.bride_first_name|capfirst}} wedding, enter your name in the box below.<br>
+    Only enter one name in your party as it appeared on your invitation using the following format: Mohit Sharma</p><br>
+    <p>Do not enter prefixes such as Mr., Mrs., Dr., etc.</p><br>
 
-                <form method="post" action="" enctype="multipart/form-data">
-                    {% csrf_token %}
-                    {% for field in form %}
-                        {{ field.label_tag }}<br>
-                        {{ field }}<br><br>
-                    {% endfor %}
-                    <br>
-                    <button type="submit" class="btn btn-primary">Submit</button>
-                </form>
-            </div>
-        </div>
-    </div>
+    <form method="post" action="" enctype="multipart/form-data">
+        {% csrf_token %}
+        {% for field in form %}
+            {{ field.label_tag }}<br>
+            {{ field }}<br><br>
+        {% endfor %}
+        <br>
+        <button type="submit" class="btn btn-primary">Submit</button><br><br><br>
+    </form>
 {% endblock content %}

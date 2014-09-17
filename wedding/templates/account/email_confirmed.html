@@ -7,16 +7,9 @@
 
 
 {% block content %}
+    <h1>{% trans "Confirm E-mail Address" %}</h1>
 
-    <div class='container'>
-        <div class="row">
-            <div class='col-lg-9 col-md-10 col-xs-5 body_color'>
-                <h1>{% trans "Confirm E-mail Address" %}</h1>
+    {% user_display email_address.user as user_display %}
 
-                {% user_display email_address.user as user_display %}
-
-                <p>{% blocktrans with email_address.email as email %}You have confirmed that <a href="mailto:{{email}}">{{ email }}</a> is an e-mail address for user {{ user_display }}.{% endblocktrans %}</p>
-            </div>
-        </div>
-    </div>
+    <p>{% blocktrans with email_address.email as email %}You have confirmed that <a href="mailto:{{email}}">{{ email }}</a> is an e-mail address for user {{ user_display }}.{% endblocktrans %}</p>
 {% endblock %}

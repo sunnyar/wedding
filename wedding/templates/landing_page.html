@@ -73,7 +73,20 @@
                         <li class="active"><a href="/sunnyarora07/welcome" target='_blank'>Demo</a></li>
                         <li class="active"><a href="/about/">About</a></li>
                         <li class="active"><a href="/contact/">Contact</a></li>
-                        <li class="active"><div class="addthis_sharing_toolbox"></div></li>
+                        <ul class="list-unstyled list-inline list-social-icons">
+                            <li>
+                                <a href="https://facebook.com/sunnyarora29"><i class="fa fa-facebook-square fa-2x"></i></a>
+                            </li>
+                            <li>
+                                <a href="https://www.linkedin.com/pub/sunny-arora/3a/a5/670"><i class="fa fa-linkedin-square fa-2x"></i></a>
+                            </li>
+                            <li>
+                                <a href="#"><i class="fa fa-twitter-square fa-2x"></i></a>
+                            </li>
+                            <li>
+                                <a href="https://github.com/sunnyar/wedding"><i class="fa fa-github-square fa-2x"></i></a>
+                            </li>
+                        </ul>
                     </ul>
                 </div>
             </div>
@@ -121,26 +134,37 @@
 
         <div class='container'>
             <div class="row">
-                <div class="col-lg-2 col-md-2 col-xs-3 sidebar">
+                <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 sidebar">
                     <ul class="nav nav-sidebar">
                         <li style='font-style: italic;font-weight: bold;'>{% block sidebar %} {% endblock %}</li>
                     </ul>
                 </div>
+            </div>
+        </div>
+
+        <div class='container'>
+            <div class="row">
                 {% block heading %}
-                    <div class="col-lg-9 col-md-9 col-xs-8 text-center" style='font-style: italic;font-weight: bold;'>
-                        <h1 style='color:#D00000'>
-                            Welcome to Wedding Bells
-                        </h1>
-                        <h3 class='page-header'>Your wedding. Your website. Your way.</h3>
+                    <div class="col-lg-12 col-md-4 col-sm-6 col-xs-12" style='font-style: italic;font-weight: bold;'>
+                        <center>
+                            <h1 style='color:#D00000'>
+                                Welcome to Wedding Bells
+                            </h1>
+                            <h3 class='page-header'>Your wedding. Your website. Your way.</h3>
+                        </center>
                     </div><br>
                 {% endblock %}
+            </div>
+        </div>
 
+        <div class='container'>
+            <div class="row">
                 {% block content %}
 
                     <!--img class="img-responsive" src="{{MEDIA_URL}}images/default/text.png"/-->
                     <!--img class="img-responsive" src="{{MEDIA_URL}}images/default/wedding.png" alt="" title=""/-->
 
-                    <div class="col-lg-12 col-md-12 col-xs-10">
+                    <div class="col-lg-12 col-md-4 col-sm-6 col-xs-12">
                         <center>
                             <p>Wedding Bells is a revolutionary new way of organising your wedding with your guests.<br>
                                     Share your wedding with your guests, tell your story, upload photos by creating a fun, secure and innovative website. Easy to create, and fully customisable to match your wedding theme - you will love it!
@@ -148,7 +172,7 @@
                         </center><br><br>
                     </div>
 
-                    <div class="col-lg-6 col-md-5 col-xs-10">
+                    <div class="col-lg-6 col-md-4 col-sm-6 col-xs-12">
                         <div class="panel panel-default">
                             <div class="panel-heading">
                                 <h4><i class="fa fa-fw fa-check"></i>Create your own</h4>
@@ -156,12 +180,12 @@
                             <div class="panel-body">
                                 <p>
                                     Create your own free responsive wedding website in 3 easy steps<br>
-                                    <b>Register/Login <span class="glyphicon glyphicon-circle-arrow-right"></span> Provide Details <span class="glyphicon glyphicon-circle-arrow-right"></span> Edit Pages</b>
+                                    <b><a href="{% url 'account_signup' %}">Register</a>/<a href="{% url 'account_login' %}">Login</a> <span class="glyphicon glyphicon-circle-arrow-right"></span> Provide Details <span class="glyphicon glyphicon-circle-arrow-right"></span> Edit Pages</b>
                                 </p>
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-6 col-md-5 col-xs-10">
+                    <div class="col-lg-6 col-md-4 col-sm-6 col-xs-12">
                         <div class="panel panel-default">
                             <div class="panel-heading">
                                 <h4><i class="fa fa-fw fa-plus"></i>Themes</h4>
@@ -174,10 +198,10 @@
                         </div>
                     </div>
 
-                    <div class="col-lg-8 col-md-12 col-xs-12">
+                    <div class="col-lg-12 col-md-4 col-sm-6 col-xs-12">
                         <h2 class="page-header">Some Of Our Most Popular Features</h2>
                     </div>
-                    <div class="col-lg-6 col-md-6 col-xs-12">
+                    <div class="col-lg-12 col-md-4 col-sm-6 col-xs-12">
                         <p></p>
                         <ul>
                             <strong>
@@ -187,7 +211,7 @@
                             </strong>
                         </ul><br><br>
                     </div>
-                    <div class="col-lg-12 col-md-12 col-sm-12">
+                    <div class="col-lg-6 col-md-4 col-sm-6 col-xs-12">
                         <div class="intro-message">
                             <h3>Connect With Us :</h3>
                             <hr class="intro-divider">
@@ -199,9 +223,9 @@
                                     <a target='_blank' href="https://github.com/sunnyar/wedding" class="btn btn-default btn-lg"><i class="fa fa-github fa-fw"></i> <span class="network-name">Github</span></a>
                                 </li>
                                 <li>
-                                    <a target='_blank' href="#" class="btn btn-default btn-lg"><i class="fa fa-linkedin fa-fw"></i> <span class="network-name">Linkedin</span></a>
+                                    <a target='_blank' href="https://www.linkedin.com/pub/sunny-arora/3a/a5/670" class="btn btn-default btn-lg"><i class="fa fa-linkedin fa-fw"></i> <span class="network-name">Linkedin</span></a>
                                 </li>
-                            </ul>
+                            </ul><br><br>
                         </div>
                     </div>
                 {% endblock %}

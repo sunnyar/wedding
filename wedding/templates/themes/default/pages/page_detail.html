@@ -34,23 +34,22 @@
 {% endblock %}
 
 {% block content %}
-    <div class='col-lg-8 col-md-10 col-xs-8 body_color'>
-        {% if object.image == '' %}
-            {% if object.title == 'Welcome' %}
-                <img class="img-responsive" src="{{MEDIA_URL}}images/default/default_welcome.jpg"/>
-            {% elif  object.title == 'Our Proposal' %}
-                <img class="img-responsive" src="{{MEDIA_URL}}images/default/default_welcome.jpg"/>
-            {% endif %}
-        {% else %}
-            {% if object.title == 'Welcome' or object.title == 'Our Proposal' %}
-                <img class="img-responsive" src="{{MEDIA_URL}}{{object.image}}"/>
-            {% endif %}
-
+    {% if object.image == '' %}
+        {% if object.title == 'Welcome' %}
+            <img class="img-responsive" src="{{MEDIA_URL}}images/default/default_welcome.jpg"/>
+        {% elif  object.title == 'Our Proposal' %}
+            <img class="img-responsive" src="{{MEDIA_URL}}images/default/default_welcome.jpg"/>
         {% endif %}
-        {{ object.body | safe | linebreaks}}
-
-        {% if object.title == 'HomePage' %}
-            <img src="{{MEDIA_URL}}images/default/edit_info.jpg" width="540" height="320" alt="" title=""/>
+    {% else %}
+        {% if object.title == 'Welcome' or object.title == 'Our Proposal' %}
+            <img class="img-responsive" src="{{MEDIA_URL}}{{object.image}}"/>
         {% endif %}
-    </div>
+
+    {% endif %}
+    {{ object.body | safe | linebreaks}}
+
+    {% if object.title == 'HomePage' %}
+        <img src="{{MEDIA_URL}}images/default/edit_info.jpg" width="540" height="320" alt="" title=""/>
+    {% endif %}
+</div>
 {% endblock content %}

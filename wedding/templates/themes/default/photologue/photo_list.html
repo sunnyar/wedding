@@ -4,12 +4,6 @@
 
 {% block head %}
     <style>
-                /*!
-         * Start Bootstrap - Thumbnail Gallery HTML Template (http://startbootstrap.com)
-         * Code licensed under the Apache License v2.0.
-         * For details, see http://www.apache.org/licenses/LICENSE-2.0.
-         */
-
         .thumb {
             margin-bottom: 20px;
         }
@@ -59,41 +53,27 @@
 {% endblock %}
 
 {% block content %}
-    <!-- Page Content -->
-    <div class="container">
-        <div class="row">
-
-            <div class="col-lg-8 body_color">
-                <h1 class="page-header">Photo Album</h1>
+    <h1 class="page-header">Photo Album</h1>
+    {% if object_list %}
+        {% for photo in object_list %}
+            <div class="col-lg-3 col-md-4 col-xs-6 thumb body_color">
+                <a class='href_color' href="{% url 'photo_detail' username=username pk=photo.pk %}">
+                    <img src="{{ photo.get_thumbnail_url }}" alt="{{ photo.title }}"/><br>
+                    {{photo.title}}
+                    {% if logged_user.is_authenticated %}
+                        <form action="{% url 'photo_update' username=logged_user.username pk=photo.pk %}">
+                            <input type="submit" value="Edit Photo" class="btn btn-primary">
+                        </form>
+                        <form action="{% url 'photo_delete' username=logged_user.username pk=photo.pk %}">
+                            <input type="submit" value="Delete Photo" class="btn btn-primary">
+                        </form>
+                    {% endif %}
+                </a>
             </div>
-
-            {% if object_list %}
-                {% for photo in object_list %}
-                    <div class="col-lg-3 col-md-4 col-xs-4 thumb body_color">
-                        <a class='href_color' href="{% url 'photo_detail' username=username pk=photo.pk %}">
-                            <img src="{{ photo.get_thumbnail_url }}" alt="{{ photo.title }}"/><br>
-                            {{photo.title}}
-                            {% if logged_user.is_authenticated %}
-                                <form action="{% url 'photo_update' username=logged_user.username pk=photo.pk %}">
-                                    <input type="submit" value="Edit Photo" class="btn btn-primary">
-                                </form>
-                                <form action="{% url 'photo_delete' username=logged_user.username pk=photo.pk %}">
-                                    <input type="submit" value="Delete Photo" class="btn btn-primary">
-                                </form>
-                            {% endif %}
-                        </a>
-                    </div>
-                {% endfor %}
-            {% else %}
-                <div class="col-lg-3 col-md-4 col-xs-4 thumb body_color">
-                    <h3>No Photos are available.</h3>
-                </div>
-            {% endif %}
-
-        </div>
-    </div>
-    <!-- /.container -->
-
+        {% endfor %}
+    {% else %}
+        <h3>No Photos are available.</h3>
+    {% endif %}
     <!--
     {% if is_paginated %}
     <p>{{ paginator.count }} photos total.</p>
