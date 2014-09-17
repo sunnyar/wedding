@@ -5,7 +5,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.views.generic import DetailView, ListView, UpdateView
 from .models import Page, PhotoContent, Wedding
 from .models import Address, Rsvp, UserProfile, Theme
-from .forms import PageForm, ThemeForm
+from .forms import PageForm, ThemeForm, AudioFileForm
 from .forms import AddressForm, RsvpForm, PhotoForm, WeddingForm, ContactForm
 from photologue.models import Photo
 from django.core.urlresolvers import reverse, reverse_lazy
@@ -19,16 +19,17 @@ from datetime import datetime
 from collections import OrderedDict
 from django.core.mail import send_mail
 from allauth.account.views import EmailAddress
+from audiofield.models import AudioFile
 
-wedding_pages = OrderedDict([('HomePage', '<center><h1>My Home Page.</h1></center><br><p><font size="3">Start creating your website and edit the pages as per your need and information.<br> Share with your near and dear ones</font></p><br><p><b>Demo :</b></p>'),
-    ('Welcome' , '<center><b>Welcome to our wedding website !!</b><center><br><p>We can\'t wait to get married. We\'re so excited to share our special day with our friends and family!</p>'),
-    ('About Us', '<h2>About the Groom</h2><br><p>Tell your guests about your partner.</p><br><h2>About the Bride</h2><br><p>Tell your guests about your partner.</p><br><h2>How We Met</h2><br><p>Tell your guests a little about how you met.</p>'),
-    ('Our Proposal', '<h2>When It Happened</h2><br><p>Date you met / Got Engaged</p><br><br><h2>How We Got Engaged</h2><br><p>Some memories of your Love Story, a little about how you met.</p>'),
-    ('Ceremony', '<h2>Information For Our Guests</h2><br><p>Provide information about the event.</p><br><h2>Driving Directions</h2><br><p>Give guests directions to the event.</p><br><h2>Additional Information</h2><br><p>Tell your guests any additional information you want them to know.</p>'),
-    ('Reception', '<h2>Information For Our Guests</h2><br><p>Provide information about the event.</p><br><h2>Driving Directions</h2><br><p>Give guests directions to the event.</p><br><h2>Additional Information</h2><br><p><Tell your guests any additional information you want them to know.</p>'),
-    ('Wedding Party', '<h2>Our Wedding Party</h2><br><p>Details about the party and family</p>'),
-    ('Guest Information', '<h2>Hotel Accommodations</h2><br><p>Hotel details/Contact no/Address</p><br><br><h2>Things To Do in the Area</h2><br><br><p>Tell your guests what they can do in the area.</p><br><h2>Additional information</h2><br><p>Tell your guests any additional information you want them to know.</p>'),
-    ('Photo Album', ''), ('Map of Events',  ''), ('RSVP', '')])
+wedding_pages = OrderedDict([('HomePage', ''), #<center><h1>My Home Page.</h1><br><p><font size="3">Start creating your website and edit the pages as per your need and information.<br> You can also check our demo site <a href="/sunnyarora07/welcome"><b>Here</b></a></font></p></center><br><p><b>Edit Instructions :</b></p><br>'),
+    ('Welcome' , '<center><b>Welcome to our wedding website !!</b><p>We can\'t wait to get married. We\'re so excited to share our special day with our friends and family!</p></center>'),
+    ('About Us', '<h2>About the Groom</h2><p>Tell your guests about your partner.</p><br><h2>About the Bride</h2><p>Tell your guests about your partner.</p><br><h2>How We Met</h2><p>Tell your guests a little about how you met.</p>'),
+    ('Our Proposal', '<h2>When It Happened</h2><p>Date you met / Got Engaged</p><br><h2>How We Got Engaged</h2><p>Some memories of your Love Story, a little about how you met.</p>'),
+    ('Ceremony', '<h2>Information For Our Guests</h2><p>Provide information about the event.</p><br><h2>Driving Directions</h2><p>Give guests directions to the event.</p><br><h2>Additional Information</h2><p>Tell your guests any additional information you want them to know.</p>'),
+    ('Reception', '<h2>Information For Our Guests</h2><p>Provide information about the event.</p><br><h2>Driving Directions</h2><p>Give guests directions to the event.</p><br><h2>Additional Information</h2><p><Tell your guests any additional information you want them to know.</p>'),
+    ('Wedding Party', '<h2>Our Wedding Party</h2><p>Details about the party and family</p>'),
+    ('Guest Information', '<h2>Hotel Accommodations</h2><p>Hotel details/Contact no/Address</p><br><h2>Things To Do in the Area</h2><p>Tell your guests what they can do in the area.</p><br><h2>Additional information</h2><p>Tell your guests any additional information you want them to know.</p>'),
+    ('Photo Album', ''), ('Music Album', ''), ('Map of Events',  ''), ('RSVP', '')])
 
 address_dict = OrderedDict([('Ceremony' ,['Kanha Continental', 'Kanpur', 'UP', '208012']),
                             ('Reception', ['111A/102, Ashok Nagar', 'Kanpur', 'UP', '208012']),
@@ -37,7 +38,7 @@ address_dict = OrderedDict([('Ceremony' ,['Kanha Continental', 'Kanpur', 'UP', '
 
 def homepage(request) :
     logged_user = request.user
-    return render_to_response('themes/default/index.html', {'wedding_pages' : wedding_pages, 'logged_user' : logged_user}, context_instance=RequestContext(request))
+    return render_to_response('landing_page.html', {'wedding_pages' : wedding_pages, 'logged_user' : logged_user}, context_instance=RequestContext(request))
 
 
 class ThemeFormView(FormView):
@@ -81,12 +82,14 @@ def contact_thanks(request) :
 def about_us(request) :
     return render_to_response('about.html', locals(), context_instance=RequestContext(request))
 
+
 @login_required
 def user_profile(request):
-    if Wedding.objects.filter(user=request.user).exists() :
-        return HttpResponseRedirect(reverse("page_list", kwargs={"username" : request.user}))
+    if Wedding.objects.filter(user__username=request.user.username).exists() :
+        return HttpResponseRedirect(reverse("page_list", kwargs={"username" : request.user.username}))
     else :
         return HttpResponseRedirect(reverse('profile_form', kwargs={"username" : request.user.username}))
+
 
 class HomePageFormView(FormView):
 
@@ -95,7 +98,7 @@ class HomePageFormView(FormView):
 
     def get_success_url(self):
         domain = UserProfile.objects.filter(user=self.request.user)
-        user_domain = domain.values().get(user=self.request.user)['user_domain']
+        #user_domain = domain.values().get(user=self.request.user)['user_domain']
         return reverse("page_list", kwargs={"username" : self.request.user})
 
     def get_context_data(self, **kwargs):
@@ -144,7 +147,7 @@ class PageListView(ListView) :
         if self.request.user.is_authenticated :
             for page, body in wedding_pages.items() :
                 if not Page.objects.filter(user=self.request.user, title=page).exists() :
-                    Page.objects.create(user=username, title=page, body=body, created=datetime.now())
+                    Page.objects.create(user=self.request.user, title=page, body=body, created=datetime.now())
         return queryset
 
     def get_context_data(self, **kwargs):
@@ -360,6 +363,7 @@ class GalleryDetailView(PhotoDetailView) :
             context['logged_user']     = self.request.user
         return context
 
+from geopy import geocoders
 
 class AddressListView(ListView) :
 
@@ -391,7 +395,18 @@ class AddressListView(ListView) :
         logged_user = self.request.user
 
         context['page_list'] = Page.objects.filter(user__username=username)
-        context['addresses'] = Address.objects.filter(user__username=username)
+
+        g=geocoders.GoogleV3()
+        event_address = Address.objects.filter(user__username=username)
+        events = []
+        addresses = []
+        map_addresses = []
+        for ea in event_address :
+            events.append(str(ea).split(':')[0])
+            addresses.append(str(ea).split(':')[1])
+            map_addresses.append(g.geocode(str(ea).split(':')[1])[1])
+
+        context['map_of_events'] = zip(events, addresses, map_addresses, event_address)
         context['wedding_objects'] = Wedding.objects.filter(user__username=username)
         context['username']  = username
 
@@ -537,3 +552,122 @@ class ContactFormView(FormView):
             print "Exception has occured !!", e
             raise
         return super(ContactFormView, self).form_valid(form)
+
+
+class AudioFileCreateView(CreateView):
+    model = AudioFile
+    form_class = AudioFileForm
+
+    def get_template_names(self):
+        if Theme.objects.filter(user=self.request.user).exists() :
+            theme_selected = Theme.objects.filter(user=self.request.user)
+            template_name = 'themes/%s/audio/audio_form.html' % (theme_selected.values()[0]['name'])
+        else :
+            template_name = 'themes/default/audio/audio_form.html'
+        return [template_name]
+
+    def get_context_data(self, **kwargs):
+        context = super(AudioFileCreateView, self).get_context_data(**kwargs)
+        context['logged_user'] = self.request.user
+        context['all_objects'] = Page.objects.filter(user=self.request.user)
+        return context
+
+    def form_valid(self, form):
+        if self.request.FILES.get('audio_file') :
+            f = form.save(commit=False)
+            uploaded_audio_file = str(form.cleaned_data['audio_file'])
+            f.name = uploaded_audio_file.split('/')[-1].split('.')[0]
+            f.user = self.request.user
+            f.save()
+        isvalid = super(AudioFileCreateView, self).form_valid(form)
+        return isvalid
+
+    def get_success_url(self):
+        return reverse('audio_list', kwargs={"username" : str(self.request.user)} )
+
+
+class AudioFileListView(ListView) :
+
+    model = AudioFile
+
+    def get_template_names(self):
+        username = self.kwargs['username']
+        if Theme.objects.filter(user__username=username).exists() :
+            theme_selected = Theme.objects.filter(user__username=username)
+            template_name = 'themes/%s/audio/audio_list.html' % (theme_selected.values()[0]['name'])
+        else :
+            template_name = 'themes/default/audio/audio_list.html'
+        return [template_name]
+
+    def get_queryset(self) :
+        username    = self.kwargs['username']
+        queryset = AudioFile.objects.filter(user__username=username)
+
+        return queryset
+
+
+    def get_context_data(self, **kwargs):
+        context = super(AudioFileListView, self).get_context_data(**kwargs)
+        username    = self.kwargs['username']
+        logged_user = self.request.user
+
+        context['page_list'] = Page.objects.filter(user__username=username)
+        context['audio_objects'] = AudioFile.objects.filter(user__username=username)
+        context['wedding_objects'] = Wedding.objects.filter(user__username=username)
+        context['username']  = username
+
+        if logged_user.is_authenticated :
+            context['logged_user'] = logged_user
+
+        return context
+
+
+class AudioFileUpdateView(UpdateView) :
+    model = AudioFile
+    form_class = AudioFileForm
+
+    def get_template_names(self):
+        if Theme.objects.filter(user=self.request.user).exists() :
+            theme_selected = Theme.objects.filter(user=self.request.user)
+            template_name = 'themes/%s/audio/audio_form.html' % (theme_selected.values()[0]['name'])
+        else :
+            template_name = 'themes/default/audio/audio_form.html'
+        return [template_name]
+
+    def get_queryset(self) :
+        queryset = AudioFile.objects.filter(user=self.request.user)
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super(AudioFileUpdateView, self).get_context_data(**kwargs)
+        context['logged_user'] = self.request.user
+        context['all_objects'] = Page.objects.filter(user=self.request.user)
+        return context
+
+    def get_success_url(self) :
+        return reverse('audio_list', kwargs={"username" : str(self.request.user)})
+
+
+class AudioFileDeleteView(DeleteView) :
+    model = AudioFile
+
+    def get_template_names(self):
+        if Theme.objects.filter(user=self.request.user).exists() :
+            theme_selected = Theme.objects.filter(user=self.request.user)
+            template_name = 'themes/%s/audio/audio_confirm_delete.html' % (theme_selected.values()[0]['name'])
+        else :
+            template_name = 'themes/default/audio/audio_confirm_delete.html'
+        return [template_name]
+
+    def get_queryset(self) :
+        queryset = AudioFile.objects.filter(user=self.request.user)
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super(AudioFileDeleteView, self).get_context_data(**kwargs)
+        context['logged_user'] = self.request.user
+        context['all_objects'] = Page.objects.filter(user=self.request.user)
+        return context
+
+    def get_success_url(self) :
+        return reverse('audio_list', kwargs={"username" : str(self.request.user)})

@@ -7,6 +7,7 @@ from photologue.models import Photo
 from localflavor.in_.forms import INStateSelect, INPhoneNumberField
 from django.forms.extras.widgets import SelectDateWidget
 from datetime import date
+from audiofield.models import AudioFile
 
 class WeddingForm(forms.ModelForm) :
 
@@ -61,7 +62,7 @@ class ContactForm(forms.ModelForm):
         widgets = {
             'message': forms.Textarea(attrs={'cols': 60, 'rows': 10}),
         }
-
+        exclude = ('created',)
 
 class ThemeForm(forms.ModelForm):
 
@@ -69,3 +70,10 @@ class ThemeForm(forms.ModelForm):
         model = Theme
         widgets = {'name': forms.RadioSelect}
         exclude = ('user',)
+
+
+class AudioFileForm(forms.ModelForm):
+
+    class Meta:
+        model = AudioFile
+        fields = ('audio_file',)

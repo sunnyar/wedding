@@ -4,7 +4,9 @@ from django.template.defaultfilters import slugify
 from django.core.urlresolvers import reverse
 from photologue.models import Photo
 from datetime import datetime
-
+from django.conf import settings
+from audiofield.fields import AudioField
+import os.path
 
 class UserProfile(models.Model) :
     user        = models.OneToOneField(User, related_name='profile')
@@ -13,11 +15,14 @@ class UserProfile(models.Model) :
     def __unicode__(self) :
         return '%s has %s domain' % (self.user, self.user_domain)
 
+def content_file_name(instance, filename):
+    return '/'.join(['images', instance.user.username, filename])
+
 class Page(models.Model):
     user  = models.ForeignKey(User)
     title = models.CharField(max_length=100)
     slug  = models.SlugField()
-    image = models.ImageField("Heading Image", upload_to="images/", null=True, blank=True)
+    image = models.ImageField("Heading Image", upload_to=content_file_name, null=True, blank=True)
     body  = models.TextField()
     created = models.DateTimeField()
 
@@ -88,7 +93,7 @@ class Contact(models.Model) :
     def save(self, *args, **kwargs):
         ''' On save, update timestamps '''
         if not self.id:
-            self.created = datetime.datetime.today()
+            self.created = datetime.today()
         return super(Contact, self).save(*args, **kwargs)
 
 

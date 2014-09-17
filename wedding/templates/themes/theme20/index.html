@@ -37,13 +37,19 @@
                 background-size: 100% 100%;
             }
             a.href_color {
-                color: #fff;
+                color: #000;
                 &:hover {
-                color: #fff;
+                color: #000;
                 }
             }
+            h2.header_color {
+                color: #000;
+            }
             div.body_color {
-                color: #fff;
+                color: #000;
+            }
+            header.carousel {
+                height: 50%;
             }
         </style>
     </head>
@@ -70,6 +76,7 @@
                         {% block navbar_right %}
                             <li class="active"><a href="{% url 'account_login' %}">Login</a></li>
                         {% endblock %}
+                        <li class="active"><a href="/sunnyarora07/welcome" target='_blank'>Demo</a></li>
                         <li class="active"><a href="/about/">About</a></li>
                         <li class="active"><a href="/contact/">Contact</a></li>
                         <li class="active"><div class="addthis_sharing_toolbox"></div></li>
@@ -121,82 +128,17 @@
         <div class='container'>
             <div class="row">
                 <div class="col-lg-2 col-md-2 col-xs-3 sidebar">
-                    {% block base_img %}
-                        <a href='/'><img class="img-responsive" src="{{MEDIA_URL}}images/default/heart.jpg"/></a>
-                    {% endblock base_img %}
                     <ul class="nav nav-sidebar">
                         <li style='font-style: italic;font-weight: bold;'>{% block sidebar %} {% endblock %}</li>
                     </ul>
                 </div>
-                <div class="col-lg-9 col-md-9 col-xs-8" style='font-style: italic;font-weight: bold;'>
-                    <h2 class='text-center' style='color:#D00000'>{% block heading %} {% endblock %}<br></h2><br>
+                <div class="col-lg-9 col-md-9 col-xs-8 text-center" style='font-style: italic;font-weight: bold;'>
+                    {% block heading %}
+                    {% endblock %}
                 </div>
+
                 {% block content %}
 
-                    <!--img class="img-responsive" src="{{MEDIA_URL}}images/default/text.png"/-->
-                    <!--img class="img-responsive" src="{{MEDIA_URL}}images/default/wedding.png" alt="" title=""/-->
-
-
-                    <div class="col-lg-12 col-md-12 col-xs-10">
-                        <h1 class="page-header">
-                            Welcome to Wedding Bells
-                        </h1>
-                        <center><i><h3>Create your own free responsive wedding website.<br>
-                            Your wedding. Your website. Your way.</h3></i><br><br>
-                            <p>Wedding Bells is a revolutionary new way of organising your wedding with your guests.<br>
-                                Share your wedding with your guests, tell your story, upload photos by creating a fun, secure and innovative website. Easy to create, and fully customisable to match your wedding theme - you will love it!
-                        </p></center>
-                    </div>
-
-                    <div class="col-lg-4 col-md-5 col-xs-10">
-                        <div class="panel panel-default">
-                            <div class="panel-heading">
-                                <h4><i class="fa fa-fw fa-check"></i>Create your own</h4>
-                            </div>
-                            <div class="panel-body">
-                                <p></p>
-                                <a href="#" class="btn btn-default">Learn More</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 col-md-5 col-xs-10">
-                        <div class="panel panel-default">
-                            <div class="panel-heading">
-                                <h4><i class="fa fa-fw fa-plus"></i>Themes</h4>
-                            </div>
-                            <div class="panel-body">
-                                <p>Register/Login and select from 30 different themes</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 col-md-5 col-xs-10">
-                        <div class="panel panel-default">
-                            <div class="panel-heading">
-                                <h4><i class="fa fa-fw fa-compass"></i>Easy to Use</h4>
-                            </div>
-                            <div class="panel-body">
-                                <p></p>
-                                <a href="#" class="btn btn-default">Learn More</a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-lg-8 col-md-12 col-xs-12">
-                        <h2 class="page-header">Some Of Our Most Popular Features</h2>
-                    </div>
-                    <div class="col-lg-6 col-md-6 col-xs-12">
-                        <p></p>
-                        <ul>
-                            <strong>
-                            <li>RSVP Online</li><br>
-                            <li>Shared Online Photo Album</li><br>
-                            <li>Custom Maps With Your Suggested Hotels</li>
-                            </strong>
-                        </ul>
-                    </div>
-                    <div class="col-md-8">
-                        <!--img class="img-responsive" src="{{MEDIA_URL}}images/default/edit_info.jpg" alt=""-->
-                    </div>
                 {% endblock %}
             </div>
             <!-- /.row -->
@@ -204,7 +146,7 @@
         <!-- /.container -->
 
         <hr>
-        <div class="panel-footer clearfix">
+        <div class="panel-footer clearfix navbar-fixed-bottom">
             <div class="pull-right">
         	    <a href="/">Home</a>
             	<a href="/terms/">Terms of use</a>

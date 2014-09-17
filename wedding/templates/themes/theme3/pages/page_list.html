@@ -9,11 +9,13 @@
 {% endblock navbar_right %}
 
 {% block heading %}
-    {{wedding_objects.values.0.groom_first_name|capfirst}} &  {{wedding_objects.values.0.bride_first_name|capfirst}}<br>
-    {{wedding_objects.values.0.wedding_date}} • {{wedding_objects.values.0.wedding_date | date_diff}} day{{wedding_objects.values.0.wedding_date | date_diff|pluralize}} to go !!<br>
-    {% if logged_user.is_authenticated %}
-        <a href="{% url 'profile_form' username=username %}" class="btn btn-primary">Edit</a>
-    {% endif %}
+    <h2 class='header_color'>
+        {{wedding_objects.values.0.groom_first_name|capfirst}} &  {{wedding_objects.values.0.bride_first_name|capfirst}}<br>
+        {{wedding_objects.values.0.wedding_date}} • {{wedding_objects.values.0.wedding_date | date_diff}} day{{wedding_objects.values.0.wedding_date | date_diff|pluralize}} to go !!<br>
+        {% if logged_user.is_authenticated %}
+            <a href="{% url 'profile_form' username=username %}" class="btn btn-primary">Edit</a>
+        {% endif %}
+    </h2>
 {% endblock %}
 
 {% block sidebar %}
@@ -28,12 +30,18 @@
 
 {% block content %}
 
-    <div class='col-lg-9 col-md-10 col-xs-8 body_color'>
-        {{ object_list.values.0.body | safe | linebreaks}}
-
-        {% if object_list.values.0.title == 'HomePage' %}
-            <img class="img-responsive" src="{{MEDIA_URL}}images/default/edit_info.jpg"/>
-        {% endif %}
+    <div class='container'>
+        <div class='row'>
+            <div class='col-lg-9 col-md-10 col-xs-8 body_color'>
+                {% if object_list.values.0.title == 'HomePage' %}
+                    <center><h1>My Home Page</h1><br>
+                    <p><font size="3">Start creating your website and edit the pages as per your need and information.<br>
+                    You can also check our demo site <a target='_blank' href="/sunnyarora07/welcome"><b>Here</b></a></font></p></center><br>
+                    <p><b>Edit Instructions :</b></p><br>
+                    <a href='{{MEDIA_URL}}images/default/edit_info.jpg' target='_blank' title='Edit Instructions'><img class="img-responsive" src="{{MEDIA_URL}}images/default/edit_info.jpg" title='Edit Instructions'/></a>
+                {% endif %}
+            </div>
+        </div>
     </div>
 
 {% endblock content %}

@@ -7,7 +7,7 @@
 
 {% block sidebar %}
     {% for page in all_objects %}
-        <a href="{% url 'page_detail' username=logged_user slug=page.slug %}">{{page.title}}</a><br>
+        <a class='href_color' href="{% url 'page_detail' username=logged_user slug=page.slug %}">{{page.title}}</a><br>
     {% endfor %}
 {% endblock %}
 
@@ -18,7 +18,9 @@
                 <form method="post" action="" enctype="multipart/form-data">
                     {% csrf_token %}
                     {% for field in form %}
-                        {{ field.label_tag }}<br>
+                        <div class='body_color'>
+                            {{ field.label_tag }}<br>
+                        </div>
                         {{ field }}<br><br>
                     {% endfor %}
                     <input type="submit" value="Update">

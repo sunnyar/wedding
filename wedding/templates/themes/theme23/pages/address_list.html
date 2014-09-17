@@ -6,11 +6,13 @@
 {% block title %}Map of Events{% endblock title %}
 
 {% block heading %}
-    {{wedding_objects.values.0.groom_first_name|capfirst}} &  {{wedding_objects.values.0.bride_first_name|capfirst}}<br>
-    {{wedding_objects.values.0.wedding_date}} • {{wedding_objects.values.0.wedding_date | date_diff}} day{{wedding_objects.values.0.wedding_date | date_diff|pluralize}} to go !!<br>
-    {% if logged_user.is_authenticated %}
-        <a href="{% url 'profile_form' username=username %}" class="btn btn-primary">Edit</a>
-    {% endif %}
+    <h2 class='header_color'>
+        {{wedding_objects.values.0.groom_first_name|capfirst}} &  {{wedding_objects.values.0.bride_first_name|capfirst}}<br>
+        {{wedding_objects.values.0.wedding_date}} • {{wedding_objects.values.0.wedding_date | date_diff}} day{{wedding_objects.values.0.wedding_date | date_diff|pluralize}} to go !!<br>
+        {% if logged_user.is_authenticated %}
+            <a href="{% url 'profile_form' username=username %}" class="btn btn-primary">Edit</a>
+        {% endif %}
+    </h2>
 {% endblock %}
 
 {% block navbar_right %}
@@ -33,20 +35,18 @@
 {% block content %}
     <div class='container'>
         <div class='row'>
-                {% for map_of_events in addresses %}
-                    {% for event, address in map_of_events|split %}
-                        <div class="col-lg-3 col-md-4 col-xs-5 body_color">
-                            {% easy_map address 200 400 %}
-                            <h3><b>{{event | capfirst }}</b></h3>
-                            {{address}}
-                            {% if logged_user.is_authenticated %}
-                                <form>
-                                    <a href="{% url 'address_update' username=username pk=map_of_events.pk %}" class="btn btn-primary">Edit</a>
-                                </form>
-                            {% endif %}
-                        </div>
-                    {% endfor %}
-                {% endfor %}
+            {% for event, address, map_address, event_address in map_of_events %}
+                <div class="col-lg-3 col-md-4 col-xs-5 body_color">
+                    <iframe width="100%" height="400px" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="http://maps.google.com/maps?hl=en&amp;ie=UTF8&amp;ll={{map_address.0}},{{map_address.1}}&amp;spn=56.506174,79.013672&amp;t=m&amp;z=15&amp;output=embed"></iframe>
+                    <h3><b>{{event | capfirst }}</b></h3>
+                    {{address}}
+                    {% if logged_user.is_authenticated %}
+                        <form>
+                            <a href="{% url 'address_update' username=username pk=event_address.pk %}" class="btn btn-primary">Edit</a>
+                        </form>
+                    {% endif %}
+                </div>
+            {% endfor %}
         </div>
     </div>
 {% endblock content %}
