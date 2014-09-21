@@ -49,7 +49,9 @@ class Address(models.Model) :
 class Rsvp(models.Model) :
     first_name = models.CharField(max_length=15)
     last_name  = models.CharField(max_length=15)
+#    contact    = models.CharField(max_length=15)
     email      = models.EmailField()
+#    connect    = models.CharField(verbose_name="How would you like us to contact you ?", max_length=15, choices=(('phone', 'Phone'), ('mail', 'E-Mail')), default=('phone', 'Phone'))
     response   = models.CharField(verbose_name="Will you and your family be attending ?", max_length=15, choices=(('yes', 'Yes'), ('no', 'No')), default=('tentative', 'Tentative'))
 
     def __unicode__(self):

@@ -7,19 +7,11 @@
 {% endblock %}
 
 {% block content %}
-    <div class='container'>
-        <div class="row">
-            <div class="col-lg-8 col-md-4 col-xs-8 body_color">
+    <p>Are you sure you want to delete "{{ object.title }}"?</p>
 
-                <p>Are you sure you want to delete "{{ object.title }}"?</p>
-
-                <form method="post" action="{% url 'audio_delete' username=logged_user.username pk=object.pk %}">
-                    {% csrf_token %}
-                    <a class='href_color' href="{% url 'audio_list' username=logged_user.username %}">Go back</a>
-                    <p><input type="submit" value="Confirm deletion" /></p>
-                </form>
-            </div>
-        </div>
-    </div>
-
+    <form method="post" action="{% url 'audio_delete' username=logged_user.username pk=object.pk %}">
+        {% csrf_token %}
+        <a class='href_color' href="{% url 'audio_list' username=logged_user.username %}">Go back</a>
+        <button type="submit" class="btn btn-primary">Confirm Deletion</button>
+    </form>
 {% endblock %}

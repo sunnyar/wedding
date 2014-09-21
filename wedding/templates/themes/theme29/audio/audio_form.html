@@ -1,36 +1,33 @@
 {% extends "themes/theme29/index.html" %}
 {% load staticfiles %}
 
-{% block navbar_right %}
-    {% if logged_user.is_authenticated %}
-        <li class="active"><a href="{% url 'account_logout' %}" class="btn">Logout</a></li>
-        <li class="active"><a href="{% url 'theme_form' username=logged_user.username %}" class="btn">Select Themes</a></li>
-    {% endif %}
-{% endblock navbar_right %}
-
 {% block sidebar %}
     {% for page in all_objects %}
         <a class='href_color' href="{% url 'page_detail' username=logged_user.username slug=page.slug %}">{{page.title}}</a><br>
     {% endfor %}
 {% endblock %}
 
+{% block navbar_right %}
+    {% if logged_user.is_authenticated %}
+        <li class="active"><a href="{% url 'account_logout' %}">Logout</a></li>
+        <li class="active"><a href="{% url 'theme_form' username=logged_user.username %}">Themes</a></li>
+        <li class="active"><a href="{% url 'payment_form' %}">Go Premium</a></li>
+        <li class="active"><a href="/sunnyarora07/welcome" target='_blank'>Demo</a></li>
+    {% endif %}
+{% endblock navbar_right %}
+
 {% block content %}
-    <div class='container'>
-        <div class="row">
-            <div class="col-lg-8 col-md-4 col-xs-8 body_color">
-                <form method="post" action="" enctype="multipart/form-data">
-                    {% csrf_token %}
-                    {% for field in form %}
-                        <div class='body_color'>
-                            {{ field.label_tag }}<br>
-                        </div>
-                        {{ field }}<br><br>
-                    {% endfor %}
-                    <input type="submit" value="Update">
-                </form>
+    <a href="{% url 'audio_list' username=logged_user.username %}"><button type="submit" class="btn btn-primary">Back</button></a><br>
+    <form method="post" action="" enctype="multipart/form-data">
+        {% csrf_token %}
+        {% for field in form %}
+            <div class='body_color'>
+                {{ field.label_tag }}<br>
             </div>
-        </div>
-    </div>
+            {{ field }}<br><br>
+        {% endfor %}
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
 {% endblock content %}
 <body>
 </body>

@@ -5,7 +5,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.views.generic import DetailView, ListView, UpdateView
 from .models import Page, PhotoContent, Wedding
 from .models import Address, Rsvp, UserProfile, Theme
-from .forms import PageForm, ThemeForm, AudioFileForm
+from .forms import PageForm, ThemeForm, AudioFileForm, PaymentForm
 from .forms import AddressForm, RsvpForm, PhotoForm, WeddingForm, ContactForm
 from photologue.models import Photo
 from django.core.urlresolvers import reverse, reverse_lazy
@@ -83,6 +83,7 @@ def about_us(request) :
     return render_to_response('about.html', locals(), context_instance=RequestContext(request))
 
 
+
 @login_required
 def user_profile(request):
     if Wedding.objects.filter(user__username=request.user.username).exists() :
@@ -104,7 +105,8 @@ class HomePageFormView(FormView):
     def get_context_data(self, **kwargs):
         context = super(HomePageFormView, self).get_context_data(**kwargs)
         context['wedding_objects'] = Wedding.objects.filter(user=self.request.user)
-        context['username'] = self.request.user
+        context['logged_user'] = self.request.user
+        context['username'] = self.request.user.username
         return context
 
     def form_valid(self, form):
@@ -488,7 +490,9 @@ class RsvpFormView(FormView):
         form.save(commit=False)
         first_name = form.cleaned_data['first_name']
         last_name  = form.cleaned_data['last_name']
+#        contact    = form.cleaned_data['contact']
         email      = form.cleaned_data['email']
+#        connect    = form.cleaned_data['connect']
         response   = form.cleaned_data['response']
         username   = self.kwargs['username']
         user_email = EmailAddress.objects.get(user__username=username).email
@@ -671,3 +675,24 @@ class AudioFileDeleteView(DeleteView) :
 
     def get_success_url(self) :
         return reverse('audio_list', kwargs={"username" : str(self.request.user)})
+
+
+class PaymentFormView(FormView):
+
+    template_name = 'payment.html'
+    form_class = PaymentForm
+
+    def get_success_url(self):
+        return reverse("contact_thanks")
+
+    def get_context_data(self, **kwargs):
+        context = super(PaymentFormView, self).get_context_data(**kwargs)
+        context['logged_user'] = self.request.user
+        return context
+
+    def form_valid(self, form):
+        # This method is called when valid form data has been POSTed.
+        # It should return an HttpResponse.
+        form.save(commit=False)
+        form.save()
+        return super(PaymentFormView, self).form_valid(form)

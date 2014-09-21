@@ -63,10 +63,9 @@
                     <ul class="nav navbar-nav navbar-right">
                         {% if not logged_user.is_authenticated %}
                             <li class="active"><a href="{% url 'account_signup' %}">Join Free</a></li>
-                        {% endif %}
-                        {% block navbar_right %}
+                        {% else %}
                             <li class="active"><a href="{% url 'account_login' %}">Login</a></li>
-                        {% endblock %}
+                        {% endif %}
                         <li class="active"><a href="/about/">About</a></li>
                         <li class="active"><a href="/contact/">Contact</a></li>
                         <li class="active"><div class="addthis_sharing_toolbox"></div></li>
@@ -80,10 +79,51 @@
 
             <!-- Page Heading/Breadcrumbs -->
             <div class="row">
-                <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
-                    <h2>Thanks for contacting us</h2>
-                    <p>We will get back to you shortly</p><br><br>
-                    <a href='/'><button type="submit" class="btn btn-primary">Go Home</button></a><br><br><br>
+                <div class="col-lg-2 col-md-4 col-sm-4 col-xs-6">
+                    {% for field in form %}
+                        <div class="fieldWrapper">
+                            {{ field.errors }}
+                        </div>
+                    {% endfor %}
+                    <h1 class="page-header">Payment
+                        <small></small>
+                    </h1>
+                    <ol class="breadcrumb">
+                        <li><a href="/">Home</a>
+                        </li>
+                        <li class="active">Payment</li>
+                    </ol>
+                </div>
+            </div>
+            <!-- /.row -->
+
+            <!-- Payment Form -->
+            <!-- In order to set the email address and subject line for the contact form go to the bin/contact_me.php file. -->
+            <div class="row">
+                <div class="col-lg-12 col-md-8 col-sm-8 col-xs-8">
+                    {% if logged_user.is_authenticated %}
+                        <form method="post" action="" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <div class="control-group form-group">
+                                <div class="controls form_control">
+                                    <div class="row">
+                                        <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
+                                            {% for field in form %}
+                                                {{ field.label_tag }}<br>
+                                                {{ field }}<br><br>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div><br>
+
+                            <div id="success"></div>
+                            <!-- For success/fail messages -->
+                            <button type="submit" class="btn btn-primary disabled">Go Premium</button><br><br><br>
+                        </form>
+                    {% else %}
+                        <h3>You need to either <b><a href="{% url 'account_signup' %}">Register</a>  /  <a href="{% url 'account_login' %}">Login</a></b> to make Payments for Premium Themes</h3>
+                    {% endif %}
                 </div>
             </div>
             <!-- /.row -->

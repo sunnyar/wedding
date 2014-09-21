@@ -30,7 +30,7 @@
             @import url('/static/css/bootstrap.min.css');
 
             body{
-                background: url('/media/images/themes/theme0.jpg') no-repeat center center fixed;
+                background: url('/media/images/themes/bg_image.jpg') no-repeat center center fixed;
                 -webkit-background-size: cover;
                 -moz-background-size: cover;
                 -o-background-size: cover;
@@ -65,11 +65,9 @@
                 <div class="collapse navbar-collapse" id="navbarCollapse">
                     <ul class="nav navbar-nav navbar-right">
                         {% if not logged_user.is_authenticated %}
-                            <li class="active"><a href="{% url 'account_signup' %}">Join Free</a></li>
+                            <li class="active"><a href="{% url 'account_signup' %}">Join FREE</a></li>
                         {% endif %}
-                        {% block navbar_right %}
-                            <li class="active"><a href="{% url 'account_login' %}">Login</a></li>
-                        {% endblock %}
+                        <li class="active"><a href="{% url 'account_login' %}">Login</a></li>
                         <li class="active"><a href="/sunnyarora07/welcome" target='_blank'>Demo</a></li>
                         <li class="active"><a href="/about/">About</a></li>
                         <li class="active"><a href="/contact/">Contact</a></li>
@@ -93,12 +91,12 @@
         </nav>
 
         <!-- Header Carousel -->
-        <header id="myCarousel" class="carousel slide">
+        <header id="WeddingCarousel" class="carousel slide" data-ride="carousel">
             <!-- Indicators -->
             <ol class="carousel-indicators">
-                <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
-                <li data-target="#myCarousel" data-slide-to="1"></li>
-                <li data-target="#myCarousel" data-slide-to="2"></li>
+                <li data-target="#WeddingCarousel" data-slide-to="0" class="active"></li>
+                <li data-target="#WeddingCarousel" data-slide-to="1"></li>
+                <li data-target="#WeddingCarousel" data-slide-to="2"></li>
             </ol>
 
             <!-- Wrapper for slides -->
@@ -124,111 +122,109 @@
             </div>
 
             <!-- Controls -->
-            <a class="left carousel-control" href="#myCarousel" data-slide="prev">
-                <span class="icon-prev"></span>
+            <a class="left carousel-control" href="#WeddingCarousel" data-slide="prev">
+                <span class="glyphicon glyphicon-chevron-left"></span>
             </a>
-            <a class="right carousel-control" href="#myCarousel" data-slide="next">
-                <span class="icon-next"></span>
+            <a class="right carousel-control" href="#WeddingCarousel" data-slide="next">
+                <span class="glyphicon glyphicon-chevron-right"></span>
             </a>
         </header><br>
 
         <div class='container'>
             <div class="row">
-                <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 sidebar">
-                    <ul class="nav nav-sidebar">
-                        <li style='font-style: italic;font-weight: bold;'>{% block sidebar %} {% endblock %}</li>
-                    </ul>
+                <div class="col-lg-12 col-md-4 col-sm-6 col-xs-12" style='font-style: italic;font-weight: bold;'>
+                    <center>
+                        <h1 style='color:#330033'>
+                            Welcome to Wedding Bells
+                        </h1>
+                        <h3 class='page-header'>Your wedding. Your website. Your way.</h3>
+                    </center>
+                </div><br>
+            </div>
+        </div>
+
+        <div class='container'>
+            <div class="row">
+                <div class="col-lg-12 col-md-4 col-sm-6 col-xs-12">
+                    <center>
+                        <b><p>Wedding Bells is a revolutionary new way of organising your wedding with your guests.<br>
+                                Share your wedding with your guests, tell your story, upload photos by creating a fun, secure and innovative website. Easy to create, and fully customisable to match your wedding theme - you will love it!
+                        </p></b>
+                    </center><br><br>
                 </div>
-            </div>
-        </div>
 
-        <div class='container'>
-            <div class="row">
-                {% block heading %}
-                    <div class="col-lg-12 col-md-4 col-sm-6 col-xs-12" style='font-style: italic;font-weight: bold;'>
-                        <center>
-                            <h1 style='color:#D00000'>
-                                Welcome to Wedding Bells
-                            </h1>
-                            <h3 class='page-header'>Your wedding. Your website. Your way.</h3>
-                        </center>
-                    </div><br>
-                {% endblock %}
-            </div>
-        </div>
-
-        <div class='container'>
-            <div class="row">
-                {% block content %}
-
-                    <!--img class="img-responsive" src="{{MEDIA_URL}}images/default/text.png"/-->
-                    <!--img class="img-responsive" src="{{MEDIA_URL}}images/default/wedding.png" alt="" title=""/-->
-
-                    <div class="col-lg-12 col-md-4 col-sm-6 col-xs-12">
-                        <center>
-                            <p>Wedding Bells is a revolutionary new way of organising your wedding with your guests.<br>
-                                    Share your wedding with your guests, tell your story, upload photos by creating a fun, secure and innovative website. Easy to create, and fully customisable to match your wedding theme - you will love it!
-                            </p>
-                        </center><br><br>
+                <div class="col-lg-6 col-md-4 col-sm-6 col-xs-12">
+                    <div class="panel panel-default">
+                    <div class="panel-body" style='background-color:#FFFFCC'>
+                        <p>
+                            Congratulations on your forthcoming marriage. Create a rapid online wedding website, and start sharing your special day with all your loved ones.<br>
+                            We make your wedding celebration the Happiest !<br><br>
+                            Create your own free responsive wedding website in 3 easy steps<br>
+                            <b><a href="{% url 'account_signup' %}">Register</a>  /  <a href="{% url 'account_login' %}">Login</a> <span class="glyphicon glyphicon-circle-arrow-right"></span> Provide Details <span class="glyphicon glyphicon-circle-arrow-right"></span> Customize Pages</b>
+                        </p>
                     </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-4 col-sm-6 col-xs-12">
+                    <div class="panel panel-default">
+                    <div class="panel-body" style='background-color:#FFFFCC'>
+                        <p>Register yourself and select different themes.
+                            There are two ways of getting started.<br>
+                            Either you can choose a theme whether it can be a <a href='#'>free theme</a> or <a href='#'>Premium theme</a>.
+                            Premium wedding website themes can be accessed after payment which will be very lucrative and built for modern drift.
+                            Try it <a href='/payment/'><button type="submit" class="btn btn-primary">Go Premium</button></a>
+                        </p>
+                    </div>
+                    </div>
+                </div>
 
-                    <div class="col-lg-6 col-md-4 col-sm-6 col-xs-12">
-                        <div class="panel panel-default">
-                            <div class="panel-heading">
-                                <h4><i class="fa fa-fw fa-check"></i>Create your own</h4>
-                            </div>
-                            <div class="panel-body">
-                                <p>
-                                    Create your own free responsive wedding website in 3 easy steps<br>
-                                    <b><a href="{% url 'account_signup' %}">Register</a>/<a href="{% url 'account_login' %}">Login</a> <span class="glyphicon glyphicon-circle-arrow-right"></span> Provide Details <span class="glyphicon glyphicon-circle-arrow-right"></span> Edit Pages</b>
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-6 col-md-4 col-sm-6 col-xs-12">
-                        <div class="panel panel-default">
-                            <div class="panel-heading">
-                                <h4><i class="fa fa-fw fa-plus"></i>Themes</h4>
-                            </div>
-                            <div class="panel-body">
-                                <p>Register yourself and select different themes.
-                                    You can select from upto 30 various themes to change the look and feel of your website
-                                </p>
-                            </div>
-                        </div>
-                    </div>
+                <div class="col-lg-12 col-md-4 col-sm-6 col-xs-12">
+                    <br><br>
+                    <b><p>
+                        Creating Wedding websites changes the mission of wedding preparation from a fearsome activity into an interactive shape of rejoice!
+                        Using free wedding website templates from WeddingBells.com, the total progress has been laid very simple for you...
+                        Yes, Now Creating a Free Wedding websites made very simply by WeddingBells.com<br><br>
+                        To Begin with the creation of FREE Wedding website, just hit “Join FREE”.
+                        <br>
+                        Finally, now you are dash board. You can start customizing your wedding website as you wish. Every step of your way is easy to follow instructions.
+                        Creating a Wedding websites are simply the most incredible thing to happen to weddings since you have decided to get married!
+                        <br><br>
+                        <a href="{% url 'account_signup' %}">Register</a> for your free wedding website now and let us do the reflective life lifting easily.
+                        Wedding websites for you, just a line of WeddingBells.com connects you, with the entire thing you could wish for!
+                    </p></b>
+                </div>
 
-                    <div class="col-lg-12 col-md-4 col-sm-6 col-xs-12">
-                        <h2 class="page-header">Some Of Our Most Popular Features</h2>
-                    </div>
-                    <div class="col-lg-12 col-md-4 col-sm-6 col-xs-12">
-                        <p></p>
-                        <ul>
-                            <strong>
-                            <li>RSVP Online</li><br>
-                            <li>Shared Online Photo Album</li><br>
-                            <li>Custom Maps With Your Suggested Hotels</li>
-                            </strong>
+                <div class="col-lg-12 col-md-4 col-sm-6 col-xs-12">
+                    <h2 class="page-header">Some Of Our Most Popular Features</h2>
+                </div>
+                <div class="col-lg-12 col-md-4 col-sm-6 col-xs-12">
+                    <p></p>
+                    <ul>
+                        <strong>
+                        <li>Customize Your Site</li><br>
+                        <li>RSVP Online</li><br>
+                        <li>Shared Online Photo Album</li><br>
+                        <li>Custom Maps With Your Suggested Hotels</li>
+                        </strong>
+                    </ul><br><br>
+                </div>
+                <div class="col-lg-6 col-md-4 col-sm-6 col-xs-12">
+                    <div class="intro-message">
+                        <h3>Find Us On :</h3>
+                        <hr class="intro-divider">
+                        <ul class="list-inline intro-social-buttons">
+                            <li>
+                                <a target='_blank' href="https://facebook.com/sunnyarora29" class="btn btn-primary btn-lg"><i class="fa fa-facebook fa-fw"></i> <span class="network-name">Facebook</span></a>
+                            </li>
+                            <li>
+                                <a target='_blank' href="https://github.com/sunnyar/wedding" class="btn btn-primary btn-lg"><i class="fa fa-github fa-fw"></i> <span class="network-name">Github</span></a>
+                            </li>
+                            <li>
+                                <a target='_blank' href="https://www.linkedin.com/pub/sunny-arora/3a/a5/670" class="btn btn-primary btn-lg"><i class="fa fa-linkedin fa-fw"></i> <span class="network-name">Linkedin</span></a>
+                            </li>
                         </ul><br><br>
                     </div>
-                    <div class="col-lg-6 col-md-4 col-sm-6 col-xs-12">
-                        <div class="intro-message">
-                            <h3>Connect With Us :</h3>
-                            <hr class="intro-divider">
-                            <ul class="list-inline intro-social-buttons">
-                                <li>
-                                    <a target='_blank' href="https://facebook.com/sunnyarora29" class="btn btn-default btn-lg"><i class="fa fa-facebook fa-fw"></i> <span class="network-name">Facebook</span></a>
-                                </li>
-                                <li>
-                                    <a target='_blank' href="https://github.com/sunnyar/wedding" class="btn btn-default btn-lg"><i class="fa fa-github fa-fw"></i> <span class="network-name">Github</span></a>
-                                </li>
-                                <li>
-                                    <a target='_blank' href="https://www.linkedin.com/pub/sunny-arora/3a/a5/670" class="btn btn-default btn-lg"><i class="fa fa-linkedin fa-fw"></i> <span class="network-name">Linkedin</span></a>
-                                </li>
-                            </ul><br><br>
-                        </div>
-                    </div>
-                {% endblock %}
+                </div>
             </div>
             <!-- /.row -->
         </div>

@@ -17,10 +17,12 @@
         {% if object_list_len > 20 %}
             <li><a href="">Max Photos Added</a></li>
         {% else %}
-            <li><a href="{% url 'photo_create' username=logged_user.username %}" class="btn">Add Photos (Max: 20)</a></li>
+            <li class="active"><a href="{% url 'photo_create' username=logged_user.username %}">Add Photos (Max: 20)</a></li>
         {% endif %}
-        <li class="active"><a href="{% url 'account_logout' %}" class="btn">Logout</a></li>
-        <li class="active"><a href="{% url 'theme_form' username=logged_user.username %}" class="btn">Select Themes</a></li>
+        <li class="active"><a href="{% url 'account_logout' %}">Logout</a></li>
+        <li class="active"><a href="{% url 'theme_form' username=logged_user.username %}">Themes</a></li>
+        <li class="active"><a href="{% url 'payment_form' %}">Go Premium</a></li>
+        <li class="active"><a href="/sunnyarora07/welcome" target='_blank'>Demo</a></li>
     {% endif %}
 {% endblock navbar_right %}
 

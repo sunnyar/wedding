@@ -3,13 +3,6 @@
 
 {% load photologue_tags %}
 
-{% block navbar_right %}
-    {% if logged_user.is_authenticated %}
-        <li class="active"><a href="{% url 'account_logout' %}" class="btn">Logout</a></li>
-        <li class="active"><a href="{% url 'theme_form' username=logged_user.username %}" class="btn">Select Themes</a></li>
-    {% endif %}
-{% endblock navbar_right %}
-
 {% block heading %}
     <h2 class='header_color'>
         {{wedding_objects.values.0.groom_first_name|capfirst}} &  {{wedding_objects.values.0.bride_first_name|capfirst}}<br>
@@ -19,6 +12,16 @@
         {% endif %}
     </h2>
 {% endblock %}
+
+{% block navbar_right %}
+    {% if logged_user.is_authenticated %}
+        <li class="active"><a href="{% url 'account_logout' %}">Logout</a></li>
+        <li class="active"><a href="{% url 'theme_form' username=logged_user.username %}">Themes</a></li>
+        <li class="active"><a href="{% url 'payment_form' %}">Go Premium</a></li>
+        <li class="active"><a href="/sunnyarora07/welcome" target='_blank'>Demo</a></li>
+    {% endif %}
+{% endblock navbar_right %}
+
 
 {% block sidebar %}
     {% for page in page_list %}

@@ -16,7 +16,7 @@
                 <form method="post" action="{% url 'photo_delete' username=logged_user.username pk=object.pk %}">
                     {% csrf_token %}
                     <a class='href_color' href="{% url 'photo_list' username=logged_user.username %}">Go back</a>
-                    <p><input type="submit" value="Confirm deletion" /></p>
+                    <button type="submit" class="btn btn-primary">Confirm Deletion</button>
                 </form>
             </div>
         </div>

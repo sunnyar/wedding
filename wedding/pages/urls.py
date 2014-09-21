@@ -1,10 +1,10 @@
 from django.conf.urls import patterns, url
 from django.views.generic import TemplateView
-from .views import PageDetailView, GalleryDetailView
+from .views import PageDetailView, GalleryDetailView, AudioFileDeleteView
 from .views import PageListView, GalleryListView, AddressListView, AudioFileListView
 from .views import PageUpdateView, AddressUpdateView, PhotoUpdateView, AudioFileUpdateView
 from .views import PhotoCreateView, AudioFileCreateView
-from .views import PhotoDeleteView, HomePageFormView, RsvpFormView, ContactFormView, ThemeFormView, AudioFileDeleteView
+from .views import PhotoDeleteView, HomePageFormView, RsvpFormView, ContactFormView, ThemeFormView, PaymentFormView
 from .views import rsvp_thanks, user_profile, homepage, about_us, contact_thanks
 from django.contrib.auth.decorators import login_required as auth
 
@@ -15,6 +15,7 @@ urlpatterns = patterns('',
         url(r'^terms/$', TemplateView.as_view(template_name='terms.html')),
         url(r'^privacy/$', TemplateView.as_view(template_name='privacy.html')),
         url(r'^about/$', about_us, name='about'),
+        url(r'^payment/$', PaymentFormView.as_view(), name='payment_form'),
         url(r'^profile/$', user_profile),
         url(r'^(?P<username>[-\w\d]+)/theme$', ThemeFormView.as_view(), name='theme_form'),
         url(r'^audio/create/(?P<username>[-\w\d]+)$', auth(AudioFileCreateView.as_view()), name='audio_create'),

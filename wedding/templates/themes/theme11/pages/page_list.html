@@ -1,22 +1,22 @@
 {% extends "themes/theme11/index.html" %}
 {% load date_diff %}
 
+{% block heading %}
+    <h2 class='header_color'>
+        {{wedding_objects.values.0.groom_first_name|capfirst}} Ẃἔḋṩ  {{wedding_objects.values.0.bride_first_name|capfirst}}<br>
+        {{wedding_objects.values.0.wedding_date}} • {{wedding_objects.values.0.wedding_date | date_diff}} day{{wedding_objects.values.0.wedding_date | date_diff|pluralize}} to go !!<br>
+    </h2>
+{% endblock %}
+
 {% block navbar_right %}
     {% if logged_user.is_authenticated %}
-        <li class="active"><a href="{% url 'account_logout' %}" class="btn">Logout</a></li>
-        <li class="active"><a href="{% url 'theme_form' username=logged_user.username %}" class="btn">Themes</a></li>
+        <li class="active"><a href="{% url 'account_logout' %}">Logout</a></li>
+        <li class="active"><a href="{% url 'theme_form' username=logged_user.username %}">Themes</a></li>
+        <li class="active"><a href="{% url 'payment_form' %}">Go Premium</a></li>
+        <li class="active"><a href="/sunnyarora07/welcome" target='_blank'>Demo</a></li>
     {% endif %}
 {% endblock navbar_right %}
 
-{% block heading %}
-    <h2 class='header_color'>
-        {{wedding_objects.values.0.groom_first_name|capfirst}} &  {{wedding_objects.values.0.bride_first_name|capfirst}}<br>
-        {{wedding_objects.values.0.wedding_date}} • {{wedding_objects.values.0.wedding_date | date_diff}} day{{wedding_objects.values.0.wedding_date | date_diff|pluralize}} to go !!<br>
-        {% if logged_user.is_authenticated %}
-            <a href="{% url 'profile_form' username=username %}" class="btn btn-primary">Edit</a>
-        {% endif %}
-    </h2>
-{% endblock %}
 
 {% block sidebar %}
     {% for page in object_list.values %}
@@ -30,18 +30,14 @@
 
 {% block content %}
 
-    <div class='container'>
-        <div class='row'>
-            <div class='col-lg-9 col-md-10 col-xs-8 body_color'>
-                {% if object_list.values.0.title == 'HomePage' %}
-                    <center><h1>My Home Page</h1><br>
-                    <p><font size="3">Start creating your website and edit the pages as per your need and information.<br>
-                    You can also check our demo site <a target='_blank' href="/sunnyarora07/welcome"><b>Here</b></a></font></p></center><br>
-                    <p><b>Edit Instructions :</b></p><br>
-                    <a href='{{MEDIA_URL}}images/default/edit_info.jpg' target='_blank' title='Edit Instructions'><img class="img-responsive" src="{{MEDIA_URL}}images/default/edit_info.jpg" title='Edit Instructions'/></a>
-                {% endif %}
-            </div>
-        </div>
-    </div>
+    {% if object_list.values.0.title == 'HomePage' %}
+        <center><h1>Home Page</h1><br>
+        <p><font size="3"> Welcome to our wedding website portal!<br>
+        For all those who will be attending, all of the information you could ever want to know about wedding couple and our wedding will be available for you here.
+        <br><br>Please check back often as we will be making frequent updates.<br>
+        You can also check our demo site <a target='_blank' href="/sunnyarora07/welcome"><b>Here</b></a></font></p></center><br>
+        <p><b>Edit Instructions :</b></p><br>
+        <a href='{{MEDIA_URL}}images/default/edit_info.jpg' target='_blank' title='Edit Instructions'><img class="img-responsive" src="{{MEDIA_URL}}images/default/edit_info.jpg" title='Edit Instructions'/></a>
+    {% endif %}
 
 {% endblock content %}

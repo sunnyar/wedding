@@ -50,9 +50,13 @@ class AddressForm(forms.ModelForm):
 
 class RsvpForm(forms.ModelForm):
 
+#    contact = INPhoneNumberField(label="Contact Number")
     class Meta:
         model = Rsvp
-        widgets = {'response': forms.RadioSelect}
+        widgets = {
+#                    'connect': forms.RadioSelect,
+                    'response': forms.RadioSelect
+                }
 
 
 class ContactForm(forms.ModelForm):
@@ -78,3 +82,12 @@ class AudioFileForm(forms.ModelForm):
     class Meta:
         model = AudioFile
         fields = ('audio_file',)
+
+
+class PaymentForm(forms.Form):
+    first_name = forms.CharField(max_length=50)
+    last_name = forms.CharField(max_length=50)
+    card_number = forms.CharField(max_length=16)
+    expiration_month = forms.ChoiceField(choices=((date(2000, m, 1).strftime('%B'), date(2000, m, 1).strftime('%B')) for m in range(1, 13)))
+    expiration_year = forms.ChoiceField(choices=((2014, 2014), (2015, 2015),(2016,2016), (2017,2017)))
+    security_code = forms.CharField(max_length=4)

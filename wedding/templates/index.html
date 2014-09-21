@@ -9,7 +9,7 @@
         <meta name="author" content="">
         <link rel="icon" href="../../favicon.ico">
 
-        <title>Wedding Website</title>
+        <title>Wedding Website - Themes</title>
 
         <!-- Bootstrap core CSS -->
         <link href="{{STATIC_URL}}css/bootstrap.min.css" rel="stylesheet">
@@ -27,19 +27,27 @@
         <![endif]-->
         {% block head %}{% endblock %}
         <style>
-            body {
-                margin: 0;
-                background: url('/media/images/default/abc.jpg');
+            @import url('/static/css/bootstrap.min.css');
+
+            .thumb {
+               margin-bottom: 30px;
+            }
+
+            body{
+                background: url('/media/images/themes/bg_image.jpg') no-repeat center center fixed;
+                -webkit-background-size: cover;
+                -moz-background-size: cover;
+                -o-background-size: cover;
                 background-size: 100% 100%;
-                background-repeat:no-repeat;
-                display: compact;
-                font: 13px/18px "Helvetica Neue", Helvetica, Arial, sans-serif;
             }
             a.href_color {
                 color: #000;
                 &:hover {
                 color: #000;
                 }
+            }
+            div.body_color {
+                color: #000;
             }
         </style>
     </head>
@@ -60,148 +68,41 @@
                 <!-- Collect the nav links, forms, and other content for toggling -->
                 <div class="collapse navbar-collapse" id="navbarCollapse">
                     <ul class="nav navbar-nav navbar-right">
-                        {% if not logged_user.is_authenticated %}
-                            <li class="active"><a href="{% url 'account_signup' %}">Join Free</a></li>
-                            <li class="active"><a href="{% url 'account_login' %}">Login</a></li>
-                        {% endif %}
-                        {% block navbar_right %}<li class="active"><a href="{% url 'account_login' %}">Login</a></li>{% endblock %}
+                        <li class="active"><a href="/sunnyarora07/welcome" target='_blank'>Demo</a></li>
                         <li class="active"><a href="/about/">About</a></li>
                         <li class="active"><a href="/contact/">Contact</a></li>
-                        <li class="active"><div class="addthis_sharing_toolbox"></div></li>
+                        <ul class="list-unstyled list-inline list-social-icons">
+                            <li>
+                                <a href="https://facebook.com/sunnyarora29"><i class="fa fa-facebook-square fa-2x"></i></a>
+                            </li>
+                            <li>
+                                <a href="https://www.linkedin.com/pub/sunny-arora/3a/a5/670"><i class="fa fa-linkedin-square fa-2x"></i></a>
+                            </li>
+                            <li>
+                                <a href="#"><i class="fa fa-twitter-square fa-2x"></i></a>
+                            </li>
+                            <li>
+                                <a href="https://github.com/sunnyar/wedding"><i class="fa fa-github-square fa-2x"></i></a>
+                            </li>
+                        </ul>
                     </ul>
                 </div>
             </div>
         </nav>
-        <hr>
-
-
-        <!-- Header Carousel -->
-        <header id="myCarousel" class="carousel slide">
-            <!-- Indicators -->
-            <ol class="carousel-indicators">
-                <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
-                <li data-target="#myCarousel" data-slide-to="1"></li>
-                <li data-target="#myCarousel" data-slide-to="2"></li>
-            </ol>
-
-            <!-- Wrapper for slides -->
-            <div class="carousel-inner">
-                <div class="item active">
-                    <div class="fill" style="background-image:url('/media/images/default/slide_1.jpg');"></div>
-                    <div class="carousel-caption">
-                        <h2></h2>
-                    </div>
-                </div>
-                <div class="item">
-                    <div class="fill" style="background-image:url('/media/images/default/slide_2.jpg');"></div>
-                    <div class="carousel-caption">
-                        <h2></h2>
-                    </div>
-                </div>
-                <div class="item">
-                    <div class="fill" style="background-image:url('/media/images/default/slide_3.jpg');"></div>
-                    <div class="carousel-caption">
-                        <h2></h2>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Controls -->
-            <a class="left carousel-control" href="#myCarousel" data-slide="prev">
-                <span class="icon-prev"></span>
-            </a>
-            <a class="right carousel-control" href="#myCarousel" data-slide="next">
-                <span class="icon-next"></span>
-            </a>
-        </header>
-        <hr>
+        <br><br><br>
 
         <div class='container'>
             <div class="row">
-                <div class="col-xs-2 sidebar">
-                    <a href='/'><img class="img-responsive" src="{{MEDIA_URL}}images/default/heart.jpg"/></a>
-                    <ul class="nav nav-sidebar">
-                        <li style='font-style: italic;font-weight: bold;'>{% block sidebar %} {% endblock %}</li>
-                    </ul>
-                </div>
-                <div class="col-xs-9" style='font-style: italic;font-weight: bold;'>
-                    <h2 class='text-center' style='color:#FFCC33;font-style:italic;font-weight:bold'>{% block heading %} {% endblock %}<br></h2><br>
-
-                    {% block content %}
-
-                        <!--img class="img-responsive" src="{{MEDIA_URL}}images/default/text.png"/-->
-                        <center><i><h2>Create your own free responsive wedding website.<br>
-                        Your wedding. Your website. Your way.</h2></i><br><br>
-                        <p>Wedding Bells is a revolutionary new way of organising your wedding with your guests.<br>
-                            Share your wedding with your guests, tell your story, upload photos by creating a fun, secure and innovative website. Easy to create, and fully customisable to match your wedding theme - you will love it!
-                        </p></center><hr>
-                        <!--img class="img-responsive" src="{{MEDIA_URL}}images/default/wedding.png" alt="" title=""/-->
-
-                        <div class="col-xs-12">
-                            <h1 class="page-header">
-                                Welcome to Wedding Bells
-                            </h1>
-                        </div>
-                        <div class="col-xs-4">
-                            <div class="panel panel-default">
-                                <div class="panel-heading">
-                                    <h4><i class="fa fa-fw fa-check"></i>Create your own</h4>
-                                </div>
-                                <div class="panel-body">
-                                    <p></p>
-                                    <a href="#" class="btn btn-default">Learn More</a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-xs-4">
-                            <div class="panel panel-default">
-                                <div class="panel-heading">
-                                    <h4><i class="fa fa-fw fa-plus"></i>Themes</h4>
-                                </div>
-                                <div class="panel-body">
-                                    <p></p>
-                                    <a href="#" class="btn btn-default">Learn More</a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-xs-4">
-                            <div class="panel panel-default">
-                                <div class="panel-heading">
-                                    <h4><i class="fa fa-fw fa-compass"></i>Easy to Use</h4>
-                                </div>
-                                <div class="panel-body">
-                                    <p></p>
-                                    <a href="#" class="btn btn-default">Learn More</a>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-xs-12">
-                            <h2 class="page-header">Some Of Our Most Popular Features</h2>
-                        </div>
-                        <div class="col-xs-6">
-                            <p></p>
-                            <ul>
-                                <li><strong>RSVP Online</strong></li><br>
-                                <li>Shared Online Photo Album</li><br>
-                                <li>Custom Maps With Your Suggested Hotels</li>
-                            </ul>
-                        </div>
-                        <div class="col-md-8">
-                            <!--img class="img-responsive" src="{{MEDIA_URL}}images/default/edit_info.jpg" alt=""-->
-                        </div>
-                    {% endblock %}
+                <div class="col-lg-8 col-lg-offset-4 col-md-4 col-md-offset-2 col-sm-6 col-sm-offset-2 col-xs-8 col-xs-offset-3 text_align body_color">
+                    {%block content %} {%endblock %}
                 </div>
             </div>
-            <!-- /.row -->
         </div>
-        <!-- /.container -->
-
         <hr>
-        <div class="panel-footer clearfix">
+
+        <div class="panel-footer clearfix navbar-fixed-bottom">
             <div class="pull-right">
         	    <a href="/">Home</a>
-                <a href="/themes/">Themes</a>
             	<a href="/terms/">Terms of use</a>
             	<a href="/privacy/">Privacy policy</a>
             	<a href="/contact/">Contact us</a>

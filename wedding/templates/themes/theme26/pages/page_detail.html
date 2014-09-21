@@ -6,8 +6,10 @@
         {% if page.title != 'HomePage' %}
             <li class="active"><a href="{% url 'page_update' username=logged_user.username slug=object.slug %}" class="btn">Edit Page</a></li>
         {% endif %}
-        <li class="active"><a href="{% url 'account_logout' %}" class="btn">Logout</a></li>
-        <li class="active"><a href="{% url 'theme_form' username=logged_user.username %}" class="btn">Themes</a></li>
+        <li class="active"><a href="{% url 'account_logout' %}">Logout</a></li>
+        <li class="active"><a href="{% url 'theme_form' username=logged_user.username %}">Themes</a></li>
+        <li class="active"><a href="{% url 'payment_form' %}">Go Premium</a></li>
+        <li class="active"><a href="/sunnyarora07/welcome" target='_blank'>Demo</a></li>
     {% endif %}
 {% endblock navbar_right %}
 
@@ -25,7 +27,7 @@
 
 {% block heading %}
     <h2 class='header_color'>
-        {{wedding_objects.values.0.groom_first_name |capfirst}} &  {{wedding_objects.values.0.bride_first_name|capfirst}}<br>
+        {{wedding_objects.values.0.groom_first_name |capfirst}} Ẃἔḋṩ  {{wedding_objects.values.0.bride_first_name|capfirst}}<br>
         {{wedding_objects.values.0.wedding_date}} • {{wedding_objects.values.0.wedding_date | date_diff}} day{{wedding_objects.values.0.wedding_date | date_diff|pluralize}} to go !!<br>
         {% if logged_user.is_authenticated %}
             <a href="{% url 'profile_form' username=username %}" class="btn btn-primary">Edit</a>
@@ -34,23 +36,22 @@
 {% endblock %}
 
 {% block content %}
-    <div class='col-lg-8 col-md-10 col-xs-8 body_color'>
-        {% if object.image == '' %}
-            {% if object.title == 'Welcome' %}
-                <img class="img-responsive" src="{{MEDIA_URL}}images/default/default_welcome.jpg"/>
-            {% elif  object.title == 'Our Proposal' %}
-                <img class="img-responsive" src="{{MEDIA_URL}}images/default/default_welcome.jpg"/>
-            {% endif %}
-        {% else %}
-            {% if object.title == 'Welcome' or object.title == 'Our Proposal' %}
-                <img class="img-responsive" src="{{MEDIA_URL}}{{object.image}}"/>
-            {% endif %}
-
+    {% if object.image == '' %}
+        {% if object.title == 'Welcome' %}
+            <img class="img-responsive" src="{{MEDIA_URL}}images/default/default_welcome.jpg"/>
+        {% elif  object.title == 'Our Proposal' %}
+            <img class="img-responsive" src="{{MEDIA_URL}}images/default/default_welcome.jpg"/>
         {% endif %}
-        {{ object.body | safe | linebreaks}}
-
-        {% if object.title == 'HomePage' %}
-            <img src="{{MEDIA_URL}}images/default/edit_info.jpg" width="540" height="320" alt="" title=""/>
+    {% else %}
+        {% if object.title == 'Welcome' or object.title == 'Our Proposal' %}
+            <img class="img-responsive" src="{{MEDIA_URL}}{{object.image}}"/>
         {% endif %}
-    </div>
+
+    {% endif %}
+    {{ object.body | safe | linebreaks}}
+
+    {% if object.title == 'HomePage' %}
+        <img src="{{MEDIA_URL}}images/default/edit_info.jpg" width="540" height="320" alt="" title=""/>
+    {% endif %}
+</div>
 {% endblock content %}

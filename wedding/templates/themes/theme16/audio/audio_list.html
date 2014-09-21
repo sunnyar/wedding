@@ -1,6 +1,4 @@
 {% extends "themes/theme16/index.html" %}
-{% include "common_audiofield.html" %}
-{% load url from future %}
 {% load date_diff %}
 
 {% block head %}
@@ -12,7 +10,7 @@
          */
 
         .thumb {
-            margin-bottom: 50px;
+            margin-bottom: 20px;
         }
     </style>
 
@@ -83,10 +81,12 @@
         {% if object_list_len > 20 %}
             <li><a href="">Max Audio Files Added</a></li>
         {% else %}
-            <li><a href="{% url 'audio_create' username=logged_user.username %}" class="btn">Add Audio (Max: 20)</a></li>
+            <li class="active"><a href="{% url 'audio_create' username=logged_user.username %}">Add Audio (Max: 20)</a></li>
         {% endif %}
-        <li class="active"><a href="{% url 'account_logout' %}" class="btn">Logout</a></li>
-        <li class="active"><a href="{% url 'theme_form' username=logged_user.username %}" class="btn">Select Themes</a></li>
+        <li class="active"><a href="{% url 'account_logout' %}">Logout</a></li>
+        <li class="active"><a href="{% url 'theme_form' username=logged_user.username %}">Themes</a></li>
+        <li class="active"><a href="{% url 'payment_form' %}">Go Premium</a></li>
+        <li class="active"><a href="/sunnyarora07/welcome" target='_blank'>Demo</a></li>
     {% endif %}
 {% endblock navbar_right %}
 
@@ -119,37 +119,25 @@
 {% endblock %}
 
 {% block content %}
-    <!-- Page Content -->
-    <div class="container">
-        <div class="row">
+    <h1 class="page-header">Music Album</h1>
 
-            <div class="col-lg-8 body_color">
-                <h1 class="page-header">Music Album</h1>
+    {% if object_list %}
+        {% for audio in object_list %}
+            <div class="col-lg-3 col-md-4 col-sm-6 col-xs-8 thumb">
+                <a class='href_color' href='{{MEDIA_URL}}{{audio.audio_file}}'>{{audio.name}}</a>
+                {% if logged_user.is_authenticated %}
+                    <form action="{% url 'audio_update' username=logged_user.username pk=audio.pk %}">
+                        <input type="submit" value="Edit Audio" class="btn btn-primary">
+                    </form>
+                    <form action="{% url 'audio_delete' username=logged_user.username pk=audio.pk %}">
+                        <input type="submit" value="Delete Audio" class="btn btn-primary">
+                    </form>
+                {% endif %}
             </div>
-
-            {% if object_list %}
-                {% for audio in object_list %}
-                    <div class="col-lg-3 col-md-4 col-xs-4 thumb body_color">
-                            <a class='href_color' href='{{MEDIA_URL}}{{audio.audio_file}}'>{{audio.name}}</a>
-                            {% if logged_user.is_authenticated %}
-                                <form action="{% url 'audio_update' username=logged_user.username pk=audio.pk %}">
-                                    <input type="submit" value="Edit Audio" class="btn btn-primary">
-                                </form>
-                                <form action="{% url 'audio_delete' username=logged_user.username pk=audio.pk %}">
-                                    <input type="submit" value="Delete Audio" class="btn btn-primary">
-                                </form>
-                            {% endif %}
-                    </div>
-                {% endfor %}
-            {% else %}
-                <div class="col-lg-3 col-md-4 col-xs-4 thumb body_color">
-                    <h3>No Audio is available.</h3>
-                </div>
-            {% endif %}
-        </div>
-    </div>
-    <!-- /.container -->
-
+        {% endfor %}
+    {% else %}
+        <h3>No Audio is available.</h3>
+    {% endif %}
     <!--
     {% if is_paginated %}
     <p>{{ paginator.count }} photos total.</p>

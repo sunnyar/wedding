@@ -37,23 +37,23 @@
                 background-size: 100% 100%;
             }
             a.href_color {
-                color: #000;
+                color: #fff;
                 &:hover {
-                color: #000;
+                color: #fff;
                 }
             }
             h2.header_color {
-                color: #000;
+                color: #fff;
             }
             div.body_color {
-                color: #000;
+                color: #fff;
             }
             div.text_align
             {
                 padding-left: 50px;
             }
             header.carousel {
-                height: 50%;
+                height: 60%;
             }
             ul.text_align
             {
@@ -78,58 +78,52 @@
                 <!-- Collect the nav links, forms, and other content for toggling -->
                 <div class="collapse navbar-collapse" id="navbarCollapse">
                     <ul class="nav navbar-nav navbar-right">
-                        {% if not logged_user.is_authenticated %}
-                            <li class="active"><a href="{% url 'account_signup' %}">Join Free</a></li>
-                        {% endif %}
                         {% block navbar_right %}
-                            <li class="active"><a href="{% url 'account_login' %}">Login</a></li>
                         {% endblock %}
-                        <li class="active"><a href="/sunnyarora07/welcome" target='_blank'>Demo</a></li>
                         <li class="active"><a href="/about/">About</a></li>
                         <li class="active"><a href="/contact/">Contact</a></li>
-                        <li class="active"><div class="addthis_sharing_toolbox"></div></li>
                     </ul>
                 </div>
             </div>
         </nav>
 
         <!-- Header Carousel -->
-        <header id="myCarousel" class="carousel slide">
+        <header id="myCarousel" class="carousel slide" data-ride="carousel">
             <!-- Indicators -->
             <ol class="carousel-indicators">
-                <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
-                <li data-target="#myCarousel" data-slide-to="1"></li>
-                <li data-target="#myCarousel" data-slide-to="2"></li>
+                <li data-target="#WeddingCarousel" data-slide-to="0" class="active"></li>
+                <li data-target="#WeddingCarousel" data-slide-to="1"></li>
+                <li data-target="#WeddingCarousel" data-slide-to="2"></li>
             </ol>
 
             <!-- Wrapper for slides -->
             <div class="carousel-inner">
                 <div class="item active">
-                    <div class="fill" style="background-image:url('/media/images/default/slide_1.jpg');"></div>
+                    <div class="fill" style="background-image:url('/media/images/themes/slide_1.jpg');"></div>
                     <div class="carousel-caption">
-                        <h2></h2>
+                        <h1 class='header_color'></h2>
                     </div>
                 </div>
                 <div class="item">
-                    <div class="fill" style="background-image:url('/media/images/default/slide_2.jpg');"></div>
+                    <div class="fill" style="background-image:url('/media/images/themes/slide_2.jpg');"></div>
                     <div class="carousel-caption">
-                        <h2></h2>
+                        <h1 class='header_color'></h2>
                     </div>
                 </div>
                 <div class="item">
-                    <div class="fill" style="background-image:url('/media/images/default/slide_3.jpg');"></div>
+                    <div class="fill" style="background-image:url('/media/images/themes/slide_3.jpg');"></div>
                     <div class="carousel-caption">
-                        <h2></h2>
+                        <h1 class='header_color'></h2>
                     </div>
                 </div>
             </div>
 
             <!-- Controls -->
-            <a class="left carousel-control" href="#myCarousel" data-slide="prev">
-                <span class="icon-prev"></span>
+            <a class="left carousel-control" href="#WeddingCarousel" data-slide="prev">
+                <span class="glyphicon glyphicon-chevron-left"></span>
             </a>
-            <a class="right carousel-control" href="#myCarousel" data-slide="next">
-                <span class="icon-next"></span>
+            <a class="right carousel-control" href="#WeddingCarousel" data-slide="next">
+                <span class="glyphicon glyphicon-chevron-right"></span>
             </a>
         </header><br>
 
@@ -142,7 +136,7 @@
                 </div>
                 <div class="col-lg-8 col-md-4 col-sm-6 col-xs-8 text_align text-center" style='font-style: italic;font-weight: bold;'>
                     {% block heading %}
-                    {% endblock %}
+                    {% endblock %}<br><br>
                 </div>
                 <div class="col-lg-8 col-md-4 col-sm-6 col-xs-8 text_align body_color">
                     {% block content %}
@@ -171,9 +165,5 @@
 
         <!-- Bootstrap Core JavaScript -->
         <script src="{{STATIC_URL}}js/bootstrap.min.js"></script>
-
-        <!-- Go to www.addthis.com/dashboard to customize your tools -->
-        <!--script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5404ad8148071059"></script-->
-        <script src="http://api.html5media.info/1.1.5/html5media.min.js"></script>
     </body>
 </html>
