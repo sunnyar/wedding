@@ -15,7 +15,7 @@ from photologue.views import PhotoListView, PhotoDetailView
 from django.utils.text import slugify
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
-from datetime import datetime
+from datetime import datetime, date
 from collections import OrderedDict
 from django.core.mail import send_mail
 from allauth.account.views import EmailAddress
@@ -53,8 +53,8 @@ class ThemeFormView(FormView):
         context = super(ThemeFormView, self).get_context_data(**kwargs)
         logged_user = self.request.user
         username    = self.kwargs['username']
-
         context['username']  = username
+        context['is_member'] = UserProfile.objects.filter(user__username=self.kwargs['username']).values()[0]['member']
         if logged_user.is_authenticated :
             context['logged_user'] = logged_user
 
@@ -73,15 +73,45 @@ class ThemeFormView(FormView):
         return super(ThemeFormView, self).form_valid(form)
 
 
-def contact_us(request) :
-    return render_to_response('contact.html', locals(), context_instance=RequestContext(request))
+"""
+class PremiumThemeFormView(FormView):
+
+    template_name = 'themes/select_premium_theme.html'
+    form_class    = PremiumThemeForm
+
+    def get_success_url(self):
+        return reverse("page_list", kwargs={"username" : self.request.user})
+
+    def get_context_data(self, **kwargs):
+        context = super(PremiumThemeFormView, self).get_context_data(**kwargs)
+        logged_user = self.request.user
+        username    = self.kwargs['username']
+
+        context['username']  = username
+        if logged_user.is_authenticated :
+            context['logged_user'] = logged_user
+
+        return context
+
+    def form_valid(self, form):
+        # This method is called when valid form data has been POSTed.
+        # It should return an HttpResponse.
+        if not PremiumTheme.objects.filter(user=self.request.user).exists() :
+            PremiumTheme.objects.create(user=self.request.user,
+                name=form.cleaned_data['name'])
+        else :
+            PremiumTheme.objects.all().update(user=self.request.user,
+                name=form.cleaned_data['name'])
+
+        return super(PremiumThemeFormView, self).form_valid(form)
+"""
 
 def contact_thanks(request) :
     return render_to_response('contact_thanks.html', context_instance=RequestContext(request))
 
 def about_us(request) :
+    logged_user = request.user
     return render_to_response('about.html', locals(), context_instance=RequestContext(request))
-
 
 
 @login_required
@@ -98,13 +128,14 @@ class HomePageFormView(FormView):
     form_class = WeddingForm
 
     def get_success_url(self):
-        domain = UserProfile.objects.filter(user=self.request.user)
+        domain = UserProfile.objects.filter(user__username=self.kwargs['username'])
         #user_domain = domain.values().get(user=self.request.user)['user_domain']
         return reverse("page_list", kwargs={"username" : self.request.user})
 
     def get_context_data(self, **kwargs):
         context = super(HomePageFormView, self).get_context_data(**kwargs)
-        context['wedding_objects'] = Wedding.objects.filter(user=self.request.user)
+        wedding_objects = Wedding.objects.filter(user=self.request.user)
+        context['wedding_objects'] = wedding_objects
         context['logged_user'] = self.request.user
         context['username'] = self.request.user.username
         return context
@@ -156,7 +187,18 @@ class PageListView(ListView) :
         context = super(PageListView, self).get_context_data(**kwargs)
         context['username'] = self.kwargs['username']
         context['logged_user'] = self.request.user
-        context['wedding_objects'] = Wedding.objects.filter(user__username=self.kwargs['username'])
+        if self.request.user.is_authenticated :
+            context['is_member'] = UserProfile.objects.filter(user__username=self.kwargs['username']).values()[0]['member']
+
+        wedding_objects = Wedding.objects.filter(user__username=self.kwargs['username'])
+        context['wedding_objects'] = wedding_objects
+        wedding_date = wedding_objects.values()[0]['wedding_date']
+        current_date = date.today()
+        wedding_done = 'False'
+        if wedding_date <= current_date :
+            wedding_done = 'True'
+        context['wedding_done'] = wedding_done
+
         return context
 
 
@@ -184,7 +226,17 @@ class PageDetailView(DetailView) :
 
         context['all_objects'] = Page.objects.filter(user__username=username)
         context['username']    = self.kwargs['username']
-        context['wedding_objects'] = Wedding.objects.filter(user__username=username)
+        if self.request.user.is_authenticated :
+            context['is_member'] = UserProfile.objects.filter(user__username=self.kwargs['username']).values()[0]['member']
+
+        wedding_objects = Wedding.objects.filter(user__username=self.kwargs['username'])
+        context['wedding_objects'] = wedding_objects
+        wedding_date = wedding_objects.values()[0]['wedding_date']
+        current_date = date.today()
+        wedding_done = 'False'
+        if wedding_date <= current_date :
+            wedding_done = 'True'
+        context['wedding_done'] = wedding_done
 
         if logged_user.is_authenticated :
             context['logged_user'] = logged_user
@@ -214,6 +266,8 @@ class PageUpdateView(UpdateView) :
     def get_context_data(self, **kwargs):
         context = super(PageUpdateView, self).get_context_data(**kwargs)
         context['logged_user'] = self.request.user
+        if self.request.user.is_authenticated :
+            context['is_member'] = UserProfile.objects.filter(user__username=self.kwargs['username']).values()[0]['member']
         context['all_objects'] = Page.objects.filter(user=self.request.user)
         return context
 
@@ -237,6 +291,8 @@ class PhotoUpdateView(UpdateView) :
     def get_context_data(self, **kwargs):
         context = super(PhotoUpdateView, self).get_context_data(**kwargs)
         context['logged_user'] = self.request.user
+        if self.request.user.is_authenticated :
+            context['is_member'] = UserProfile.objects.filter(user__username=self.kwargs['username']).values()[0]['member']
         context['all_objects'] = Page.objects.filter(user=self.request.user)
         return context
 
@@ -259,6 +315,8 @@ class PhotoCreateView(CreateView):
     def get_context_data(self, **kwargs):
         context = super(PhotoCreateView, self).get_context_data(**kwargs)
         context['logged_user'] = self.request.user
+        if self.request.user.is_authenticated :
+            context['is_member'] = UserProfile.objects.filter(user__username=self.kwargs['username']).values()[0]['member']
         context['all_objects'] = Page.objects.filter(user=self.request.user)
         return context
 
@@ -294,6 +352,8 @@ class PhotoDeleteView(DeleteView) :
     def get_context_data(self, **kwargs):
         context = super(PhotoDeleteView, self).get_context_data(**kwargs)
         context['logged_user'] = self.request.user
+        if self.request.user.is_authenticated :
+            context['is_member'] = UserProfile.objects.filter(user__username=self.kwargs['username']).values()[0]['member']
         context['all_objects'] = Page.objects.filter(user=self.request.user)
         return context
 
@@ -327,7 +387,18 @@ class GalleryListView(PhotoListView) :
 
         context['object_list_len'] = len(PhotoContent.objects.filter(user__username=username))
         context['page_list']       = Page.objects.filter(user__username=username)
-        context['wedding_objects'] = Wedding.objects.filter(user__username=username)
+        if self.request.user.is_authenticated :
+            context['is_member']       = UserProfile.objects.filter(user__username=username).values()[0]['member']
+
+        wedding_objects = Wedding.objects.filter(user__username=username)
+        context['wedding_objects'] = wedding_objects
+        wedding_date = wedding_objects.values()[0]['wedding_date']
+        current_date = date.today()
+        wedding_done = 'False'
+        if wedding_date <= current_date :
+            wedding_done = 'True'
+        context['wedding_done'] = wedding_done
+
         context['username']        = username
 
         if logged_user.is_authenticated :
@@ -358,7 +429,18 @@ class GalleryDetailView(PhotoDetailView) :
 
         context['object_list_len'] = len(PhotoContent.objects.filter(user__username=username))
         context['page_list']       = Page.objects.filter(user__username=username)
-        context['wedding_objects'] = Wedding.objects.filter(user__username=username)
+        if self.request.user.is_authenticated :
+            context['is_member']       = UserProfile.objects.filter(user__username=self.kwargs['username']).values()[0]['member']
+
+        wedding_objects = Wedding.objects.filter(user__username=username)
+        context['wedding_objects'] = wedding_objects
+        wedding_date = wedding_objects.values()[0]['wedding_date']
+        current_date = date.today()
+        wedding_done = 'False'
+        if wedding_date <= current_date :
+            wedding_done = 'True'
+        context['wedding_done'] = wedding_done
+
         context['username']        = username
 
         if logged_user.is_authenticated :
@@ -409,7 +491,18 @@ class AddressListView(ListView) :
             map_addresses.append(g.geocode(str(ea).split(':')[1])[1])
 
         context['map_of_events'] = zip(events, addresses, map_addresses, event_address)
-        context['wedding_objects'] = Wedding.objects.filter(user__username=username)
+        if self.request.user.is_authenticated :
+            context['is_member']     = UserProfile.objects.filter(user__username=self.kwargs['username']).values()[0]['member']
+
+        wedding_objects = Wedding.objects.filter(user__username=username)
+        context['wedding_objects'] = wedding_objects
+        wedding_date = wedding_objects.values()[0]['wedding_date']
+        current_date = date.today()
+        wedding_done = 'False'
+        if wedding_date <= current_date :
+            wedding_done = 'True'
+        context['wedding_done'] = wedding_done
+
         context['username']  = username
 
         if logged_user.is_authenticated :
@@ -437,6 +530,8 @@ class AddressUpdateView(UpdateView) :
     def get_context_data(self, **kwargs):
         context = super(AddressUpdateView, self).get_context_data(**kwargs)
         context['logged_user'] = self.request.user
+        if self.request.user.is_authenticated :
+            context['is_member']   = UserProfile.objects.filter(user__username=self.kwargs['username']).values()[0]['member']
         context['all_objects'] = Page.objects.filter(user=self.request.user)
         return context
 
@@ -476,12 +571,23 @@ class RsvpFormView(FormView):
         username    = self.kwargs['username']
 
         context['wedding_objects'] = Wedding.objects.filter(user__username=username)
-        context['username'] = username
-        context['wedding_objects'] = Wedding.objects.filter(user__username=username)
+        context['username']        = username
+        if self.request.user.is_authenticated :
+            context['is_member']       = UserProfile.objects.filter(user__username=self.kwargs['username']).values()[0]['member']
+
+        wedding_objects = Wedding.objects.filter(user__username=username)
+        context['wedding_objects'] = wedding_objects
+        wedding_date = wedding_objects.values()[0]['wedding_date']
+        current_date = date.today()
+        wedding_done = 'False'
+        if wedding_date <= current_date :
+            wedding_done = 'True'
+        context['wedding_done'] = wedding_done
+
         context['all_objects']     = Page.objects.filter(user__username=username)
 
         if logged_user.is_authenticated() :
-            context['logged_user']     = logged_user
+            context['logged_user'] = logged_user
         return context
 
     def form_valid(self, form):
@@ -557,6 +663,10 @@ class ContactFormView(FormView):
             raise
         return super(ContactFormView, self).form_valid(form)
 
+    def get_context_data(self, **kwargs):
+        context = super(ContactFormView, self).get_context_data(**kwargs)
+        context['logged_user'] = self.request.user
+        return context
 
 class AudioFileCreateView(CreateView):
     model = AudioFile
@@ -573,6 +683,8 @@ class AudioFileCreateView(CreateView):
     def get_context_data(self, **kwargs):
         context = super(AudioFileCreateView, self).get_context_data(**kwargs)
         context['logged_user'] = self.request.user
+        if self.request.user.is_authenticated :
+            context['is_member']   = UserProfile.objects.filter(user__username=self.kwargs['username']).values()[0]['member']
         context['all_objects'] = Page.objects.filter(user=self.request.user)
         return context
 
@@ -616,8 +728,19 @@ class AudioFileListView(ListView) :
         logged_user = self.request.user
 
         context['page_list'] = Page.objects.filter(user__username=username)
-        context['audio_objects'] = AudioFile.objects.filter(user__username=username)
-        context['wedding_objects'] = Wedding.objects.filter(user__username=username)
+        context['audio_objects']   = AudioFile.objects.filter(user__username=username)
+        if self.request.user.is_authenticated :
+            context['is_member']       = UserProfile.objects.filter(user__username=self.kwargs['username']).values()[0]['member']
+
+        wedding_objects = Wedding.objects.filter(user__username=username)
+        context['wedding_objects'] = wedding_objects
+        wedding_date = wedding_objects.values()[0]['wedding_date']
+        current_date = date.today()
+        wedding_done = 'False'
+        if wedding_date <= current_date :
+            wedding_done = 'True'
+        context['wedding_done'] = wedding_done
+
         context['username']  = username
 
         if logged_user.is_authenticated :
@@ -645,6 +768,8 @@ class AudioFileUpdateView(UpdateView) :
     def get_context_data(self, **kwargs):
         context = super(AudioFileUpdateView, self).get_context_data(**kwargs)
         context['logged_user'] = self.request.user
+        if self.request.user.is_authenticated :
+            context['is_member']   = UserProfile.objects.filter(user__username=self.kwargs['username']).values()[0]['member']
         context['all_objects'] = Page.objects.filter(user=self.request.user)
         return context
 
@@ -670,6 +795,8 @@ class AudioFileDeleteView(DeleteView) :
     def get_context_data(self, **kwargs):
         context = super(AudioFileDeleteView, self).get_context_data(**kwargs)
         context['logged_user'] = self.request.user
+        if self.request.user.is_authenticated :
+            context['is_member']   = UserProfile.objects.filter(user__username=self.kwargs['username']).values()[0]['member']
         context['all_objects'] = Page.objects.filter(user=self.request.user)
         return context
 
@@ -687,6 +814,8 @@ class PaymentFormView(FormView):
 
     def get_context_data(self, **kwargs):
         context = super(PaymentFormView, self).get_context_data(**kwargs)
+        if self.request.user.is_authenticated :
+            context['is_member']   = UserProfile.objects.filter(user__username=self.kwargs['username']).values()[0]['member']
         context['logged_user'] = self.request.user
         return context
 

@@ -1,6 +1,6 @@
 from django.conf.urls import patterns, include, url
-
 from django.contrib import admin
+
 admin.autodiscover()
 
 urlpatterns = patterns('',
@@ -14,5 +14,5 @@ urlpatterns = patterns('',
     (r'^tinymce/', include('tinymce.urls')),
     (r'^photologue/', include('photologue.urls')),
     (r'^accounts/', include('allauth.urls')),
-    #url(r'^homepage/', include('wedding.pages.urls')),
+    (r'^summernote/', include('django_summernote.urls')),
 )

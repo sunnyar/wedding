@@ -7,7 +7,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="description" content="">
         <meta name="author" content="">
-        <link rel="icon" href="../../favicon.ico">
+        <link rel="shortcut icon" type="image/png" href="{{MEDIA_URL}}images/default/favicon.ico"/>
 
         <title>Wedding Website - Themes</title>
 
@@ -65,9 +65,9 @@
     </head>
 
     <body>
-        <nav id="myNavbar" class="navbar navbar-default navbar-inverse navbar-fixed-top" role="navigation">
+        <div class="container">
+            <nav id="myNavbar" class="navbar navbar-default navbar-inverse navbar-fixed-top" role="navigation">
             <!-- Brand and toggle get grouped for better mobile display -->
-            <div class="container">
                 <div class="navbar-header">
                     <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbarCollapse">
                         <span class="sr-only">Toggle navigation</span>
@@ -75,7 +75,7 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a class="navbar-brand" href="/">Wedding Bells</a>
+                    <a href="/"><img class='img-responsive' src='{{MEDIA_URL}}images/default/logo.jpg'/></a>
                 </div>
                 <!-- Collect the nav links, forms, and other content for toggling -->
                 <div class="collapse navbar-collapse" id="navbarCollapse">
@@ -84,27 +84,30 @@
                             <li class="active"><a href="{% url 'page_list' username=username %}" class="btn">Home</a></li>
                             <li class="active"><a href="{% url 'account_logout' %}" class="btn">Logout</a></li>
                         {% endif %}
-                        <li class="active"><a href="/sunnyarora07/welcome" target='_blank'>Demo</a></li>
-                        <li class="active"><a href="/about/">About</a></li>
-                        <li class="active"><a href="/contact/">Contact</a></li>
-                        <ul class="list-unstyled list-inline list-social-icons">
-                            <li>
-                                <a href="https://facebook.com/sunnyarora29"><i class="fa fa-facebook-square fa-2x"></i></a>
-                            </li>
-                            <li>
-                                <a href="https://www.linkedin.com/pub/sunny-arora/3a/a5/670"><i class="fa fa-linkedin-square fa-2x"></i></a>
-                            </li>
-                            <li>
-                                <a href="#"><i class="fa fa-twitter-square fa-2x"></i></a>
-                            </li>
-                            <li>
-                                <a href="https://github.com/sunnyar/wedding"><i class="fa fa-github-square fa-2x"></i></a>
-                            </li>
-                        </ul>
+                        <li><a href="/sunnyarora07/welcome" target='_blank'>Demo</a></li>
+                        <li><a href="/about/">About</a></li>
+                        <li><a href="/contact/">Contact</a></li>
+                        <li class="dropdown">
+                            <a data-toggle="dropdown" class="dropdown-toggle" href="#">Share <b class="caret"></b></a>
+                            <ul role="menu" class="dropdown-menu list-unstyled list-inline list-social-icons">
+                                <li>
+                                    <a href="https://facebook.com/sunnyarora29"><i class="fa fa-facebook-square fa-2x"></i></a>
+                                </li>
+                                <li>
+                                    <a href="https://www.linkedin.com/pub/sunny-arora/3a/a5/670"><i class="fa fa-linkedin-square fa-2x"></i></a>
+                                </li>
+                                <li>
+                                    <a href="#"><i class="fa fa-twitter-square fa-2x"></i></a>
+                                </li>
+                                <li>
+                                    <a href="https://github.com/sunnyar/wedding"><i class="fa fa-github-square fa-2x"></i></a>
+                                </li>
+                            </ul>
+                        </li>
                     </ul>
                 </div>
-            </div>
-        </nav>
+            </nav>
+        </div>
         <br><br><br>
 
         <div class='container'>
@@ -143,7 +146,7 @@
         </div>
         <hr>
 
-        <div class="panel-footer clearfix navbar-fixed-bottom">
+        <div class="panel-footer clearfix">
             <div class="pull-right">
         	    <a href="/">Home</a>
             	<a href="/terms/">Terms of use</a>

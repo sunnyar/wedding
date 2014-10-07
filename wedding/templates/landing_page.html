@@ -3,11 +3,11 @@
 <html lang="en">
     <head>
         <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="description" content="">
         <meta name="author" content="">
-        <link rel="icon" href="../../favicon.ico">
+        <link rel="shortcut icon" type="image/png" href="{{MEDIA_URL}}images/default/favicon.ico"/>
 
         <title>Wedding Website</title>
 
@@ -19,39 +19,88 @@
 
         <!-- Custom Fonts -->
         <link href="{{STATIC_URL}}font-awesome-4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+        <script type="text/javascript">
+            document.createElement('video');document.createElement('audio');document.createElement('track');
+        </script>
+        <!--link href="//vjs.zencdn.net/4.8/video-js.css" rel="stylesheet">
+        <link rel="stylesheet" href="{{STATIC_URL}}BigVideo_js/css/style.css"-->
+        <link rel="stylesheet" href="{{STATIC_URL}}bower_components/BigVideo.js/css/bigvideo.css">
 
         <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
         <!--[if lt IE 9]>
           <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
           <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
         <![endif]-->
-        {% block head %}{% endblock %}
         <style>
             @import url('/static/css/bootstrap.min.css');
 
-            body{
-                background: url('/media/images/themes/bg_image.jpg') no-repeat center center fixed;
+            /*body{
+                background: url('/media/images/themes/bg_image1.jpg') no-repeat center center fixed;
                 -webkit-background-size: cover;
                 -moz-background-size: cover;
                 -o-background-size: cover;
                 background-size: 100% 100%;
-            }
+            }*/
             a.href_color {
                 color: #000;
                 &:hover {
                 color: #000;
                 }
             }
+            a.link_color {
+                color: yellow;
+            }
             div.body_color {
-                color: #000;
+                color: #fff;
+            }
+            header.carousel {
+                height: 70%;
+            }
+        	li.tab_padding{
+        	    padding-right:100px;
+        	}
+        	ul.tab_bg_image{
+                background: url('/media/images/default/tab_bg_image.jpg');
+        	}
+        	#big-video-wrap {
+                display: none;
             }
         </style>
+
+        <script type="text/javascript">
+            function accordin_click(click_id) {
+
+                var accordin_id = document.getElementsByClassName('panel-collapse');
+                var id_clicked = accordin_id[click_id].id;
+                var accordin_class = document.getElementById(id_clicked).className;
+
+                for (i=0; i < accordin_id.length; i ++)
+                {
+                    if (i != click_id)
+                    {
+                        var remaining_accordin_id = document.getElementsByClassName('panel-collapse')[i].id;
+                        document.getElementById(remaining_accordin_id).className = 'panel-collapse collapse';
+                    }
+                }
+
+                if  (accordin_class == 'panel-collapse collapse')
+                {
+                    document.getElementById(id_clicked).className = 'panel-collapse';
+                }
+                else
+                {
+                    document.getElementById(id_clicked).className = 'panel-collapse collapse in';
+                }
+
+            }
+        </script>
+
     </head>
 
     <body>
-        <nav id="myNavbar" class="navbar navbar-default navbar-inverse navbar-fixed-top" role="navigation">
+        <div class="container">
+            <nav id="myNavbar" class="navbar navbar-default navbar-inverse navbar-fixed-top" role="navigation">
             <!-- Brand and toggle get grouped for better mobile display -->
-            <div class="container">
                 <div class="navbar-header">
                     <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbarCollapse">
                         <span class="sr-only">Toggle navigation</span>
@@ -59,47 +108,41 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a class="navbar-brand" href="/">Wedding Bells</a>
+                    <a href="/"><img class='img-responsive' src='{{MEDIA_URL}}images/default/logo.jpg'/></a>
                 </div>
                 <!-- Collect the nav links, forms, and other content for toggling -->
                 <div class="collapse navbar-collapse" id="navbarCollapse">
                     <ul class="nav navbar-nav navbar-right">
                         {% if not logged_user.is_authenticated %}
                             <li class="active"><a href="{% url 'account_signup' %}">Join FREE</a></li>
+                            <li class="active"><a href="{% url 'account_login' %}">Login</a></li>
+                        {% else %}
+                            <li class="active"><a href="{% url 'account_login' %}">Your Website</a></li>
+                            <li class="active"><a href="{% url 'account_logout' %}">Logout</a></li>
                         {% endif %}
-                        <li class="active"><a href="{% url 'account_login' %}">Login</a></li>
-                        <li class="active"><a href="/sunnyarora07/welcome" target='_blank'>Demo</a></li>
-                        <li class="active"><a href="/about/">About</a></li>
-                        <li class="active"><a href="/contact/">Contact</a></li>
-                        <ul class="list-unstyled list-inline list-social-icons">
-                            <li>
-                                <a href="https://facebook.com/sunnyarora29"><i class="fa fa-facebook-square fa-2x"></i></a>
-                            </li>
-                            <li>
-                                <a href="https://www.linkedin.com/pub/sunny-arora/3a/a5/670"><i class="fa fa-linkedin-square fa-2x"></i></a>
-                            </li>
-                            <li>
-                                <a href="#"><i class="fa fa-twitter-square fa-2x"></i></a>
-                            </li>
-                            <li>
-                                <a href="https://github.com/sunnyar/wedding"><i class="fa fa-github-square fa-2x"></i></a>
-                            </li>
-                        </ul>
+                        <li><a href="/sunnyarora07/welcome" target='_blank'>Demo</a></li>
+                        <li><a href="/about/">About</a></li>
+                        <li><a href="/contact/">Contact</a></li>
+                        <li>&nbsp;&nbsp;&nbsp;</li>
                     </ul>
                 </div>
-            </div>
-        </nav>
+            </nav>
+        </div>
 
-        <!-- Header Carousel -->
-        <header id="WeddingCarousel" class="carousel slide" data-ride="carousel">
-            <!-- Indicators -->
+        <!-- <!-- Header Carousel >
+        <header id="WeddingCarousel" class="carousel slide" data-ride="carousel"-->
+            <!-- Indicators >
             <ol class="carousel-indicators">
                 <li data-target="#WeddingCarousel" data-slide-to="0" class="active"></li>
                 <li data-target="#WeddingCarousel" data-slide-to="1"></li>
                 <li data-target="#WeddingCarousel" data-slide-to="2"></li>
-            </ol>
+                <li data-target="#WeddingCarousel" data-slide-to="3"></li>
+                <li data-target="#WeddingCarousel" data-slide-to="4"></li>
+                <li data-target="#WeddingCarousel" data-slide-to="5"></li>
+                <li data-target="#WeddingCarousel" data-slide-to="6"></li>
+            </ol-->
 
-            <!-- Wrapper for slides -->
+            <!-- Wrapper for slides >
             <div class="carousel-inner">
                 <div class="item active">
                     <div class="fill" style="background-image:url('/media/images/default/slide_1.jpg');"></div>
@@ -119,66 +162,229 @@
                         <h2></h2>
                     </div>
                 </div>
-            </div>
+                <div class="item">
+                    <div class="fill" style="background-image:url('/media/images/default/slide_4.jpg');"></div>
+                    <div class="carousel-caption">
+                        <h2></h2>
+                    </div>
+                </div>
+                <div class="item">
+                    <div class="fill" style="background-image:url('/media/images/default/slide_5.jpg');"></div>
+                    <div class="carousel-caption">
+                        <h2></h2>
+                    </div>
+                </div>
+                <div class="item">
+                    <div class="fill" style="background-image:url('/media/images/default/slide_6.jpg');"></div>
+                    <div class="carousel-caption">
+                        <h2></h2>
+                    </div>
+                </div>
+                <div class="item">
+                    <div class="fill" style="background-image:url('/media/images/default/slide_7.jpg');"></div>
+                    <div class="carousel-caption">
+                        <h2></h2>
+                    </div>
+                </div>
+            </div-->
 
-            <!-- Controls -->
+            <!-- Controls >
             <a class="left carousel-control" href="#WeddingCarousel" data-slide="prev">
                 <span class="glyphicon glyphicon-chevron-left"></span>
             </a>
             <a class="right carousel-control" href="#WeddingCarousel" data-slide="next">
                 <span class="glyphicon glyphicon-chevron-right"></span>
             </a>
-        </header><br>
+        </header--><br>
 
         <div class='container'>
             <div class="row">
-                <div class="col-lg-12 col-md-4 col-sm-6 col-xs-12" style='font-style: italic;font-weight: bold;'>
+                <div class="col-lg-12 col-md-4 col-sm-6 col-xs-12">
+                    <div id="myModal" class="modal fade">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                    <h4 class="modal-title">Update</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <strong>
+                                        <large>
+                                            <span class='glyphicon glyphicon-warning-sign'></span> <p>Site Under Construction</p>
+                                        </large>
+                                    </strong>
+                                    <p class="text-warning"><small>Be Patient. We will be back soon !!</small></p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br><br>
+        <div class='container'>
+            <div class="row">
+                <div class="col-lg-12 col-md-4 col-sm-6 col-xs-12 body_color" style='font-style: italic;font-weight: bold;'>
                     <center>
-                        <h1 style='color:#330033'>
+                        <h1 style='color:red'>
                             Welcome to Wedding Bells
                         </h1>
                         <h3 class='page-header'>Your wedding. Your website. Your way.</h3>
-                    </center>
-                </div><br>
+                    <b><p>Wedding Bells is a revolutionary new way of organising your wedding with your guests.<br>
+                            Share your wedding with your guests, tell your story, upload photos by creating a fun, secure and innovative website. Easy to create, and fully customisable to match your wedding theme - you will love it!
+                    </p></b>
+                </center><br><br>
             </div>
         </div>
 
-        <div class='container'>
+        <div class="panel-group" id="accordion">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-6 col-md-4 col-sm-6 col-xs-12">
+                        <div class="panel panel-default">
+                            <div class="panel-heading" style='background-color:#33FF33'>
+                                <h4 class="panel-title  text-center">
+                                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" onclick='accordin_click(0);'>Create Your Own Website</a>
+                                </h4>
+                            </div>
+                            <div id="collapseOne" class="panel-collapse collapse">
+                                <div class="panel-body">
+                                    <strong><p>
+                                        Congratulations on your forthcoming marriage. Create a rapid online wedding website, and start sharing your special day with all your loved ones.<br>
+                                        We make your wedding celebration the Happiest !<br><br>
+                                        Create your own free responsive wedding website in 3 easy steps<br>
+                                        <b><a href="{% url 'account_signup' %}">Register</a>  /  <a href="{% url 'account_login' %}">Login</a> <span class="glyphicon glyphicon-circle-arrow-right"></span> Provide Details <span class="glyphicon glyphicon-circle-arrow-right"></span> Customize Pages</b>
+                                    </p></strong>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-6 col-md-4 col-sm-6 col-xs-12">
+                        <div class="panel panel-default">
+                            <div class="panel-heading" style='background-color:#33FF33'>
+                                <h4 class="panel-title text-center">
+                                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" onclick='accordin_click(1);'>Themes</a>
+                                </h4>
+                            </div>
+                            <div id="collapseTwo" class="panel-collapse collapse">
+                                <div class="panel-body">
+                                    <strong><p>
+                                        Checkout our unique elegant wedding website designs<br>
+                                        50+ Designs<br>
+                                    </p>
+                                    <a href='/themes/'>Themes</a>
+                                    </strong>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div><br><br>
+            </div>
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-6 col-md-4 col-sm-6 col-xs-12">
+                        <div class="panel panel-default">
+                            <div class="panel-heading" style='background-color:#33FF33'>
+                                <h4 class="panel-title text-center">
+                                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseThree" onclick='accordin_click(2);'>Features</a>
+                                </h4>
+                            </div>
+                            <div id="collapseThree" class="panel-collapse collapse">
+                                <div class="panel-body">
+                                    <ul>
+                                        <strong>
+                                        <span class='glyphicon glyphicon-edit'></span> Customize Your Site<br><br>
+                                        <span class='glyphicon glyphicon-picture'></span> Photo Gallery<br><br>
+                                        <span class='glyphicon glyphicon-headphones'></span> Music Album<br><br>
+                                        <span class='glyphicon glyphicon-envelope'></span> RSVP Online <br><br>
+                                        <span class='glyphicon glyphicon-map-marker'></span> Map View for all the Hotels & Accommodation<br><br>
+                                        </strong>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-6 col-md-4 col-sm-6 col-xs-12">
+                        <div class="panel panel-default">
+                            <div class="panel-heading" style='background-color:#33FF33'>
+                                <h4 class="panel-title text-center">
+                                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseFour" onclick='accordin_click(3);'>Packages</a>
+                                </h4>
+                            </div>
+                            <div id="collapseFour" class="panel-collapse collapse">
+                                <div class="panel-body">
+                                    <a target='_blank' href='/payment/'><button class='btn btn-primary'>Go Premium</button></a><br><br>
+                                    <strong><p>
+                                        Register yourself and select different themes.
+                                        There are two ways of getting started.<br>
+                                        Either you can choose a theme whether it can be a <a href='/themes/#free_themes'>free theme</a> or <a href='/themes/#premium_themes'>Premium theme</a>.
+                                        Premium wedding website themes can be accessed after payment which will be very lucrative and built for modern drift.
+                                    </p></strong>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--div class="container">
             <div class="row">
                 <div class="col-lg-12 col-md-4 col-sm-6 col-xs-12">
-                    <center>
-                        <b><p>Wedding Bells is a revolutionary new way of organising your wedding with your guests.<br>
-                                Share your wedding with your guests, tell your story, upload photos by creating a fun, secure and innovative website. Easy to create, and fully customisable to match your wedding theme - you will love it!
-                        </p></b>
-                    </center><br><br>
+                    <ul class="nav nav-tabs tab_bg_image">
+                        <li class="active tab_padding"><a class='link_color' data-toggle="tab" href="#sectionA">
+                            Create Your Own
+                        </a></li>
+                        <li class='tab_padding'><a class='link_color' data-toggle="tab" href="#sectionB">Themes</a></li>
+                        <li class='tab_padding'><a class='link_color' data-toggle="tab" href="#sectionC">Packages</a></li>
+                        <li class='tab_padding'><a class='link_color' data-toggle="tab" href="#sectionD">Features</a></li>
+                    </ul>
+                    <br><br><br>
+                    <div class="tab-content">
+                        <div id="sectionA" class="tab-pane fade in active">
+                            <strong><p>
+                                Congratulations on your forthcoming marriage. Create a rapid online wedding website, and start sharing your special day with all your loved ones.<br>
+                                We make your wedding celebration the Happiest !<br><br>
+                                Create your own free responsive wedding website in 3 easy steps<br>
+                                <b><a href="{% url 'account_signup' %}">Register</a>  /  <a href="{% url 'account_login' %}">Login</a> <span class="glyphicon glyphicon-circle-arrow-right"></span> Provide Details <span class="glyphicon glyphicon-circle-arrow-right"></span> Customize Pages</b>
+                            </p></strong>
+                        </div>
+                        <div id="sectionB" class="tab-pane fade">
+                            <strong><p>
+                            </p></strong>
+                        </div>
+                        <div id="sectionC" class="tab-pane fade">
+                            <a target='_blank' href='/payment/'><button class='btn btn-primary'>Go Premium</button></a><br><br>
+                            <strong><p>
+                                Register yourself and select different themes.
+                                There are two ways of getting started.<br>
+                                Either you can choose a theme whether it can be a <a href='#'>free theme</a> or <a href='#'>Premium theme</a>.
+                                Premium wedding website themes can be accessed after payment which will be very lucrative and built for modern drift.
+                            </p></strong>
+                        </div>
+                        <div id="sectionD" class="tab-pane fade">
+                            <ul>
+                                <strong>
+                                <li>Customize Your Site</li><br>
+                                <li>RSVP Online</li><br>
+                                <li>Shared Online Photo Album</li><br>
+                                <li>Custom Maps With Your Suggested Hotels</li>
+                                </strong>
+                            </ul>
+                        </div>
+                    </div><br><br>
                 </div>
+            </div>
+        </div-->
 
-                <div class="col-lg-6 col-md-4 col-sm-6 col-xs-12">
-                    <div class="panel panel-default">
-                    <div class="panel-body" style='background-color:#FFFFCC'>
-                        <p>
-                            Congratulations on your forthcoming marriage. Create a rapid online wedding website, and start sharing your special day with all your loved ones.<br>
-                            We make your wedding celebration the Happiest !<br><br>
-                            Create your own free responsive wedding website in 3 easy steps<br>
-                            <b><a href="{% url 'account_signup' %}">Register</a>  /  <a href="{% url 'account_login' %}">Login</a> <span class="glyphicon glyphicon-circle-arrow-right"></span> Provide Details <span class="glyphicon glyphicon-circle-arrow-right"></span> Customize Pages</b>
-                        </p>
-                    </div>
-                    </div>
-                </div>
-                <div class="col-lg-6 col-md-4 col-sm-6 col-xs-12">
-                    <div class="panel panel-default">
-                    <div class="panel-body" style='background-color:#FFFFCC'>
-                        <p>Register yourself and select different themes.
-                            There are two ways of getting started.<br>
-                            Either you can choose a theme whether it can be a <a href='#'>free theme</a> or <a href='#'>Premium theme</a>.
-                            Premium wedding website themes can be accessed after payment which will be very lucrative and built for modern drift.
-                            Try it <a href='/payment/'><button type="submit" class="btn btn-primary">Go Premium</button></a>
-                        </p>
-                    </div>
-                    </div>
-                </div>
-
-                <div class="col-lg-12 col-md-4 col-sm-6 col-xs-12">
+		<div class='container'>
+		    <div class='row'>
+                <div class="col-lg-12 col-md-4 col-sm-6 col-xs-12 body_color">
                     <br><br>
                     <b><p>
                         Creating Wedding websites changes the mission of wedding preparation from a fearsome activity into an interactive shape of rejoice!
@@ -187,14 +393,17 @@
                         To Begin with the creation of FREE Wedding website, just hit “Join FREE”.
                         <br>
                         Finally, now you are dash board. You can start customizing your wedding website as you wish. Every step of your way is easy to follow instructions.
-                        Creating a Wedding websites are simply the most incredible thing to happen to weddings since you have decided to get married!
+                        Creating a Wedding website is simply the most incredible thing to happen to weddings since you have decided to get married !!
                         <br><br>
                         <a href="{% url 'account_signup' %}">Register</a> for your free wedding website now and let us do the reflective life lifting easily.
-                        Wedding websites for you, just a line of WeddingBells.com connects you, with the entire thing you could wish for!
+                        Wedding websites for you, just a line of WeddingBells.com connects you, with the entire thing you could wish for !!
                     </p></b>
                 </div>
-
-                <div class="col-lg-12 col-md-4 col-sm-6 col-xs-12">
+           </div><br><br>
+            <!-- /.row -->
+        </div-->
+        <!-- /.container -->
+                <!--div class="col-lg-12 col-md-4 col-sm-6 col-xs-12">
                     <h2 class="page-header">Some Of Our Most Popular Features</h2>
                 </div>
                 <div class="col-lg-12 col-md-4 col-sm-6 col-xs-12">
@@ -227,12 +436,39 @@
                 </div>
             </div>
             <!-- /.row -->
-        </div>
+        </div-->
         <!-- /.container -->
 
-        <hr>
+        <div class='container'>
+		    <div class='row'>
+                <div class="col-lg-6 col-md-4 col-sm-6 col-xs-12">
+                    <a href='{{MEDIA_URL}}wedding_bells_wed_planner.pdf' download><img class='img-responsive' src='{{MEDIA_URL}}images/default/wedding_planner.jpg'/></a>
+                </div>
+                <div class="col-lg-6 col-md-4 col-sm-6 col-xs-12">
+                    <a href='/accounts/signup/'><img class='img-responsive' src='{{MEDIA_URL}}images/default/register.jpg'/></a>
+                </div>
+                <div>&nbsp;</div>
+                <div>&nbsp;</div>
+                <!--div class="col-lg-12 col-md-4 col-sm-6 col-xs-12">
+                    <video id="example_video_1" class="video-js vjs-default-skin"
+                        controls preload="auto" width="1100" height="264"
+                        poster="http://video-js.zencoder.com/oceans-clip.png"
+                        data-setup='{"example_option":true}'>
+                        <source src="http://video-js.zencoder.com/oceans-clip.mp4" type='video/mp4' />
+                        <source src="http://video-js.zencoder.com/oceans-clip.webm" type='video/webm' />
+                        <source src="http://video-js.zencoder.com/oceans-clip.ogv" type='video/ogg' />
+                        <p class="vjs-no-js">To view this video please enable JavaScript, and consider upgrading to a web browser that <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a></p>
+                    </video>
+                </div-->
+            </div><br><br>
+        </div>
+
         <div class="panel-footer clearfix navbar-fixed-bottom">
             <div class="pull-right">
+                <a target='_blank' href="https://facebook.com/sunnyarora29"><i class="fa fa-facebook-square fa-2x"></i></a>
+                <a target='_blank' href="https://www.linkedin.com/pub/sunny-arora/3a/a5/670"><i class="fa fa-linkedin-square fa-2x"></i></a>
+                <a target='_blank' href="#"><i class="fa fa-twitter-square fa-2x"></i></a>
+                <a target='_blank' href="https://github.com/sunnyar/wedding"><i class="fa fa-github-square fa-2x"></i></a>
         	    <a href="/">Home</a>
             	<a href="/terms/">Terms of use</a>
             	<a href="/privacy/">Privacy policy</a>
@@ -241,16 +477,50 @@
             <p>Copyright © 2014 Wedding Bells</p>
         </div>
 
-
-
         <!-- jQuery Version 1.11.0 -->
         <script src="{{STATIC_URL}}js/jquery-1.11.0.js"></script>
 
         <!-- Bootstrap Core JavaScript -->
         <script src="{{STATIC_URL}}js/bootstrap.min.js"></script>
-
-        <!-- Go to www.addthis.com/dashboard to customize your tools -->
-        <!--script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5404ad8148071059"></script-->
         <script src="http://api.html5media.info/1.1.5/html5media.min.js"></script>
+
+        <script type="text/javascript">
+        	$(document).ready(function(){
+        		$("#myModal").modal('show');
+        	});
+        </script>
+
+
+        <!-- BigVideo Dependencies -->
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+        <script>window.jQuery || document.write('<script src="{{STATIC_URL}}bower_components/jquery/dist/jquery.min.js"><\/script>')</script>
+        <script src="{{STATIC_URL}}bower_components/jquery-ui/jquery-ui.js"></script>
+        <script src="{{STATIC_URL}}bower_components/jquery-ui/jquery-ui.min.js"></script>
+        <script src="//vjs.zencdn.net/4.8/video.js"></script>
+
+        <!-- BigVideo -->
+        <script src="{{STATIC_URL}}bower_components/BigVideo.js/lib/bigvideo.js"></script>
+
+        <!-- Demo -->
+        <script>
+    	    $(function() {
+                var BV = new $.BigVideo({useFlashForFirefox:false});
+                var vids = [
+                    '{{STATIC_URL}}BigVideo_js/vids/vid_2.mp4',
+                    '{{STATIC_URL}}BigVideo_js/vids/vid_3.mp4',
+                    '{{STATIC_URL}}BigVideo_js/vids/vid_4.mp4',
+                    '{{STATIC_URL}}BigVideo_js/vids/vid_5.mp4',
+                    '{{STATIC_URL}}BigVideo_js/vids/vid_14.mp4',
+                    '{{STATIC_URL}}BigVideo_js/vids/vid_16.mp4',
+                ];
+                vids.sort(function() { return 0.5 - Math.random() }); // random order on load
+                BV.init();
+                BV.showPlaylist(vids,{ambient:true});
+                BV.getPlayer().on('durationchange',function(){
+                    $('#big-video-wrap').fadeIn();
+                });
+             });
+        </script>
+
     </body>
 </html>

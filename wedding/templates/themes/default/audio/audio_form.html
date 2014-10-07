@@ -7,15 +7,6 @@
     {% endfor %}
 {% endblock %}
 
-{% block navbar_right %}
-    {% if logged_user.is_authenticated %}
-        <li class="active"><a href="{% url 'account_logout' %}">Logout</a></li>
-        <li class="active"><a href="{% url 'theme_form' username=logged_user.username %}">Themes</a></li>
-        <li class="active"><a href="{% url 'payment_form' %}">Go Premium</a></li>
-        <li class="active"><a href="/sunnyarora07/welcome" target='_blank'>Demo</a></li>
-    {% endif %}
-{% endblock navbar_right %}
-
 {% block content %}
     <a href="{% url 'audio_list' username=logged_user.username %}"><button type="submit" class="btn btn-primary">Back</button></a><br>
     <form method="post" action="" enctype="multipart/form-data">

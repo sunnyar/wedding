@@ -4,20 +4,26 @@ from .views import PageDetailView, GalleryDetailView, AudioFileDeleteView
 from .views import PageListView, GalleryListView, AddressListView, AudioFileListView
 from .views import PageUpdateView, AddressUpdateView, PhotoUpdateView, AudioFileUpdateView
 from .views import PhotoCreateView, AudioFileCreateView
-from .views import PhotoDeleteView, HomePageFormView, RsvpFormView, ContactFormView, ThemeFormView, PaymentFormView
+from .views import PhotoDeleteView, HomePageFormView, RsvpFormView
+from .views import ContactFormView, ThemeFormView, PaymentFormView
 from .views import rsvp_thanks, user_profile, homepage, about_us, contact_thanks
 from django.contrib.auth.decorators import login_required as auth
+
 
 urlpatterns = patterns('',
         url(r'^$', homepage, name='homepage'),
         url(r'^contact/$', ContactFormView.as_view(), name='contact_form'),
         url(r'^contact/thanks/$', contact_thanks, name='contact_thanks'),
         url(r'^terms/$', TemplateView.as_view(template_name='terms.html')),
+        url(r'^big_video/$', TemplateView.as_view(template_name='example-ambient.html')),
+        url(r'^themes/$', TemplateView.as_view(template_name='themes/select_theme.html'), {'theme_range' : range(65)}),
+        #url(r'^premium_themes/$', TemplateView.as_view(template_name='themes/select_premium_theme.html'), {'theme_range' : range(33)}),
         url(r'^privacy/$', TemplateView.as_view(template_name='privacy.html')),
         url(r'^about/$', about_us, name='about'),
         url(r'^payment/$', PaymentFormView.as_view(), name='payment_form'),
         url(r'^profile/$', user_profile),
         url(r'^(?P<username>[-\w\d]+)/theme$', ThemeFormView.as_view(), name='theme_form'),
+        #url(r'^(?P<username>[-\w\d]+)/premium_theme$', PremiumThemeFormView.as_view(), name='premium_theme_form'),
         url(r'^audio/create/(?P<username>[-\w\d]+)$', auth(AudioFileCreateView.as_view()), name='audio_create'),
         url(r'^(?P<username>[-\w\d]+)/music-album$', AudioFileListView.as_view(), name='audio_list'),
         url(r'^audio/edit/(?P<username>[-\w\d]+)/(?P<pk>[\d]+)$', auth(AudioFileUpdateView.as_view()), name='audio_update'),

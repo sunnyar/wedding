@@ -7,7 +7,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="description" content="">
         <meta name="author" content="">
-        <link rel="icon" href="../../favicon.ico">
+        <link rel="shortcut icon" type="image/png" href="{{MEDIA_URL}}images/default/favicon.ico"/>
 
         <title>Wedding Website - Themes</title>
 
@@ -49,13 +49,25 @@
             div.body_color {
                 color: #000;
             }
+
+            .fieldgroup{
+               float: left;
+               margin-left: 1em;
+               margin-right: 2em;
+            }
         </style>
+
+        <script>
+            function goBack() {
+                window.history.back()
+            }
+        </script>
     </head>
 
     <body>
-        <nav id="myNavbar" class="navbar navbar-default navbar-inverse navbar-fixed-top" role="navigation">
+        <div class="container">
+            <nav id="myNavbar" class="navbar navbar-default navbar-inverse navbar-fixed-top" role="navigation">
             <!-- Brand and toggle get grouped for better mobile display -->
-            <div class="container">
                 <div class="navbar-header">
                     <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbarCollapse">
                         <span class="sr-only">Toggle navigation</span>
@@ -63,44 +75,35 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a class="navbar-brand" href="/">Wedding Bells</a>
+                    <a href="/"><img class='img-responsive' src='{{MEDIA_URL}}images/default/logo.jpg'/></a>
                 </div>
                 <!-- Collect the nav links, forms, and other content for toggling -->
                 <div class="collapse navbar-collapse" id="navbarCollapse">
                     <ul class="nav navbar-nav navbar-right">
-                        {% if not logged_user.is_authenticated %}
-                            <li class="active"><a href="{% url 'page_list' username=logged_user %}" class="btn">Home</a></li>
-                            <li class="active"><a href="{% url 'account_logout' %}" class="btn">Logout</a></li>
+                        {% if form %}
+                            {% if not logged_user.is_authenticated %}
+                                <li class="active"><a href="{% url 'page_list' username=logged_user %}" class="btn">Home</a></li>
+                                <li class="active"><a href="{% url 'account_logout' %}" class="btn">Logout</a></li>
+                            {% endif %}
                         {% endif %}
-                        <li class="active"><a href="/sunnyarora07/welcome" target='_blank'>Demo</a></li>
-                        <li class="active"><a href="/about/">About</a></li>
-                        <li class="active"><a href="/contact/">Contact</a></li>
-                        <ul class="list-unstyled list-inline list-social-icons">
-                            <li>
-                                <a href="https://facebook.com/sunnyarora29"><i class="fa fa-facebook-square fa-2x"></i></a>
-                            </li>
-                            <li>
-                                <a href="https://www.linkedin.com/pub/sunny-arora/3a/a5/670"><i class="fa fa-linkedin-square fa-2x"></i></a>
-                            </li>
-                            <li>
-                                <a href="#"><i class="fa fa-twitter-square fa-2x"></i></a>
-                            </li>
-                            <li>
-                                <a href="https://github.com/sunnyar/wedding"><i class="fa fa-github-square fa-2x"></i></a>
-                            </li>
-                        </ul>
+                        <li><a href="/sunnyarora07/welcome" target='_blank'>Demo</a></li>
+                        <li><a href="/about/">About</a></li>
+                        <li><a href="/contact/">Contact</a></li>
+                        <li>&nbsp;&nbsp;&nbsp;</li>
                     </ul>
                 </div>
-            </div>
-        </nav>
+            </nav>
+        </div>
 
-        <div class='container'>
-            <div class="row">
-                <div class="col-lg-8 col-md-4 col-sm-6 col-xs-8 text_align body_color">
-                    <h1 class="page-header">Select Themes</h1>
+        {% if form %}
+            <div class='container'>
+                <div class="row">
+                    <div class="col-lg-8 col-md-4 col-sm-6 col-xs-8 text_align body_color">
+                        <br><br><button onclick="goBack()" type="submit" class="btn btn-primary">Go Back</button>
+                        <h1 class="page-header">Select Themes</h1>
 
-                    <form action="" method='post' enctype="multipart/form-data">
-                        <ul class="errorlist">
+                        <form action="" method='post' enctype="multipart/form-data">
+                            <ul class="errorlist">
                                 {% if form.non_field_errors %}
                                     <li>{{ form.non_field_errors }}</li>
                                 {% endif %}
@@ -108,34 +111,78 @@
                                     {% if field.errors %}
                                         <ul class="errorlist">
                                             {% for error in field.errors %}
-                                                <h2 style='color:red'><b><i>Field Error : Select a Theme or Click 'Home' on top right</i></b></h2>
+                                                <h2 style='color:red'><b><i>Error : Select a Theme or Click 'Go Back' on top</i></b></h2>
                                             {% endfor %}
                                         </ul>
                                     {% endif %}
                                 {% endfor %}
                             </ul>
-                        </div>
-                        {% csrf_token %}
-                        <div class="control-group form-group">
-                            <div class="controls form_control">
-                                <div class="col-lg-6 col-md-4 col-xs-6 text_align thumb">
-                                    {% for choice in form.name %}
-                                        <span class="radio">{{ choice.tag }} {{ choice.choice_label }}</span>
-                                        <img class="img-responsive" src="{{MEDIA_URL}}images/themes/theme{{forloop.counter0}}.jpg"/><br>
-                                        <button type="submit" class="btn btn-primary">Select</button>
-                                    {% endfor %}
-                                </div>
                             </div>
-                        </div><br>
+                            {% csrf_token %}
+                            <div class="control-group form-group">
+                                <div class="controls form_control">
+                                    <div class="col-lg-12 col-md-4 col-xs-6 text_align thumb">
+                                        {% if is_member %}
+                                            {% for choice in form.name %}
+                                                <div class="fieldgroup" style='margin-left: 2em;'>
+                                                    <span class="radio">{{ choice.tag }} {{ choice.choice_label }}</span>
+                                                    <br>
+                                                    <button type="submit" class="btn btn-primary">Select</button><br><br>
+                                                </div>
+                                            {% endfor %}
+                                        {% else %}
+                                            {% for choice in form.name|slice:":31" %}
+                                                <div class="fieldgroup" style='margin-left: 2em;'>
+                                                    <span class="radio">{{ choice.tag }} {{ choice.choice_label }}</span>
+                                                    <br>
+                                                    <button type="submit" class="btn btn-primary">Select</button><br><br>
+                                                </div>
+                                            {% endfor %}
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div><br>
 
-                        <div id="success"></div>
-                    </form>
+                            <div id="success"></div>
+                        </form>
+                    </div>
                 </div>
             </div>
-        </div>
-        <hr>
+        {% else %}
+            <br><br><button onclick="goBack()" type="submit" class="btn btn-primary">Go Back</button>
+            <br><br>
+            <h1><u>Free & Premium Themes</u></h1>
+            <div class='container'>
+                <div class="row">
+                    <div class="col-lg-8 col-lg-offset-2 col-md-8 col-md-offset-2 col-sm-8 col-sm-offset-2 col-xs-12 text_align thumb">
+                        <h2 id='free_themes' class="page-header">Free Themes</h2>
+                        {% for i in theme_range|slice:":31" %}
+                            <div class="fieldgroup" style='margin-left: 2em;'>
+                                <img src='{{MEDIA_URL}}images/themes/theme{{i}}.jpg' width="150" height="150"/><br><br>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            <div class='container'>
+                <div class="row">
+                    <div class="col-lg-8 col-lg-offset-2 col-md-8 col-md-offset-2 col-sm-8 col-sm-offset-2 col-xs-12 text_align thumb">
+                            <h2 id='premium_themes' class="page-header">Premium Themes</h2>
+                            {% for i in theme_range|slice:"31:64" %}
+                                <div class="fieldgroup" style='margin-left: 2em;'>
+                                    <img src='{{MEDIA_URL}}images/premium_themes/premium_theme{{forloop.counter0}}.jpg' width="150" height="150"/><br><br>
+                                </div>
+                            {% endfor %}
+                    </div>
+                </div>
+            </div>
+        {% endif %}
         <div class="panel-footer clearfix navbar-fixed-bottom">
             <div class="pull-right">
+                <a target='_blank' href="https://facebook.com/sunnyarora29"><i class="fa fa-facebook-square fa-2x"></i></a>
+                <a target='_blank' href="https://www.linkedin.com/pub/sunny-arora/3a/a5/670"><i class="fa fa-linkedin-square fa-2x"></i></a>
+                <a target='_blank' href="#"><i class="fa fa-twitter-square fa-2x"></i></a>
+                <a target='_blank' href="https://github.com/sunnyar/wedding"><i class="fa fa-github-square fa-2x"></i></a>
         	    <a href="/">Home</a>
             	<a href="/terms/">Terms of use</a>
             	<a href="/privacy/">Privacy policy</a>
@@ -143,7 +190,6 @@
             </div>
             <p>Copyright © 2014 Wedding Bells</p>
         </div>
-
 
 
         <!-- jQuery Version 1.11.0 -->

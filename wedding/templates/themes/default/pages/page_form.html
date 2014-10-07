@@ -5,15 +5,6 @@
     {{form.media}}
 {% endblock %}
 
-{% block navbar_right %}
-    {% if logged_user.is_authenticated %}
-        <li class="active"><a href="{% url 'account_logout' %}">Logout</a></li>
-        <li class="active"><a href="{% url 'theme_form' username=logged_user.username %}">Themes</a></li>
-        <li class="active"><a href="{% url 'payment_form' %}">Go Premium</a></li>
-        <li class="active"><a href="/sunnyarora07/welcome" target='_blank'>Demo</a></li>
-    {% endif %}
-{% endblock navbar_right %}
-
 {% block sidebar %}
     {% for page in all_objects %}
         <a class='href_color' href="{% url 'page_detail' username=logged_user slug=page.slug %}">{{page.title}}</a><br>
