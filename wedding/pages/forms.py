@@ -36,7 +36,7 @@ class PhotoForm(forms.ModelForm):
 
     class Meta:
         model = PhotoContent
-        fields = ('image', 'title', 'caption', 'crop_from', 'tags',)
+        fields = ('image', 'title', 'caption', 'crop_from',)
 
 
 class AddressForm(forms.ModelForm):

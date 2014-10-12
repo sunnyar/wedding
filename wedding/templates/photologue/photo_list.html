@@ -72,9 +72,11 @@
                             {{photo.title}}
                             {% if logged_user.is_authenticated %}
                                 <form action="{% url 'photo_update' username=logged_user.username pk=photo.pk %}">
+                                {% csrf_token %}
                                     <input type="submit" value="Edit Photo" class="btn btn-primary">
                                 </form>
                                 <form action="{% url 'photo_delete' username=logged_user.username pk=photo.pk %}">
+                                {% csrf_token %}
                                     <input type="submit" value="Delete Photo" class="btn btn-primary">
                                 </form>
                             {% endif %}

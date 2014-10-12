@@ -100,7 +100,6 @@
                 <div class="row">
                     <div class="col-lg-8 col-md-4 col-sm-6 col-xs-8 text_align body_color">
                         <br><br><button onclick="goBack()" type="submit" class="btn btn-primary">Go Back</button>
-                        <h1 class="page-header">Select Themes</h1>
 
                         <form action="" method='post' enctype="multipart/form-data">
                             <ul class="errorlist">
@@ -123,19 +122,21 @@
                                 <div class="controls form_control">
                                     <div class="col-lg-12 col-md-4 col-xs-6 text_align thumb">
                                         {% if is_member %}
+                                            <h1 class="page-header">Free & Premium Themes</h1>
                                             {% for choice in form.name %}
                                                 <div class="fieldgroup" style='margin-left: 2em;'>
                                                     <span class="radio">{{ choice.tag }} {{ choice.choice_label }}</span>
                                                     <br>
-                                                    <button type="submit" class="btn btn-primary">Select</button><br><br>
+                                                    <button type="submit" class="btn btn-primary">Select</button><br><br>>br>
                                                 </div>
                                             {% endfor %}
                                         {% else %}
+                                            <h1 class="page-header">Free Themes</h1>
                                             {% for choice in form.name|slice:":31" %}
                                                 <div class="fieldgroup" style='margin-left: 2em;'>
                                                     <span class="radio">{{ choice.tag }} {{ choice.choice_label }}</span>
                                                     <br>
-                                                    <button type="submit" class="btn btn-primary">Select</button><br><br>
+                                                    <button type="submit" class="btn btn-primary">Select</button><br><br><br>
                                                 </div>
                                             {% endfor %}
                                         {% endif %}

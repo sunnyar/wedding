@@ -151,8 +151,9 @@ class HomePageFormView(FormView):
                 bride_last_name=form.cleaned_data['bride_last_name'],
                 location=form.cleaned_data['location'],
                 wedding_date=form.cleaned_data['wedding_date'])
+            UserProfile.objects.create(user=self.request.user)
         else :
-            Wedding.objects.all().update(user=self.request.user,
+            Wedding.objects.filter(user=self.request.user).update(user=self.request.user,
                 groom_first_name=form.cleaned_data['groom_first_name'],
                 groom_last_name=form.cleaned_data['groom_last_name'],
                 bride_first_name=form.cleaned_data['bride_first_name'],
@@ -186,8 +187,9 @@ class PageListView(ListView) :
     def get_context_data(self, **kwargs):
         context = super(PageListView, self).get_context_data(**kwargs)
         context['username'] = self.kwargs['username']
-        context['logged_user'] = self.request.user
+
         if self.request.user.is_authenticated :
+            context['logged_user'] = self.request.user
             context['is_member'] = UserProfile.objects.filter(user__username=self.kwargs['username']).values()[0]['member']
 
         wedding_objects = Wedding.objects.filter(user__username=self.kwargs['username'])
@@ -226,8 +228,6 @@ class PageDetailView(DetailView) :
 
         context['all_objects'] = Page.objects.filter(user__username=username)
         context['username']    = self.kwargs['username']
-        if self.request.user.is_authenticated :
-            context['is_member'] = UserProfile.objects.filter(user__username=self.kwargs['username']).values()[0]['member']
 
         wedding_objects = Wedding.objects.filter(user__username=self.kwargs['username'])
         context['wedding_objects'] = wedding_objects
@@ -239,7 +239,8 @@ class PageDetailView(DetailView) :
         context['wedding_done'] = wedding_done
 
         if logged_user.is_authenticated :
-            context['logged_user'] = logged_user
+            context['is_member'] = UserProfile.objects.filter(user__username=self.kwargs['username']).values()[0]['member']
+            context['logged_user'] = str(logged_user)
 
         return context
 
@@ -265,6 +266,7 @@ class PageUpdateView(UpdateView) :
 
     def get_context_data(self, **kwargs):
         context = super(PageUpdateView, self).get_context_data(**kwargs)
+        context['username'] = self.kwargs['username']
         context['logged_user'] = self.request.user
         if self.request.user.is_authenticated :
             context['is_member'] = UserProfile.objects.filter(user__username=self.kwargs['username']).values()[0]['member']
@@ -290,6 +292,7 @@ class PhotoUpdateView(UpdateView) :
 
     def get_context_data(self, **kwargs):
         context = super(PhotoUpdateView, self).get_context_data(**kwargs)
+        context['username'] = self.kwargs['username']
         context['logged_user'] = self.request.user
         if self.request.user.is_authenticated :
             context['is_member'] = UserProfile.objects.filter(user__username=self.kwargs['username']).values()[0]['member']
@@ -314,6 +317,7 @@ class PhotoCreateView(CreateView):
 
     def get_context_data(self, **kwargs):
         context = super(PhotoCreateView, self).get_context_data(**kwargs)
+        context['username'] = self.kwargs['username']
         context['logged_user'] = self.request.user
         if self.request.user.is_authenticated :
             context['is_member'] = UserProfile.objects.filter(user__username=self.kwargs['username']).values()[0]['member']
@@ -352,6 +356,7 @@ class PhotoDeleteView(DeleteView) :
     def get_context_data(self, **kwargs):
         context = super(PhotoDeleteView, self).get_context_data(**kwargs)
         context['logged_user'] = self.request.user
+        context['username'] = self.kwargs['username']
         if self.request.user.is_authenticated :
             context['is_member'] = UserProfile.objects.filter(user__username=self.kwargs['username']).values()[0]['member']
         context['all_objects'] = Page.objects.filter(user=self.request.user)
@@ -387,8 +392,6 @@ class GalleryListView(PhotoListView) :
 
         context['object_list_len'] = len(PhotoContent.objects.filter(user__username=username))
         context['page_list']       = Page.objects.filter(user__username=username)
-        if self.request.user.is_authenticated :
-            context['is_member']       = UserProfile.objects.filter(user__username=username).values()[0]['member']
 
         wedding_objects = Wedding.objects.filter(user__username=username)
         context['wedding_objects'] = wedding_objects
@@ -402,8 +405,12 @@ class GalleryListView(PhotoListView) :
         context['username']        = username
 
         if logged_user.is_authenticated :
-            context['logged_user']     = self.request.user
+            context['logged_user']     = str(logged_user)
+            context['is_member']       = UserProfile.objects.filter(user__username=username).values()[0]['member']
+
         return context
+
+
 
 class GalleryDetailView(PhotoDetailView) :
     model = PhotoContent
@@ -429,8 +436,6 @@ class GalleryDetailView(PhotoDetailView) :
 
         context['object_list_len'] = len(PhotoContent.objects.filter(user__username=username))
         context['page_list']       = Page.objects.filter(user__username=username)
-        if self.request.user.is_authenticated :
-            context['is_member']       = UserProfile.objects.filter(user__username=self.kwargs['username']).values()[0]['member']
 
         wedding_objects = Wedding.objects.filter(user__username=username)
         context['wedding_objects'] = wedding_objects
@@ -444,8 +449,11 @@ class GalleryDetailView(PhotoDetailView) :
         context['username']        = username
 
         if logged_user.is_authenticated :
-            context['logged_user']     = self.request.user
+            context['is_member']       = UserProfile.objects.filter(user__username=self.kwargs['username']).values()[0]['member']
+            context['logged_user']     = str(logged_user)
         return context
+
+
 
 from geopy import geocoders
 
@@ -491,8 +499,6 @@ class AddressListView(ListView) :
             map_addresses.append(g.geocode(str(ea).split(':')[1])[1])
 
         context['map_of_events'] = zip(events, addresses, map_addresses, event_address)
-        if self.request.user.is_authenticated :
-            context['is_member']     = UserProfile.objects.filter(user__username=self.kwargs['username']).values()[0]['member']
 
         wedding_objects = Wedding.objects.filter(user__username=username)
         context['wedding_objects'] = wedding_objects
@@ -506,7 +512,8 @@ class AddressListView(ListView) :
         context['username']  = username
 
         if logged_user.is_authenticated :
-            context['logged_user'] = logged_user
+            context['is_member']   = UserProfile.objects.filter(user__username=self.kwargs['username']).values()[0]['member']
+            context['logged_user'] = str(logged_user)
 
         return context
 
@@ -529,6 +536,7 @@ class AddressUpdateView(UpdateView) :
 
     def get_context_data(self, **kwargs):
         context = super(AddressUpdateView, self).get_context_data(**kwargs)
+        context['username'] = self.kwargs['username']
         context['logged_user'] = self.request.user
         if self.request.user.is_authenticated :
             context['is_member']   = UserProfile.objects.filter(user__username=self.kwargs['username']).values()[0]['member']
@@ -544,7 +552,7 @@ def rsvp_thanks(request, username) :
     all_objects     = Page.objects.filter(user__username=username)
 
     if request.user.is_authenticated() :
-        logged_user     = request.user
+        logged_user = str(request.user)
 
     return render_to_response('pages/thanks.html',locals(), context_instance=RequestContext(request))
 
@@ -572,8 +580,6 @@ class RsvpFormView(FormView):
 
         context['wedding_objects'] = Wedding.objects.filter(user__username=username)
         context['username']        = username
-        if self.request.user.is_authenticated :
-            context['is_member']       = UserProfile.objects.filter(user__username=self.kwargs['username']).values()[0]['member']
 
         wedding_objects = Wedding.objects.filter(user__username=username)
         context['wedding_objects'] = wedding_objects
@@ -587,7 +593,9 @@ class RsvpFormView(FormView):
         context['all_objects']     = Page.objects.filter(user__username=username)
 
         if logged_user.is_authenticated() :
-            context['logged_user'] = logged_user
+            context['is_member']   = UserProfile.objects.filter(user__username=self.kwargs['username']).values()[0]['member']
+            context['logged_user'] = str(logged_user)
+
         return context
 
     def form_valid(self, form):
@@ -682,6 +690,7 @@ class AudioFileCreateView(CreateView):
 
     def get_context_data(self, **kwargs):
         context = super(AudioFileCreateView, self).get_context_data(**kwargs)
+        context['username'] = self.kwargs['username']
         context['logged_user'] = self.request.user
         if self.request.user.is_authenticated :
             context['is_member']   = UserProfile.objects.filter(user__username=self.kwargs['username']).values()[0]['member']
@@ -729,8 +738,6 @@ class AudioFileListView(ListView) :
 
         context['page_list'] = Page.objects.filter(user__username=username)
         context['audio_objects']   = AudioFile.objects.filter(user__username=username)
-        if self.request.user.is_authenticated :
-            context['is_member']       = UserProfile.objects.filter(user__username=self.kwargs['username']).values()[0]['member']
 
         wedding_objects = Wedding.objects.filter(user__username=username)
         context['wedding_objects'] = wedding_objects
@@ -744,7 +751,8 @@ class AudioFileListView(ListView) :
         context['username']  = username
 
         if logged_user.is_authenticated :
-            context['logged_user'] = logged_user
+            context['is_member']   = UserProfile.objects.filter(user__username=self.kwargs['username']).values()[0]['member']
+            context['logged_user'] = str(logged_user)
 
         return context
 
@@ -767,6 +775,7 @@ class AudioFileUpdateView(UpdateView) :
 
     def get_context_data(self, **kwargs):
         context = super(AudioFileUpdateView, self).get_context_data(**kwargs)
+        context['username'] = self.kwargs['username']
         context['logged_user'] = self.request.user
         if self.request.user.is_authenticated :
             context['is_member']   = UserProfile.objects.filter(user__username=self.kwargs['username']).values()[0]['member']
@@ -794,6 +803,7 @@ class AudioFileDeleteView(DeleteView) :
 
     def get_context_data(self, **kwargs):
         context = super(AudioFileDeleteView, self).get_context_data(**kwargs)
+        context['username'] = self.kwargs['username']
         context['logged_user'] = self.request.user
         if self.request.user.is_authenticated :
             context['is_member']   = UserProfile.objects.filter(user__username=self.kwargs['username']).values()[0]['member']

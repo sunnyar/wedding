@@ -5,9 +5,26 @@
     {{form.media}}
 {% endblock %}
 
+{% block navbar_right %}
+    {% if user.is_authenticated %}
+        <li><a href="{% url 'account_logout' %}">Logout</a></li>
+        <li><a href="{% url 'theme_form' username=username %}">Themes</a></li>
+        {% if not is_member %}
+            <li><a href="{% url 'payment_form' username %}">Go Premium</a></li>
+        {% endif %}
+        <li><a href="/sunnyarora07/welcome" target='_blank'>Demo</a></li>
+    {% endif %}
+{% endblock navbar_right %}
+
+{% block heading %}
+    {% if logged_user == username %}
+        <a href="{% url 'profile_form' username=username %}" class="btn btn-primary">Edit</a>
+    {% endif %}
+{% endblock heading %}
+
 {% block sidebar %}
     {% for page in all_objects %}
-        {% if logged_user.is_authenticated %}
+        {% if logged_user == username %}
             <a class='href_color' href="{% url 'page_detail' username=username slug=page.slug %}">{{page.title}}</a><br>
         {% elif page.title != 'HomePage' %}
             <a class='href_color' href="{% url 'page_detail' username=username slug=page.slug %}">{{page.title}}</a><br>
@@ -24,10 +41,16 @@
     <form method="post" action="" enctype="multipart/form-data">
         {% csrf_token %}
         {% for field in form %}
-            {{ field.label_tag }}<br>
-            {{ field }}<br><br>
+            <div class='form_content_color'>
+                {{ field.label_tag }}<br>
+                {{ field }}<br><br>
+            </div>
         {% endfor %}
         <br>
-        <button type="submit" class="btn btn-primary">Submit</button><br><br><br>
+        {% if logged_user == username %}
+            <button type="submit" class="btn btn-primary">Submit</button><br><br><br>
+        {% else %}
+            <button type="submit" class="btn btn-primary disabled">Submit</button><br><br><br>
+        {% endif %}
     </form>
 {% endblock content %}

@@ -80,30 +80,10 @@
                 <!-- Collect the nav links, forms, and other content for toggling -->
                 <div class="collapse navbar-collapse" id="navbarCollapse">
                     <ul class="nav navbar-nav navbar-right">
-                        {% if not logged_user.is_authenticated %}
-                            <li class="active"><a href="{% url 'page_list' username=username %}" class="btn">Home</a></li>
-                            <li class="active"><a href="{% url 'account_logout' %}" class="btn">Logout</a></li>
-                        {% endif %}
                         <li><a href="/sunnyarora07/welcome" target='_blank'>Demo</a></li>
                         <li><a href="/about/">About</a></li>
                         <li><a href="/contact/">Contact</a></li>
-                        <li class="dropdown">
-                            <a data-toggle="dropdown" class="dropdown-toggle" href="#">Share <b class="caret"></b></a>
-                            <ul role="menu" class="dropdown-menu list-unstyled list-inline list-social-icons">
-                                <li>
-                                    <a href="https://facebook.com/sunnyarora29"><i class="fa fa-facebook-square fa-2x"></i></a>
-                                </li>
-                                <li>
-                                    <a href="https://www.linkedin.com/pub/sunny-arora/3a/a5/670"><i class="fa fa-linkedin-square fa-2x"></i></a>
-                                </li>
-                                <li>
-                                    <a href="#"><i class="fa fa-twitter-square fa-2x"></i></a>
-                                </li>
-                                <li>
-                                    <a href="https://github.com/sunnyar/wedding"><i class="fa fa-github-square fa-2x"></i></a>
-                                </li>
-                            </ul>
-                        </li>
+                        <li>&nbsp;&nbsp;&nbsp;</li>
                     </ul>
                 </div>
             </nav>
@@ -146,12 +126,15 @@
         </div>
         <hr>
 
-        <div class="panel-footer clearfix">
+        <div class="panel-footer clearfix navbar-fixed-bottom">
             <div class="pull-right">
+                <a target='_blank' href="https://facebook.com/sunnyarora29"><i class="fa fa-facebook-square fa-2x"></i></a>
+                <a target='_blank' href="https://www.linkedin.com/pub/sunny-arora/3a/a5/670"><i class="fa fa-linkedin-square fa-2x"></i></a>
+                <a target='_blank' href="#"><i class="fa fa-twitter-square fa-2x"></i></a>
+                <a target='_blank' href="https://github.com/sunnyar/wedding"><i class="fa fa-github-square fa-2x"></i></a>
         	    <a href="/">Home</a>
-            	<a href="/terms/">Terms of use</a>
-            	<a href="/privacy/">Privacy policy</a>
-            	<a href="/contact/">Contact us</a>
+            	<a href="/terms/">Terms</a>
+            	<a href="/privacy/">Privacy</a>
             </div>
             <p>Copyright © 2014 Wedding Bells</p>
         </div>

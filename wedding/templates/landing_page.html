@@ -251,7 +251,7 @@
                                 </h4>
                             </div>
                             <div id="collapseOne" class="panel-collapse collapse">
-                                <div class="panel-body">
+                                <div class="panel-body" style='background-color: #dedef8;'>
                                     <strong><p>
                                         Congratulations on your forthcoming marriage. Create a rapid online wedding website, and start sharing your special day with all your loved ones.<br>
                                         We make your wedding celebration the Happiest !<br><br>
@@ -271,7 +271,7 @@
                                 </h4>
                             </div>
                             <div id="collapseTwo" class="panel-collapse collapse">
-                                <div class="panel-body">
+                                <div class="panel-body"  style='background-color: #dedef8;'>
                                     <strong><p>
                                         Checkout our unique elegant wedding website designs<br>
                                         50+ Designs<br>
@@ -294,7 +294,7 @@
                                 </h4>
                             </div>
                             <div id="collapseThree" class="panel-collapse collapse">
-                                <div class="panel-body">
+                                <div class="panel-body" style='background-color: #dedef8;'>
                                     <ul>
                                         <strong>
                                         <span class='glyphicon glyphicon-edit'></span> Customize Your Site<br><br>
@@ -317,13 +317,17 @@
                                 </h4>
                             </div>
                             <div id="collapseFour" class="panel-collapse collapse">
-                                <div class="panel-body">
-                                    <a target='_blank' href='/payment/'><button class='btn btn-primary'>Go Premium</button></a><br><br>
+                                <div class="panel-body" style='background-color: #dedef8;'>
+                                    {% if logged_user.is_authenticated %}
+                                        <a href="{% url 'payment_form' logged_user.username %}"><button class='btn btn-primary'>Go Premium</button></a><br><br>
+                                    {% else %}
+                                        <button class='btn btn-primary disabled'>Go Premium</button><br><br>
+                                    {% endif %}
                                     <strong><p>
                                         Register yourself and select different themes.
                                         There are two ways of getting started.<br>
                                         Either you can choose a theme whether it can be a <a href='/themes/#free_themes'>free theme</a> or <a href='/themes/#premium_themes'>Premium theme</a>.
-                                        Premium wedding website themes can be accessed after payment which will be very lucrative and built for modern drift.
+                                        Premium wedding website themes can be accessed after login/register and payment which will be very lucrative and built for modern drift.
                                     </p></strong>
                                 </div>
                             </div>
@@ -470,9 +474,8 @@
                 <a target='_blank' href="#"><i class="fa fa-twitter-square fa-2x"></i></a>
                 <a target='_blank' href="https://github.com/sunnyar/wedding"><i class="fa fa-github-square fa-2x"></i></a>
         	    <a href="/">Home</a>
-            	<a href="/terms/">Terms of use</a>
-            	<a href="/privacy/">Privacy policy</a>
-            	<a href="/contact/">Contact us</a>
+            	<a href="/terms/">Terms</a>
+            	<a href="/privacy/">Privacy</a>
             </div>
             <p>Copyright © 2014 Wedding Bells</p>
         </div>
