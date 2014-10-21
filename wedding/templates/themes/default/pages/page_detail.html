@@ -1,5 +1,30 @@
 {% extends "themes/default/index.html" %}
 
+{% block head %}
+    {% if not logged_user == username %}
+        <script>
+            function prompt_access_key(){
+                alert(logged_user);
+                var access_key = prompt("Please enter the access key", "");
+                var count = 0;
+                if (access_key != 'password') {
+                    while(count < 2) {
+                    alert("Incorrect access key !!");
+                    access_key = prompt("Please enter the access key", "");
+                    count ++;
+                    }
+                    window.location.replace("/");
+                }
+                else {
+
+                    window.location.replace("#");
+                }
+            }
+            window.onload = prompt_access_key;
+        </script>
+    {% endif %}
+{% endblock head %}
+
 {% block navbar_right %}
     {% if logged_user == username and page.title != 'HomePage' %}
         <li><a href="{% url 'page_update' username=username slug=object.slug %}" class="btn">Edit Page</a></li>
@@ -25,7 +50,11 @@
         {% if logged_user == username %}
             <a class='href_color' href="{% url 'page_detail' username=username slug=page.slug %}">{{page.title}}</a><br>
         {% elif page.title != 'HomePage' %}
-            <a class='href_color' href="{% url 'page_detail' username=username slug=page.slug %}">{{page.title}}</a><br>
+            {% if access_granted == 'True' %}
+                <a class='href_color' href="{% url 'page_detail' username=username slug=page.slug %}">{{page.title}}</a><br>
+            {% else %}
+                <a class='href_color' href="{% url 'site_access' username=username %}">{{page.title}}</a><br>
+            {% endif %}
         {% endif %}
     {% endfor %}
 {% endblock %}
@@ -45,9 +74,4 @@
 
     {% endif %}
     {{ object.body | safe | linebreaks}}
-
-    {% if object.title == 'HomePage' %}
-        <img src="{{MEDIA_URL}}images/default/edit_info.jpg" width="540" height="320" alt="" title=""/>
-    {% endif %}
-</div>
 {% endblock content %}

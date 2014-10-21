@@ -1,7 +1,7 @@
 from django import forms
 from .models import Page
 from .models import Address, Rsvp, PhotoContent
-from .models import Wedding, Contact, Theme
+from .models import Wedding, Contact, Theme, UserProfile
 from tinymce.widgets import TinyMCE
 from photologue.models import Photo
 from localflavor.in_.forms import INStateSelect, INPhoneNumberField
@@ -85,6 +85,12 @@ class AudioFileForm(forms.ModelForm):
     class Meta:
         model = AudioFile
         fields = ('audio_file',)
+
+
+class SiteAccessForm(forms.Form) :
+
+    access_key = forms.CharField(required = True, label = "Website Access Key",
+        max_length = 10)
 
 
 class CreditCardField(forms.IntegerField):

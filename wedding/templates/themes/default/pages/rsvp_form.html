@@ -27,7 +27,11 @@
         {% if logged_user == username %}
             <a class='href_color' href="{% url 'page_detail' username=username slug=page.slug %}">{{page.title}}</a><br>
         {% elif page.title != 'HomePage' %}
-            <a class='href_color' href="{% url 'page_detail' username=username slug=page.slug %}">{{page.title}}</a><br>
+            {% if access_granted == 'True' %}
+                <a class='href_color' href="{% url 'page_detail' username=username slug=page.slug %}">{{page.title}}</a><br>
+            {% else %}
+                <a class='href_color' href="{% url 'site_access' username=username %}">{{page.title}}</a><br>
+            {% endif %}
         {% endif %}
     {% endfor %}
 {% endblock %}
@@ -40,6 +44,7 @@
 
     <form method="post" action="" enctype="multipart/form-data">
         {% csrf_token %}
+        <br>
         {% for field in form %}
             <div class='form_content_color'>
                 {{ field.label_tag }}<br>
@@ -47,7 +52,7 @@
             </div>
         {% endfor %}
         <br>
-        {% if logged_user == username %}
+        {% if username != 'sunnyarora07' %}
             <button type="submit" class="btn btn-primary">Submit</button><br><br><br>
         {% else %}
             <button type="submit" class="btn btn-primary disabled">Submit</button><br><br><br>

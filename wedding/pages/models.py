@@ -14,12 +14,14 @@ class UserProfile(models.Model) :
     user        = models.OneToOneField(User, related_name='profile')
     user_domain = models.CharField(max_length=20, default='jack-and-jill')
     member      = models.BooleanField(default=False)
+    access_key  = models.CharField(max_length=10, default='0000000')
+    access_granted = models.BooleanField(default=False)
 
     def __unicode__(self) :
         if self.member :
-            return '%s has %s domain and is a Premium Member ' % (self.user, self.user_domain)
+            return '%s has %s domain and is a Premium Member with access key : %s' % (self.user, self.user_domain, self.access_key)
         else :
-            return '%s has %s domain and is a Free Member ' % (self.user, self.user_domain)
+            return '%s has %s domain and is a Free Member with access key : %s' % (self.user, self.user_domain, self.access_key)
 
 
 def content_file_name(instance, filename):

@@ -4,7 +4,7 @@ from .views import PageDetailView, GalleryDetailView, AudioFileDeleteView
 from .views import PageListView, GalleryListView, AddressListView, AudioFileListView
 from .views import PageUpdateView, AddressUpdateView, PhotoUpdateView, AudioFileUpdateView
 from .views import PhotoCreateView, AudioFileCreateView
-from .views import PhotoDeleteView, HomePageFormView, RsvpFormView
+from .views import PhotoDeleteView, HomePageFormView, RsvpFormView, SiteAccessFormView
 from .views import ContactFormView, ThemeFormView, PaymentFormView
 from .views import rsvp_thanks, user_profile, homepage, about_us, contact_thanks
 from django.contrib.auth.decorators import login_required as auth
@@ -12,6 +12,7 @@ from django.contrib.auth.decorators import login_required as auth
 
 urlpatterns = patterns('',
         url(r'^$', homepage, name='homepage'),
+        url(r'^(?P<username>[-\w\d]+)/site_access$', SiteAccessFormView.as_view(), name='site_access'),
         url(r'^contact/$', ContactFormView.as_view(), name='contact_form'),
         url(r'^contact/thanks/$', contact_thanks, name='contact_thanks'),
         url(r'^terms/$', TemplateView.as_view(template_name='terms.html')),

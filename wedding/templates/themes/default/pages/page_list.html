@@ -22,7 +22,8 @@
                 </div>
                 <div class="modal-body">
                     <p class="text-warning"><large>Start Customzing your Website</large><br>
-                        You can also check our <a href='#'>'How To Create Your Own Website'</a> video
+                        We will soon be releasing <a href='#'>'How To Create Your Own Website'</a> video<br>
+                        Till then you can check our <a href='#howToCreate'>'How to' Instructions</a>
                     </p>
                 </div>
             </div>
@@ -34,26 +35,39 @@
 
 {% endblock %}
 
+
 {% block sidebar %}
     {% for page in object_list.values %}
         {% if user.is_authenticated %}
-            <a class='href_color' href="{% url 'page_detail' username=logged_user slug=page.slug %}">{{page.title}}</a><br>
+            <a class='href_color' href="{% url 'page_detail' username=username slug=page.slug %}">{{page.title}}</a><br>
         {% elif page.title != 'HomePage' %}
-            <a class='href_color' href="{% url 'page_detail' username=logged_user slug=page.slug %}">{{page.title}}</a><br>
+            <a class='href_color' href="{% url 'page_detail' username=username slug=page.slug %}">{{page.title}}</a><br>
         {% endif %}
     {% endfor %}
 {% endblock sidebar %}
+
 
 {% block content %}
 
     {% if object_list.values.0.title == 'HomePage' %}
         <center><h1>Home Page</h1><br>
-        <p><font size="3"> Welcome to our wedding website portal!<br>
-        For all those who will be attending, all of the information you could ever want to know about wedding couple and our wedding will be available for you here.
-        <br><br>Please check back often as we will be making frequent updates.<br>
-        You can also check our demo site <a target='_blank' href="/sunnyarora07/welcome"><b>Here</b></a></font></p></center><br>
-        <p><b>'How to' Instructions :</b></p><br>
+        <p><font size="4"> Welcome to your wedding website portal !!</center><br><br>
+            For all those who will be attending, all of the information they
+            could ever want to know about you and your better half will be available here.<br>
+            <br>Please check back often as we will be making frequent updates.<br>
+            You can also check our demo site
+            <a target='_blank' href="/sunnyarora07/welcome"><b>Here</b></a>
+            </font>
+        </p><br>
+        <h3>
+            <u><b>Website Access to Family and Friends</b></u>
+        </h3>
+        <p>
+            <a target='_blank' href='/{{username}}/site_access'>Click Here</a></b><br><br>
+        </p>
+        <h3 id='howToCreate'><b><u>'How to' Instructions</u> :</b></h3><br>
         <a href='{{MEDIA_URL}}images/default/edit_info.jpg' target='_blank' title='Edit Instructions'><img class="img-responsive" src="{{MEDIA_URL}}images/default/edit_info.jpg" title='Edit Instructions'/></a>
+
     {% endif %}
 
 {% endblock content %}

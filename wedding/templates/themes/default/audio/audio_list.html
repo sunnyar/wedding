@@ -114,10 +114,14 @@
                 <a class='href_color' href="{% url 'page_detail' username=username slug=page.slug %}">{{page.title}}</a><br>
             {% endif %}
         {% elif page.title != 'HomePage' %}
-            {% if page.title == 'Music Album' %}
-                <a class='href_color' href="{% url 'audio_list' username=username %}">{{page.title}}</a><br>
+            {% if access_granted == 'True' %}
+                {% if page.title == 'Music Album' %}
+                    <a class='href_color' href="{% url 'audio_list' username=username %}">{{page.title}}</a><br>
+                {% else %}
+                    <a class='href_color' href="{% url 'page_detail' username=username slug=page.slug %}">{{page.title}}</a><br>
+                {% endif %}
             {% else %}
-                <a class='href_color' href="{% url 'page_detail' username=username slug=page.slug %}">{{page.title}}</a><br>
+                <a class='href_color' href="{% url 'site_access' username=username %}">{{page.title}}</a><br>
             {% endif %}
         {% endif %}
     {% endfor %}

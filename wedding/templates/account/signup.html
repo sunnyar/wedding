@@ -12,10 +12,36 @@
 
     <form class="signup" id="signup_form" method="post" action="{% url 'account_signup' %}">
         {% csrf_token %}
+        {% if form.non_field_errors %}
+            <div class="alert alert-danger alert-error">
+                <strong>Error!</strong> {{ form.non_field_errors }}
+            </div>
+        {% endif %}
+        {% for field in form %}
+            {% if field.errors %}
+                {% for error in field.errors %}
+                    {% if field.name == 'terms_and_privacy' %}
+                        <div class="alert alert-danger alert-error">
+                            <strong>Error!</strong> You need to accept the Terms and Privacy Policies.
+                        </div>
+                    {% else %}
+                        <div class="alert alert-danger alert-error">
+                            <strong>Error!</strong> {{field.label}} - Required.
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+        {% endfor %}
+        <br>
         {% for field in form.visible_fields %}
-            {{ field.errors }}
-            {{ field.label_tag }}<br>
-            {{ field }}<br><br>
+            {% if field.name == "terms_and_privacy" %}
+                {{field}}
+                I have read and agree to the <a href="/terms/" target="_blank">Terms</a> and <a href="/privacy/" target="_blank">Privacy</a>
+            {% else %}
+                {{ field.label_tag }}<br>
+                {{ field }}
+            {% endif %}
+            <br><br>
         {% endfor %}
         {% if redirect_field_value %}
             <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />

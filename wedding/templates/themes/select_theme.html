@@ -98,29 +98,28 @@
         {% if form %}
             <div class='container'>
                 <div class="row">
-                    <div class="col-lg-8 col-md-4 col-sm-6 col-xs-8 text_align body_color">
+                    <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 text_align body_color">
                         <br><br><button onclick="goBack()" type="submit" class="btn btn-primary">Go Back</button>
 
                         <form action="" method='post' enctype="multipart/form-data">
-                            <ul class="errorlist">
-                                {% if form.non_field_errors %}
-                                    <li>{{ form.non_field_errors }}</li>
-                                {% endif %}
-                                {% for field in form %}
-                                    {% if field.errors %}
-                                        <ul class="errorlist">
-                                            {% for error in field.errors %}
-                                                <h2 style='color:red'><b><i>Error : Select a Theme or Click 'Go Back' on top</i></b></h2>
-                                            {% endfor %}
-                                        </ul>
-                                    {% endif %}
-                                {% endfor %}
-                            </ul>
-                            </div>
                             {% csrf_token %}
+                            <br>
+                            {% if form.non_field_errors %}
+                                <li>{{ form.non_field_errors }}</li>
+                            {% endif %}
+                            {% for field in form %}
+                                {% if field.errors %}
+                                    {% for error in field.errors %}
+                                        <div class="alert alert-danger alert-error">
+                                            <strong>Error!</strong> Select a Theme or Click 'Go Back' on top
+                                        </div>
+                                    {% endfor %}
+                                {% endif %}
+                            {% endfor %}
+                            </div>
                             <div class="control-group form-group">
                                 <div class="controls form_control">
-                                    <div class="col-lg-12 col-md-4 col-xs-6 text_align thumb">
+                                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-6 text_align thumb">
                                         {% if is_member %}
                                             <h1 class="page-header">Free & Premium Themes</h1>
                                             {% for choice in form.name %}
@@ -155,7 +154,7 @@
             <h1><u>Free & Premium Themes</u></h1>
             <div class='container'>
                 <div class="row">
-                    <div class="col-lg-8 col-lg-offset-2 col-md-8 col-md-offset-2 col-sm-8 col-sm-offset-2 col-xs-12 text_align thumb">
+                    <div class="col-lg-8 col-lg-offset-2 col-md-12 col-md-offset-2 col-sm-8 col-sm-offset-2 col-xs-12 text_align thumb">
                         <h2 id='free_themes' class="page-header">Free Themes</h2>
                         {% for i in theme_range|slice:":31" %}
                             <div class="fieldgroup" style='margin-left: 2em;'>
@@ -167,7 +166,7 @@
             </div>
             <div class='container'>
                 <div class="row">
-                    <div class="col-lg-8 col-lg-offset-2 col-md-8 col-md-offset-2 col-sm-8 col-sm-offset-2 col-xs-12 text_align thumb">
+                    <div class="col-lg-8 col-lg-offset-2 col-md-12 col-md-offset-2 col-sm-12 col-sm-offset-2 col-xs-12 text_align thumb">
                             <h2 id='premium_themes' class="page-header">Premium Themes</h2>
                             {% for i in theme_range|slice:"31:64" %}
                                 <div class="fieldgroup" style='margin-left: 2em;'>

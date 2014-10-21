@@ -10,7 +10,7 @@
         <meta name="author" content="">
         <link rel="shortcut icon" type="image/png" href="{{MEDIA_URL}}images/default/favicon.ico"/>
 
-        <title>Wedding Website - {% block title %}{%endblock%}</title>
+        <title>Wedding Bells - {% block title %}{%endblock%}</title>
 
         <!-- Bootstrap core CSS -->
         <link href="{{STATIC_URL}}css/bootstrap.min.css" rel="stylesheet">
@@ -137,12 +137,12 @@
 
         <div class='container'>
             <div class="row">
-                <div class="col-lg-2 col-md-4 col-sm-6 col-xs-3 sidebar">
+                <div class="col-lg-2 col-md-2 col-sm-2 col-xs-3 sidebar">
                     <ul class="nav nav-sidebar text_align">
                         <li style='font-style: italic;font-weight: bold;'>{% block sidebar %} {% endblock %}</li>
                     </ul>
                 </div>
-                <div class="col-lg-8 col-md-4 col-sm-6 col-xs-8 text_align text-center" style='font-style: italic;font-weight: bold;'>
+                <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 text_align text-center" style='font-style: italic;font-weight: bold;'>
                     <h2 class='header_color'>
                         {{wedding_objects.values.0.groom_first_name |capfirst}} <img src="{{MEDIA_URL}}images/default/weds.png"/> {{wedding_objects.values.0.bride_first_name|capfirst}}<br><br>
                         {{wedding_objects.values.0.wedding_date}}
@@ -153,7 +153,21 @@
                     {% block heading %}
                     {% endblock %}<br><br>
                 </div>
-                <div class="col-lg-8 col-md-4 col-sm-6 col-xs-8 text_align body_color">
+                <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 text_align body_color">
+                    {% if form.non_field_errors %}
+                        <div class="alert alert-danger alert-error">
+                            <strong>Error!</strong> {{ form.non_field_errors }}
+                        </div>
+                    {% endif %}
+                    {% for field in form %}
+                        {% if field.errors %}
+                            {% for error in field.errors %}
+                                <div class="alert alert-danger alert-error">
+                                    <strong>Error!</strong> {{field.label}} - Required.
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                    {% endfor %}
                     {% block content %}
                     {% endblock %}
                 </div>

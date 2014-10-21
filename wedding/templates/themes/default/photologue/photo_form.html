@@ -28,6 +28,7 @@
     <a href="{% url 'photo_list' username=logged_user.username %}"><button type="submit" class="btn btn-primary">Back</button></a><br>
     <form method="post" action="" enctype="multipart/form-data">
         {% csrf_token %}
+        <br>
         {% for field in form %}
             <div class='form_content_color'>
                 {{ field.label_tag }}<br>

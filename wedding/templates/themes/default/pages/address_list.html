@@ -26,7 +26,11 @@
         {% if logged_user == username %}
             <a class='href_color' href="{% url 'page_detail' username=username slug=page.slug %}">{{page.title}}</a><br>
         {% elif page.title != 'HomePage' %}
-            <a class='href_color' href="{% url 'page_detail' username=username slug=page.slug %}">{{page.title}}</a><br>
+            {% if access_granted == 'True' %}
+                <a class='href_color' href="{% url 'page_detail' username=username slug=page.slug %}">{{page.title}}</a><br>
+            {% else %}
+                <a class='href_color' href="{% url 'site_access' username=username %}">{{page.title}}</a><br>
+            {% endif %}
         {% endif %}
     {% endfor %}
 {% endblock sidebar %}
