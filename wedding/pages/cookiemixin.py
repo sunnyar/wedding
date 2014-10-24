@@ -35,6 +35,7 @@ class CookieMixin(object):
         Get the response object from the parent class and sets the cookies on
         it accordingly.
         """
+
         response = super(CookieMixin, self).dispatch(request, *args, **kwargs)
         for cookie_args, cookie_kwargs in self.get_cookies():
             response.set_cookie(*cookie_args, **cookie_kwargs)

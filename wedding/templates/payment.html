@@ -1,6 +1,27 @@
 {% extends 'flat_pages_base.html' %}
 {% load staticfiles %}
 
+{% block heading %}
+    <div id="myModal" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h3 class="modal-title">Welcome {{logged_user.username}}</h3>
+                </div>
+                <div class="modal-body">
+                    <p class="text-info">
+                    <large>
+                        Our Payment Gateway is still under process. We will keep you updated.<br>
+                        Thanks for your co-operation !!
+                    </large>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
 {% block page_header %}Payment{% endblock %}
 
 {% block breadcrumb %}Payment{% endblock %}

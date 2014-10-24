@@ -5,8 +5,8 @@
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="description" content="">
-        <meta name="author" content="">
+        <meta name="description" content="Wedding Bells is a website for organising your wedding with your guests.">
+        <meta name="author" content="Sunny Arora">
         <link rel="shortcut icon" type="image/png" href="{{MEDIA_URL}}images/default/favicon.ico"/>
 
         <title>Wedding Bells</title>
@@ -32,39 +32,38 @@
           <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
         <![endif]-->
         <style>
-            @import url('/static/css/bootstrap.min.css');
 
-            /*body{
-                background: url('/media/images/themes/bg_image1.jpg') no-repeat center center fixed;
-                -webkit-background-size: cover;
-                -moz-background-size: cover;
-                -o-background-size: cover;
-                background-size: 100% 100%;
-            }*/
             a.href_color {
                 color: #000;
                 &:hover {
                 color: #000;
                 }
             }
+
             a.link_color {
                 color: yellow;
             }
+
             div.body_color {
                 color: #fff;
             }
+
             header.carousel {
                 height: 70%;
             }
-        	li.tab_padding{
-        	    padding-right:100px;
-        	}
-        	ul.tab_bg_image{
+
+            li.tab_padding{
+                padding-right:100px;
+            }
+
+            ul.tab_bg_image{
                 background: url('/media/images/default/tab_bg_image.jpg');
-        	}
-        	#big-video-wrap {
+            }
+
+            #big-video-wrap {
                 display: none;
             }
+
         </style>
 
         <script type="text/javascript">
@@ -129,74 +128,6 @@
             </nav>
         </div>
 
-        <!-- <!-- Header Carousel >
-        <header id="WeddingCarousel" class="carousel slide" data-ride="carousel"-->
-            <!-- Indicators >
-            <ol class="carousel-indicators">
-                <li data-target="#WeddingCarousel" data-slide-to="0" class="active"></li>
-                <li data-target="#WeddingCarousel" data-slide-to="1"></li>
-                <li data-target="#WeddingCarousel" data-slide-to="2"></li>
-                <li data-target="#WeddingCarousel" data-slide-to="3"></li>
-                <li data-target="#WeddingCarousel" data-slide-to="4"></li>
-                <li data-target="#WeddingCarousel" data-slide-to="5"></li>
-                <li data-target="#WeddingCarousel" data-slide-to="6"></li>
-            </ol-->
-
-            <!-- Wrapper for slides >
-            <div class="carousel-inner">
-                <div class="item active">
-                    <div class="fill" style="background-image:url('/media/images/default/slide_1.jpg');"></div>
-                    <div class="carousel-caption">
-                        <h2></h2>
-                    </div>
-                </div>
-                <div class="item">
-                    <div class="fill" style="background-image:url('/media/images/default/slide_2.jpg');"></div>
-                    <div class="carousel-caption">
-                        <h2></h2>
-                    </div>
-                </div>
-                <div class="item">
-                    <div class="fill" style="background-image:url('/media/images/default/slide_3.jpg');"></div>
-                    <div class="carousel-caption">
-                        <h2></h2>
-                    </div>
-                </div>
-                <div class="item">
-                    <div class="fill" style="background-image:url('/media/images/default/slide_4.jpg');"></div>
-                    <div class="carousel-caption">
-                        <h2></h2>
-                    </div>
-                </div>
-                <div class="item">
-                    <div class="fill" style="background-image:url('/media/images/default/slide_5.jpg');"></div>
-                    <div class="carousel-caption">
-                        <h2></h2>
-                    </div>
-                </div>
-                <div class="item">
-                    <div class="fill" style="background-image:url('/media/images/default/slide_6.jpg');"></div>
-                    <div class="carousel-caption">
-                        <h2></h2>
-                    </div>
-                </div>
-                <div class="item">
-                    <div class="fill" style="background-image:url('/media/images/default/slide_7.jpg');"></div>
-                    <div class="carousel-caption">
-                        <h2></h2>
-                    </div>
-                </div>
-            </div-->
-
-            <!-- Controls >
-            <a class="left carousel-control" href="#WeddingCarousel" data-slide="prev">
-                <span class="glyphicon glyphicon-chevron-left"></span>
-            </a>
-            <a class="right carousel-control" href="#WeddingCarousel" data-slide="next">
-                <span class="glyphicon glyphicon-chevron-right"></span>
-            </a>
-        </header--><br>
-
         <div class='container'>
             <div class="row">
                 <div class="col-lg-12 col-md-4 col-sm-6 col-xs-12">
@@ -205,18 +136,16 @@
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                                    <h4 class="modal-title">Update</h4>
+                                    <h3 class="modal-title">Welcome {{logged_user.username}}</h3>
                                 </div>
                                 <div class="modal-body">
-                                    <strong>
-                                        <large>
-                                            <span class='glyphicon glyphicon-warning-sign'></span> <p>Site Under Construction</p>
-                                        </large>
-                                    </strong>
-                                    <p class="text-warning"><small>Be Patient. We will be back soon !!</small></p>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                    <p class="text-warning"><large>Warning !! </large>
+                                        In order to take full advantage of all features,
+                                        this site could download some cookies on your computer.
+                                        By using this site you agree to its use.
+                                        The use of cookies enables us to offer you content more useful and relevant to you.
+                                        For more information, please visit <a href='/privacy/'>Privacy Policy</a>.
+                                    </p><br>
                                 </div>
                             </div>
                         </div>
@@ -224,18 +153,24 @@
                 </div>
             </div>
         </div>
-        <br><br>
+
         <div class='container'>
+            <div class='row'>
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 body_color" style='font-style: italic;font-weight: bold;'>
+                    <p class="pull-right">Last Visited Time : {{last_visit}}</p><br>
+                    <!--p class="pull-right">No. of Visits : {{visits}} </p-->
+                </div>
+            </div>
             <div class="row">
                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 body_color text-center" style='font-style: italic;font-weight: bold;'>
-                        <h1 style='color:red'>
-                            Welcome to Wedding Bells
-                        </h1>
-                        <h3 class='page-header'>Your wedding. Your website. Your way.</h3>
+                    <h1 style='color:red;'>
+                        Welcome to Wedding Bells
+                    </h1>
+                    <h3 class='page-header'>Your wedding. Your website. Your way.</h3>
                     <b><p>Wedding Bells is a revolutionary new way of organising your wedding with your guests.<br>
-                            Share your wedding with your guests, tell your story, upload photos by creating a fun, secure and innovative website. Easy to create, and fully customisable to match your wedding theme - you will love it!
+                        Share your wedding with your guests, tell your story, upload photos by creating a fun, secure and innovative website. Easy to create, and fully customisable to match your wedding theme - you will love it!
                     </p></b>
-                <br><br>
+                </div>
             </div>
         </div>
 
@@ -336,55 +271,6 @@
             </div>
         </div>
 
-        <!--div class="container">
-            <div class="row">
-                <div class="col-lg-12 col-md-4 col-sm-6 col-xs-12">
-                    <ul class="nav nav-tabs tab_bg_image">
-                        <li class="active tab_padding"><a class='link_color' data-toggle="tab" href="#sectionA">
-                            Create Your Own
-                        </a></li>
-                        <li class='tab_padding'><a class='link_color' data-toggle="tab" href="#sectionB">Themes</a></li>
-                        <li class='tab_padding'><a class='link_color' data-toggle="tab" href="#sectionC">Packages</a></li>
-                        <li class='tab_padding'><a class='link_color' data-toggle="tab" href="#sectionD">Features</a></li>
-                    </ul>
-                    <br><br><br>
-                    <div class="tab-content">
-                        <div id="sectionA" class="tab-pane fade in active">
-                            <strong><p>
-                                Congratulations on your forthcoming marriage. Create a rapid online wedding website, and start sharing your special day with all your loved ones.<br>
-                                We make your wedding celebration the Happiest !<br><br>
-                                Create your own free responsive wedding website in 3 easy steps<br>
-                                <b><a href="{% url 'account_signup' %}">Register</a>  /  <a href="{% url 'account_login' %}">Login</a> <span class="glyphicon glyphicon-circle-arrow-right"></span> Provide Details <span class="glyphicon glyphicon-circle-arrow-right"></span> Customize Pages</b>
-                            </p></strong>
-                        </div>
-                        <div id="sectionB" class="tab-pane fade">
-                            <strong><p>
-                            </p></strong>
-                        </div>
-                        <div id="sectionC" class="tab-pane fade">
-                            <a target='_blank' href='/payment/'><button class='btn btn-primary'>Go Premium</button></a><br><br>
-                            <strong><p>
-                                Register yourself and select different themes.
-                                There are two ways of getting started.<br>
-                                Either you can choose a theme whether it can be a <a href='#'>free theme</a> or <a href='#'>Premium theme</a>.
-                                Premium wedding website themes can be accessed after payment which will be very lucrative and built for modern drift.
-                            </p></strong>
-                        </div>
-                        <div id="sectionD" class="tab-pane fade">
-                            <ul>
-                                <strong>
-                                <li>Customize Your Site</li><br>
-                                <li>RSVP Online</li><br>
-                                <li>Shared Online Photo Album</li><br>
-                                <li>Custom Maps With Your Suggested Hotels</li>
-                                </strong>
-                            </ul>
-                        </div>
-                    </div><br><br>
-                </div>
-            </div>
-        </div-->
-
 		<div class='container'>
 		    <div class='row'>
                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 body_color">
@@ -402,42 +288,7 @@
                         Wedding websites for you, just a line of weddingbells.co.in connects you, with the entire thing you could wish for !!
                     </p></b>
                 </div>
-           </div><br><br>
-            <!-- /.row -->
-        </div-->
-        <!-- /.container -->
-                <!--div class="col-lg-12 col-md-4 col-sm-6 col-xs-12">
-                    <h2 class="page-header">Some Of Our Most Popular Features</h2>
-                </div>
-                <div class="col-lg-12 col-md-4 col-sm-6 col-xs-12">
-                    <p></p>
-                    <ul>
-                        <strong>
-                        <li>Customize Your Site</li><br>
-                        <li>RSVP Online</li><br>
-                        <li>Shared Online Photo Album</li><br>
-                        <li>Custom Maps With Your Suggested Hotels</li>
-                        </strong>
-                    </ul><br><br>
-                </div>
-                <div class="col-lg-6 col-md-4 col-sm-6 col-xs-12">
-                    <div class="intro-message">
-                        <h3>Find Us On :</h3>
-                        <hr class="intro-divider">
-                        <ul class="list-inline intro-social-buttons">
-                            <li>
-                                <a target='_blank' href="https://facebook.com/sunnyarora29" class="btn btn-primary btn-lg"><i class="fa fa-facebook fa-fw"></i> <span class="network-name">Facebook</span></a>
-                            </li>
-                            <li>
-                                <a target='_blank' href="https://github.com/sunnyar/wedding" class="btn btn-primary btn-lg"><i class="fa fa-github fa-fw"></i> <span class="network-name">Github</span></a>
-                            </li>
-                            <li>
-                                <a target='_blank' href="https://www.linkedin.com/pub/sunny-arora/3a/a5/670" class="btn btn-primary btn-lg"><i class="fa fa-linkedin fa-fw"></i> <span class="network-name">Linkedin</span></a>
-                            </li>
-                        </ul><br><br>
-                    </div>
-                </div>
-            </div>
+            </div><br><br>
             <!-- /.row -->
         </div-->
         <!-- /.container -->
@@ -492,7 +343,6 @@
         	});
         </script>
 
-
         <!-- BigVideo Dependencies -->
         <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
         <script>window.jQuery || document.write('<script src="{{STATIC_URL}}bower_components/jquery/dist/jquery.min.js"><\/script>')</script>
@@ -523,6 +373,5 @@
                 });
              });
         </script>
-
     </body>
 </html>

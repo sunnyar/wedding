@@ -88,6 +88,8 @@
             <!-- Page Heading/Breadcrumbs -->
             <div class="row">
                 <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
+                    {% block heading %}
+                    {% endblock %}
                     <br><br><button onclick="goBack()" type="submit" class="btn btn-primary">Go Back</button><br><br>
                     {% if form.non_field_errors %}
                         <div class="alert alert-danger alert-error">
@@ -130,7 +132,6 @@
                 <a target='_blank' href="https://facebook.com/sunnyarora29"><i class="fa fa-facebook-square fa-2x"></i></a>
                 <a target='_blank' href="https://www.linkedin.com/pub/sunny-arora/3a/a5/670"><i class="fa fa-linkedin-square fa-2x"></i></a>
                 <a target='_blank' href="#"><i class="fa fa-twitter-square fa-2x"></i></a>
-                <a target='_blank' href="https://github.com/sunnyar/wedding"><i class="fa fa-github-square fa-2x"></i></a>
         	    <a href="/">Home</a>
             	<a href="/terms/">Terms</a>
             	<a href="/privacy/">Privacy</a>
@@ -149,6 +150,7 @@
         <!-- Go to www.addthis.com/dashboard to customize your tools -->
         <!--script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5404ad8148071059"></script-->
         <script src="http://api.html5media.info/1.1.5/html5media.min.js"></script>
+
         <script type="text/javascript">
         	$(document).ready(function(){
         		$("#myModal").modal('show');

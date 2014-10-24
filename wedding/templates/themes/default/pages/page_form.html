@@ -1,6 +1,10 @@
 {% extends "themes/default/index.html" %}
 {% load staticfiles %}
 
+{% block title %}
+    - {{object.title}} Form
+{% endblock %}
+
 {% block head %}
     {{form.media}}
 {% endblock %}

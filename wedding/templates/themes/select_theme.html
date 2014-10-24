@@ -9,7 +9,7 @@
         <meta name="author" content="">
         <link rel="shortcut icon" type="image/png" href="{{MEDIA_URL}}images/default/favicon.ico"/>
 
-        <title>Wedding Website - Themes</title>
+        <title>Wedding Website - Free & Premium Themes</title>
 
         <!-- Bootstrap core CSS -->
         <link href="{{STATIC_URL}}css/bootstrap.min.css" rel="stylesheet">
@@ -158,7 +158,7 @@
                         <h2 id='free_themes' class="page-header">Free Themes</h2>
                         {% for i in theme_range|slice:":31" %}
                             <div class="fieldgroup" style='margin-left: 2em;'>
-                                <img src='{{MEDIA_URL}}images/themes/theme{{i}}.jpg' width="150" height="150"/><br><br>
+                                <img src='{{MEDIA_URL}}images/themes/theme{{i}}.jpg' width="150" height="150"/><br><br><br>
                             </div>
                         {% endfor %}
                     </div>
@@ -167,13 +167,13 @@
             <div class='container'>
                 <div class="row">
                     <div class="col-lg-8 col-lg-offset-2 col-md-12 col-md-offset-2 col-sm-12 col-sm-offset-2 col-xs-12 text_align thumb">
-                            <h2 id='premium_themes' class="page-header">Premium Themes</h2>
-                            {% for i in theme_range|slice:"31:64" %}
-                                <div class="fieldgroup" style='margin-left: 2em;'>
-                                    <img src='{{MEDIA_URL}}images/premium_themes/premium_theme{{forloop.counter0}}.jpg' width="150" height="150"/><br><br>
-                                </div>
-                            {% endfor %}
-                    </div>
+                        <h2 id='premium_themes' class="page-header">Premium Themes</h2>
+                        {% for i in theme_range|slice:"31:64" %}
+                            <div class="fieldgroup" style='margin-left: 2em;'>
+                                <img src='{{MEDIA_URL}}images/premium_themes/premium_theme{{forloop.counter0}}.jpg' width="150" height="150"/><br><br><br>
+                            </div>
+                        {% endfor %}
+                </div>
                 </div>
             </div>
         {% endif %}

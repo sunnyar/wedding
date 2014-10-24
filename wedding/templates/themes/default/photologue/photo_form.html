@@ -1,6 +1,10 @@
 {% extends "themes/default/index.html" %}
 {% load staticfiles %}
 
+{% block title %}
+    - Photo Edit Form
+{% endblock %}
+
 {% block navbar_right %}
     {% if user.is_authenticated %}
         <li><a href="{% url 'account_logout' %}">Logout</a></li>

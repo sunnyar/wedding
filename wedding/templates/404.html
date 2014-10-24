@@ -1,12 +1,16 @@
-{% extends "admin/base_site.html" %}
+{% extends "index.html" %}
 {% load i18n %}
 
-{% block title %}{% trans 'Page not found' %}{% endblock %}
+{%block head %}
+    <script>
+        function goBack() {
+            window.history.back()
+        }
+    </script>
+{%endblock %}
 
-{% block content %}
-
-<h2>{% trans 'Page not found' %}</h2>
-
-<p>{% trans "We're sorry, but the requested page could not be found." %}</p>
-
-{% endblock %}
+{%block content %}
+    <br><br><button onclick="goBack()" type="submit" class="btn btn-primary">Go Back</button>
+    <br><br>
+    <h2>{% trans "We're sorry, but the requested page could not be found." %}</h2>
+{%endblock %}

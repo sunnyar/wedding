@@ -1,20 +1,17 @@
-from django.shortcuts import get_object_or_404, render_to_response
+from django.shortcuts import render_to_response
 from django.template import RequestContext
-import json
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponseRedirect
 from django.views.generic import DetailView, ListView, UpdateView
 from .models import Page, PhotoContent, Wedding
 from .models import Address, Rsvp, UserProfile, Theme
 from .forms import PageForm, ThemeForm, AudioFileForm, PaymentForm, SiteAccessForm
 from .forms import AddressForm, RsvpForm, PhotoForm, WeddingForm, ContactForm
 from .cookiemixin import CookieMixin
-from photologue.models import Photo
-from django.core.urlresolvers import reverse, reverse_lazy
-from django.views.generic.edit import CreateView
+from django.core.urlresolvers import reverse
+from django.views.generic.edit import CreateView, FormMixin, ModelFormMixin
 from django.views.generic.edit import DeleteView, FormView
 from photologue.views import PhotoListView, PhotoDetailView
 from django.utils.text import slugify
-from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from datetime import datetime, date
 from collections import OrderedDict
@@ -22,9 +19,9 @@ from django.core.mail import send_mail
 from allauth.account.views import EmailAddress
 from audiofield.models import AudioFile
 import random, string
-from django.contrib import messages
-from django import forms
 from django.contrib.sites.models import Site
+from geopy import geocoders
+
 
 
 
@@ -38,14 +35,61 @@ wedding_pages = OrderedDict([('HomePage', ''), #<center><h1>My Home Page.</h1><b
     ('Guest Information', '<h2>Hotel Accommodations</h2><p>Hotel details/Contact no/Address</p><br><h2>Things To Do in the Area</h2><p>Tell your guests what they can do in the area.</p><br><h2>Additional information</h2><p>Tell your guests any additional information you want them to know.</p>'),
     ('Photo Album', ''), ('Music Album', ''), ('Map of Events',  ''), ('RSVP', '')])
 
+
 address_dict = OrderedDict([('Ceremony' ,['Kanha Continental', 'Kanpur', 'UP', '208012']),
                             ('Reception', ['111A/102, Ashok Nagar', 'Kanpur', 'UP', '208012']),
                             ('Hotel', ['Landmark Towers', 'Kanpur', 'UP', '208012'])])
 
 
+
+
 def homepage(request) :
     logged_user = request.user
-    return render_to_response('landing_page.html', {'wedding_pages' : wedding_pages, 'logged_user' : logged_user}, context_instance=RequestContext(request))
+    """
+    if request.session.get('last_visit'):
+        # The session has a value for the last visit
+        last_visit_time = request.session.get('last_visit')
+        visits = request.session.get('visits', 0)
+
+        if (datetime.now() - datetime.strptime(last_visit_time[:-7], "%Y-%m-%d %H:%M:%S")).days > 0:
+            request.session['visits'] = visits + 1
+            request.session['last_visit'] = str(datetime.now())
+
+    else:
+        # The get returns None, and the session does not have a value for the last visit.
+        request.session['last_visit'] = str(datetime.now())
+        request.session['visits'] = 1
+
+    visits     = request.session['visits']
+    last_visit = datetime.strftime(datetime.strptime(request.session['last_visit'][:-10], '%Y-%m-%d %I:%M'), '%b %d %Y %I:%M %p')
+    """
+
+    return render_to_response('landing_page.html', locals(), context_instance=RequestContext(request))
+
+
+
+
+def contact_thanks(request) :
+    return render_to_response('contact_thanks.html', context_instance=RequestContext(request))
+
+
+
+
+def about_us(request) :
+    logged_user = request.user
+    return render_to_response('about.html', locals(), context_instance=RequestContext(request))
+
+
+
+
+@login_required
+def user_profile(request):
+    if Wedding.objects.filter(user__username=request.user.username).exists() :
+        return HttpResponseRedirect(reverse("page_list", kwargs={"username" : request.user.username}))
+    else :
+        return HttpResponseRedirect(reverse('profile_form', kwargs={"username" : request.user.username}))
+
+
 
 
 class ThemeFormView(FormView):
@@ -79,54 +123,6 @@ class ThemeFormView(FormView):
 
         return super(ThemeFormView, self).form_valid(form)
 
-
-"""
-class PremiumThemeFormView(FormView):
-
-    template_name = 'themes/select_premium_theme.html'
-    form_class    = PremiumThemeForm
-
-    def get_success_url(self):
-        return reverse("page_list", kwargs={"username" : self.request.user})
-
-    def get_context_data(self, **kwargs):
-        context = super(PremiumThemeFormView, self).get_context_data(**kwargs)
-        logged_user = self.request.user
-        username    = self.kwargs['username']
-
-        context['username']  = username
-        if logged_user.is_authenticated :
-            context['logged_user'] = logged_user
-
-        return context
-
-    def form_valid(self, form):
-        # This method is called when valid form data has been POSTed.
-        # It should return an HttpResponse.
-        if not PremiumTheme.objects.filter(user=self.request.user).exists() :
-            PremiumTheme.objects.create(user=self.request.user,
-                name=form.cleaned_data['name'])
-        else :
-            PremiumTheme.objects.all().update(user=self.request.user,
-                name=form.cleaned_data['name'])
-
-        return super(PremiumThemeFormView, self).form_valid(form)
-"""
-
-def contact_thanks(request) :
-    return render_to_response('contact_thanks.html', context_instance=RequestContext(request))
-
-def about_us(request) :
-    logged_user = request.user
-    return render_to_response('about.html', locals(), context_instance=RequestContext(request))
-
-
-@login_required
-def user_profile(request):
-    if Wedding.objects.filter(user__username=request.user.username).exists() :
-        return HttpResponseRedirect(reverse("page_list", kwargs={"username" : request.user.username}))
-    else :
-        return HttpResponseRedirect(reverse('profile_form', kwargs={"username" : request.user.username}))
 
 
 
@@ -168,7 +164,6 @@ class SiteAccessFormView(CookieMixin, FormView):
             username   = self.kwargs['username']
             logged_user = self.request.user
             access_key = UserProfile.objects.filter(user__username=username).values()[0]['access_key']
-            error = 'No error'
 
             if user_access_key != access_key :
                 error = "Incorrect Access Key provided. Try again !!"
@@ -184,6 +179,8 @@ class SiteAccessFormView(CookieMixin, FormView):
     def form_valid(self, form):
         self.add_cookie('access_granted', 'True', max_age=3600)
         return super(SiteAccessFormView, self).form_valid(form)
+
+
 
 
 class HomePageFormView(FormView):
@@ -231,6 +228,8 @@ class HomePageFormView(FormView):
         return super(HomePageFormView, self).form_valid(form)
 
 
+
+
 class PageListView(ListView) :
     model = Page
 
@@ -256,6 +255,8 @@ class PageListView(ListView) :
         username = self.kwargs['username']
         context['username'] = username
         context['domain'] = UserProfile.objects.filter(user__username=username).values()[0]['user_domain']
+        context['access_key']  = UserProfile.objects.filter(user__username=username).values()[0]['access_key']
+        context['site_url']    = Site.objects.get_current()
 
         if self.request.user.is_authenticated :
             context['logged_user'] = self.request.user
@@ -273,8 +274,16 @@ class PageListView(ListView) :
         return context
 
 
-class PageDetailView(DetailView) :
+
+
+class PageDetailView(CookieMixin, FormMixin, DetailView) :
+
     model = Page
+    form_class = SiteAccessForm
+
+    def get_success_url(self):
+        username    = self.kwargs['username']
+        return reverse("page_detail", kwargs={"username" : str(username), "slug": str(self.object.slug)})
 
     def get_template_names(self):
         username = self.kwargs['username']
@@ -298,11 +307,18 @@ class PageDetailView(DetailView) :
 
         context['all_objects'] = Page.objects.filter(user__username=username)
         context['username']    = self.kwargs['username']
-        context['domain'] = UserProfile.objects.filter(user__username=username).values()[0]['user_domain']
+        context['domain']      = UserProfile.objects.filter(user__username=username).values()[0]['user_domain']
+        context['access_key']  = UserProfile.objects.filter(user__username=username).values()[0]['access_key']
+        context['site_url']    = Site.objects.get_current()
+
+        form_class = self.get_form_class()
+        form       = self.get_form(form_class)
+        context['form'] = form
 
         if 'access_granted' in self.request.COOKIES :
             context['access_granted'] = self.request.COOKIES['access_granted']
-
+        else :
+            context['access_granted'] = 'False'
 
         wedding_objects = Wedding.objects.filter(user__username=self.kwargs['username'])
         context['wedding_objects'] = wedding_objects
@@ -319,11 +335,44 @@ class PageDetailView(DetailView) :
 
         return context
 
+
+    def post(self, request, *args, **kwargs):
+        """
+        Handles POST requests, instantiating a form instance with the passed
+        POST variables and then checked for validity.
+        """
+        self.object = self.get_object()
+        form_class = self.get_form_class()
+        form = self.get_form(form_class)
+        self.request.COOKIES.get('access_granted', 'False')
+
+        if form.is_valid():
+            user_access_key = form.cleaned_data['access_key']
+            username   = self.kwargs['username']
+            access_key = UserProfile.objects.filter(user__username=username).values()[0]['access_key']
+
+            if user_access_key != access_key :
+                return self.form_invalid(form)
+
+            return self.form_valid(form)
+        else:
+            return self.form_invalid(form)
+
+    def form_valid(self, form):
+        self.add_cookie('access_granted', 'True', max_age=3600)
+        return super(PageDetailView, self).form_valid(form)
+
+    def form_invalid(self, form):
+        error = "Incorrect Access Key provided. Try again !!"
+        return self.render_to_response(self.get_context_data(form=form, error=error))
+
     def render_to_response(self, context, **response_kwargs):
         response = super(PageDetailView, self).render_to_response(context, **response_kwargs)
         if 'access_granted' not in self.request.COOKIES :
             response.set_cookie("access_granted", "False")
         return response
+
+
 
 
 class PageUpdateView(UpdateView) :
@@ -355,6 +404,8 @@ class PageUpdateView(UpdateView) :
         return context
 
 
+
+
 class PhotoUpdateView(UpdateView) :
     model = PhotoContent
     form_class = PhotoForm
@@ -383,6 +434,14 @@ class PhotoUpdateView(UpdateView) :
     def get_success_url(self):
         return reverse('photo_list', kwargs={"username" : str(self.request.user)} )
 
+    def form_valid(self, form):
+        f = form.save(commit=False)
+        f.user = self.request.user
+        f.slug = slugify(f.title)
+        f.save()
+        return super(PhotoUpdateView, self).form_valid(form)
+
+
 
 class PhotoCreateView(CreateView):
     model = PhotoContent
@@ -410,13 +469,15 @@ class PhotoCreateView(CreateView):
             f = form.save(commit=False)
             f.user = self.request.user
             f.slug = slugify(f.title)
-            #m = Photo.objects.get_or_create(image=image)[0]
             f.save()
         isvalid = super(PhotoCreateView, self).form_valid(form)
         return isvalid
 
     def get_success_url(self):
         return reverse('photo_list', kwargs={"username" : str(self.request.user)} )
+
+
+
 
 class PhotoDeleteView(DeleteView) :
     model = PhotoContent
@@ -448,9 +509,16 @@ class PhotoDeleteView(DeleteView) :
         return reverse('photo_list', kwargs={"username" : str(self.request.user)})
 
 
-class GalleryListView(PhotoListView) :
+
+
+class GalleryListView(CookieMixin, FormMixin, PhotoListView) :
     model = PhotoContent
+    form_class = SiteAccessForm
     paginate_by = 20
+
+    def get_success_url(self):
+        username    = self.kwargs['username']
+        return reverse("photo_list", kwargs={"username" : str(username)})
 
     def get_template_names(self):
         username = self.kwargs['username']
@@ -460,7 +528,6 @@ class GalleryListView(PhotoListView) :
         else :
             template_name = 'themes/default/photologue/photo_list.html'
         return [template_name]
-
 
     def get_queryset(self) :
         username = self.kwargs['username']
@@ -474,9 +541,17 @@ class GalleryListView(PhotoListView) :
 
         context['object_list_len'] = len(PhotoContent.objects.filter(user__username=username))
         context['page_list']       = Page.objects.filter(user__username=username)
+        context['access_key']  = UserProfile.objects.filter(user__username=username).values()[0]['access_key']
+        context['site_url']    = Site.objects.get_current()
+
+        form_class = self.get_form_class()
+        form       = self.get_form(form_class)
+        context['form'] = form
 
         if 'access_granted' in self.request.COOKIES :
             context['access_granted'] = self.request.COOKIES['access_granted']
+        else :
+            context['access_granted'] = 'False'
 
         wedding_objects = Wedding.objects.filter(user__username=username)
         context['wedding_objects'] = wedding_objects
@@ -487,13 +562,43 @@ class GalleryListView(PhotoListView) :
             wedding_done = 'True'
         context['wedding_done'] = wedding_done
 
-        context['username']        = username
+        context['username']     = username
 
         if logged_user.is_authenticated :
-            context['logged_user']     = str(logged_user)
-            context['is_member']       = UserProfile.objects.filter(user__username=username).values()[0]['member']
+            context['logged_user'] = str(logged_user)
+            context['is_member']   = UserProfile.objects.filter(user__username=username).values()[0]['member']
 
         return context
+
+    def post(self, request, *args, **kwargs):
+        """
+        Handles POST requests, instantiating a form instance with the passed
+        POST variables and then checked for validity.
+        """
+        self.object_list = self.get_queryset()
+        form_class = self.get_form_class()
+        form = self.get_form(form_class)
+        self.request.COOKIES.get('access_granted', 'False')
+
+        if form.is_valid():
+            user_access_key = form.cleaned_data['access_key']
+            username   = self.kwargs['username']
+            access_key = UserProfile.objects.filter(user__username=username).values()[0]['access_key']
+
+            if user_access_key != access_key :
+                return self.form_invalid(form)
+
+            return self.form_valid(form)
+        else:
+            return self.form_invalid(form)
+
+    def form_valid(self, form):
+        self.add_cookie('access_granted', 'True', max_age=3600)
+        return super(GalleryListView, self).form_valid(form)
+
+    def form_invalid(self, form):
+        error = "Incorrect Access Key provided. Try again !!"
+        return self.render_to_response(self.get_context_data(form=form, error=error))
 
     def render_to_response(self, context, **response_kwargs):
         response = super(GalleryListView, self).render_to_response(context, **response_kwargs)
@@ -502,8 +607,16 @@ class GalleryListView(PhotoListView) :
         return response
 
 
-class GalleryDetailView(PhotoDetailView) :
+
+
+class GalleryDetailView(CookieMixin, FormMixin, PhotoDetailView) :
+
     model = PhotoContent
+    form_class = SiteAccessForm
+
+    def get_success_url(self):
+        username    = self.kwargs['username']
+        return reverse("photo_detail", kwargs={"username" : str(username), "pk" : self.object.pk})
 
     def get_template_names(self):
         username = self.kwargs['username']
@@ -526,9 +639,17 @@ class GalleryDetailView(PhotoDetailView) :
 
         context['object_list_len'] = len(PhotoContent.objects.filter(user__username=username))
         context['page_list']       = Page.objects.filter(user__username=username)
+        context['access_key']  = UserProfile.objects.filter(user__username=username).values()[0]['access_key']
+        context['site_url']    = Site.objects.get_current()
+
+        form_class = self.get_form_class()
+        form       = self.get_form(form_class)
+        context['form'] = form
 
         if 'access_granted' in self.request.COOKIES :
             context['access_granted'] = self.request.COOKIES['access_granted']
+        else :
+            context['access_granted'] = 'False'
 
         wedding_objects = Wedding.objects.filter(user__username=username)
         context['wedding_objects'] = wedding_objects
@@ -546,6 +667,36 @@ class GalleryDetailView(PhotoDetailView) :
             context['logged_user']     = str(logged_user)
         return context
 
+    def post(self, request, *args, **kwargs):
+        """
+        Handles POST requests, instantiating a form instance with the passed
+        POST variables and then checked for validity.
+        """
+        self.object = self.get_object()
+        form_class = self.get_form_class()
+        form = self.get_form(form_class)
+        self.request.COOKIES.get('access_granted', 'False')
+
+        if form.is_valid():
+            user_access_key = form.cleaned_data['access_key']
+            username   = self.kwargs['username']
+            access_key = UserProfile.objects.filter(user__username=username).values()[0]['access_key']
+
+            if user_access_key != access_key :
+                return self.form_invalid(form)
+
+            return self.form_valid(form)
+        else:
+            return self.form_invalid(form)
+
+    def form_valid(self, form):
+        self.add_cookie('access_granted', 'True', max_age=3600)
+        return super(GalleryDetailView, self).form_valid(form)
+
+    def form_invalid(self, form):
+        error = "Incorrect Access Key provided. Try again !!"
+        return self.render_to_response(self.get_context_data(form=form, error=error))
+
     def render_to_response(self, context, **response_kwargs):
         response = super(GalleryDetailView, self).render_to_response(context, **response_kwargs)
         if 'access_granted' not in self.request.COOKIES :
@@ -553,11 +704,16 @@ class GalleryDetailView(PhotoDetailView) :
         return response
 
 
-from geopy import geocoders
 
-class AddressListView(ListView) :
+
+class AddressListView(CookieMixin, FormMixin, ListView) :
 
     model = Address
+    form_class = SiteAccessForm
+
+    def get_success_url(self):
+        username    = self.kwargs['username']
+        return reverse("events_list", kwargs={"username" : str(username)})
 
     def get_template_names(self):
         username = self.kwargs['username']
@@ -584,7 +740,18 @@ class AddressListView(ListView) :
         username    = self.kwargs['username']
         logged_user = self.request.user
 
-        context['page_list'] = Page.objects.filter(user__username=username)
+        context['page_list']  = Page.objects.filter(user__username=username)
+        context['access_key'] = UserProfile.objects.filter(user__username=username).values()[0]['access_key']
+        context['site_url']   = Site.objects.get_current()
+
+        form_class = self.get_form_class()
+        form       = self.get_form(form_class)
+        context['form'] = form
+
+        if 'access_granted' in self.request.COOKIES :
+            context['access_granted'] = self.request.COOKIES['access_granted']
+        else :
+            context['access_granted'] = 'False'
 
         g=geocoders.GoogleV3()
         event_address = Address.objects.filter(user__username=username)
@@ -608,8 +775,6 @@ class AddressListView(ListView) :
         context['wedding_done'] = wedding_done
 
         context['username']  = username
-        if 'access_granted' in self.request.COOKIES :
-            context['access_granted'] = self.request.COOKIES['access_granted']
 
         if logged_user.is_authenticated :
             context['is_member']   = UserProfile.objects.filter(user__username=self.kwargs['username']).values()[0]['member']
@@ -617,12 +782,43 @@ class AddressListView(ListView) :
 
         return context
 
+    def post(self, request, *args, **kwargs):
+        """
+        Handles POST requests, instantiating a form instance with the passed
+        POST variables and then checked for validity.
+        """
+        self.object_list = self.get_queryset()
+        form_class = self.get_form_class()
+        form = self.get_form(form_class)
+        self.request.COOKIES.get('access_granted', 'False')
+
+        if form.is_valid():
+            user_access_key = form.cleaned_data['access_key']
+            username   = self.kwargs['username']
+            access_key = UserProfile.objects.filter(user__username=username).values()[0]['access_key']
+
+            if user_access_key != access_key :
+                return self.form_invalid(form)
+
+            return self.form_valid(form)
+        else:
+            return self.form_invalid(form)
+
+    def form_valid(self, form):
+        self.add_cookie('access_granted', 'True', max_age=3600)
+        return super(AddressListView, self).form_valid(form)
+
+    def form_invalid(self, form):
+        error = "Incorrect Access Key provided. Try again !!"
+        return self.render_to_response(self.get_context_data(form=form, error=error))
 
     def render_to_response(self, context, **response_kwargs):
         response = super(AddressListView, self).render_to_response(context, **response_kwargs)
         if 'access_granted' not in self.request.COOKIES :
             response.set_cookie("access_granted", "False")
         return response
+
+
 
 
 class AddressUpdateView(UpdateView) :
@@ -654,6 +850,8 @@ class AddressUpdateView(UpdateView) :
         return reverse('events_list', kwargs={"username" : str(self.request.user)})
 
 
+
+
 def rsvp_thanks(request, username) :
     wedding_objects = Wedding.objects.filter(user__username=username)
     all_objects     = Page.objects.filter(user__username=username)
@@ -671,7 +869,9 @@ def rsvp_thanks(request, username) :
     return response
 
 
-class RsvpFormView(FormView):
+
+
+class RsvpFormView(CookieMixin, FormView):
 
     form_class = RsvpForm
 
@@ -695,8 +895,18 @@ class RsvpFormView(FormView):
         context['wedding_objects'] = Wedding.objects.filter(user__username=username)
         context['username']        = username
 
+        context['access_key']  = UserProfile.objects.filter(user__username=username).values()[0]['access_key']
+        context['site_url']    = Site.objects.get_current()
+
+        form_class = self.get_form_class()
+        form       = self.get_form(form_class)
+        context['form'] = form
+
         if 'access_granted' in self.request.COOKIES :
             context['access_granted'] = self.request.COOKIES['access_granted']
+        else :
+            context['access_granted'] = 'False'
+
 
         wedding_objects = Wedding.objects.filter(user__username=username)
         context['wedding_objects'] = wedding_objects
@@ -716,8 +926,10 @@ class RsvpFormView(FormView):
         return context
 
     def form_valid(self, form):
+
         # This method is called when valid form data has been POSTed.
         # It should return an HttpResponse.
+        self.add_cookie('access_granted', 'True', max_age=3600)
         form.save(commit=False)
         first_name = form.cleaned_data['first_name']
         last_name  = form.cleaned_data['last_name']
@@ -761,12 +973,39 @@ class RsvpFormView(FormView):
             raise
         return super(RsvpFormView, self).form_valid(form)
 
+    def post(self, request, *args, **kwargs):
+        """
+        Handles POST requests, instantiating a form instance with the passed
+        POST variables and then checked for validity.
+        """
+        #self.object = self.get_object()
+        form_class = self.get_form_class()
+        form = self.get_form(form_class)
+        self.request.COOKIES.get('access_granted', 'False')
+
+        if form.is_valid():
+            user_access_key = form.cleaned_data['access_key']
+            username   = self.kwargs['username']
+            access_key = UserProfile.objects.filter(user__username=username).values()[0]['access_key']
+
+            if user_access_key != access_key :
+                return self.form_invalid(form)
+
+            return self.form_valid(form)
+        else:
+            return self.form_invalid(form)
+
+    def form_invalid(self, form):
+        error = "Incorrect Access Key provided. Try again !!"
+        return self.render_to_response(self.get_context_data(form=form, error=error))
 
     def render_to_response(self, context, **response_kwargs):
         response = super(RsvpFormView, self).render_to_response(context, **response_kwargs)
         if 'access_granted' not in self.request.COOKIES :
             response.set_cookie("access_granted", "False")
         return response
+
+
 
 
 class ContactFormView(FormView):
@@ -799,6 +1038,8 @@ class ContactFormView(FormView):
         context = super(ContactFormView, self).get_context_data(**kwargs)
         context['logged_user'] = self.request.user
         return context
+
+
 
 
 class AudioFileCreateView(CreateView):
@@ -836,9 +1077,16 @@ class AudioFileCreateView(CreateView):
         return reverse('audio_list', kwargs={"username" : str(self.request.user)} )
 
 
-class AudioFileListView(ListView) :
+
+
+class AudioFileListView(CookieMixin, FormMixin, ListView) :
 
     model = AudioFile
+    form_class = SiteAccessForm
+
+    def get_success_url(self):
+        username    = self.kwargs['username']
+        return reverse("audio_list", kwargs={"username" : str(username)})
 
     def get_template_names(self):
         username = self.kwargs['username']
@@ -862,9 +1110,16 @@ class AudioFileListView(ListView) :
 
         context['page_list'] = Page.objects.filter(user__username=username)
         context['audio_objects']   = AudioFile.objects.filter(user__username=username)
+        context['site_url']    = Site.objects.get_current()
+
+        form_class = self.get_form_class()
+        form       = self.get_form(form_class)
+        context['form'] = form
 
         if 'access_granted' in self.request.COOKIES :
             context['access_granted'] = self.request.COOKIES['access_granted']
+        else :
+            context['access_granted'] = 'False'
 
         wedding_objects = Wedding.objects.filter(user__username=username)
         context['wedding_objects'] = wedding_objects
@@ -883,6 +1138,36 @@ class AudioFileListView(ListView) :
 
         return context
 
+    def post(self, request, *args, **kwargs):
+        """
+        Handles POST requests, instantiating a form instance with the passed
+        POST variables and then checked for validity.
+        """
+        self.object_list = self.get_queryset()
+        form_class = self.get_form_class()
+        form = self.get_form(form_class)
+        self.request.COOKIES.get('access_granted', 'False')
+
+        if form.is_valid():
+            user_access_key = form.cleaned_data['access_key']
+            username   = self.kwargs['username']
+            access_key = UserProfile.objects.filter(user__username=username).values()[0]['access_key']
+
+            if user_access_key != access_key :
+                return self.form_invalid(form)
+
+            return self.form_valid(form)
+        else:
+            return self.form_invalid(form)
+
+    def form_valid(self, form):
+        self.add_cookie('access_granted', 'True', max_age=3600)
+        return super(AudioFileListView, self).form_valid(form)
+
+    def form_invalid(self, form):
+        error = "Incorrect Access Key provided. Try again !!"
+        return self.render_to_response(self.get_context_data(form=form, error=error))
+
     def render_to_response(self, context, **response_kwargs):
         response = super(AudioFileListView, self).render_to_response(context, **response_kwargs)
         if 'access_granted' not in self.request.COOKIES :
@@ -890,14 +1175,16 @@ class AudioFileListView(ListView) :
         return response
 
 
+
+
 class AudioFileUpdateView(UpdateView) :
-    model = AudioFile
+
     form_class = AudioFileForm
 
     def get_template_names(self):
         if Theme.objects.filter(user=self.request.user).exists() :
             theme_selected = Theme.objects.filter(user=self.request.user)
-            template_name = 'themes/%s/audio/audio_form.html' % (theme_selected.values()[0]['name'])
+            template_name  = 'themes/%s/audio/audio_form.html' % (theme_selected.values()[0]['name'])
         else :
             template_name = 'themes/default/audio/audio_form.html'
         return [template_name]
@@ -910,13 +1197,17 @@ class AudioFileUpdateView(UpdateView) :
         context = super(AudioFileUpdateView, self).get_context_data(**kwargs)
         context['username'] = self.kwargs['username']
         context['logged_user'] = self.request.user
+
         if self.request.user.is_authenticated :
             context['is_member']   = UserProfile.objects.filter(user__username=self.kwargs['username']).values()[0]['member']
+
         context['all_objects'] = Page.objects.filter(user=self.request.user)
         return context
 
     def get_success_url(self) :
         return reverse('audio_list', kwargs={"username" : str(self.request.user)})
+
+
 
 
 class AudioFileDeleteView(DeleteView) :
@@ -945,6 +1236,8 @@ class AudioFileDeleteView(DeleteView) :
 
     def get_success_url(self) :
         return reverse('audio_list', kwargs={"username" : str(self.request.user)})
+
+
 
 
 class PaymentFormView(FormView):

@@ -1,5 +1,9 @@
 {% extends "themes/default/index.html" %}
 
+{% block title %}
+    - Audio Delete Confirmation
+{% endblock %}
+
 {% block navbar_right %}
     {% if user.is_authenticated %}
         <li><a href="{% url 'account_logout' %}">Logout</a></li>

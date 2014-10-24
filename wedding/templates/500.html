@@ -1,16 +1,17 @@
-{% extends "admin/base_site.html" %}
+{% extends "index.html" %}
 {% load i18n %}
 
-{% block breadcrumbs %}
-<div class="breadcrumbs">
-<a href="{% url 'admin:index' %}">{% trans 'Home' %}</a>
-&rsaquo; {% trans 'Server error' %}
-</div>
-{% endblock %}
+{%block head %}
+    <script>
+        function goBack() {
+            window.history.back()
+        }
+    </script>
+{%endblock %}
 
-{% block title %}{% trans 'Server error (500)' %}{% endblock %}
-
-{% block content %}
-<h1>{% trans 'Server Error <em>(500)</em>' %}</h1>
-<p>{% trans "There's been an error. Please <a href="/contact/">Contact Us</a> or <a href="mailto:sunnyarora07@gmail.com" target="_top">Sunny Arora</a>. Thanks for your patience." %}</p>
+{%block content %}
+    <br><br><button onclick="goBack()" type="submit" class="btn btn-primary">Go Back</button>
+    <br><br>
+    <h1>{% trans 'Server Error <em>(500)</em>' %}</h1>
+    <h3>There's been an error. Please <a href="/contact/">Contact Us</a> or <a href="mailto:sunnyarora07@gmail.com" target="_top">Sunny Arora</a>. Thanks for your patience.</h3>
 {% endblock %}

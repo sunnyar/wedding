@@ -2,8 +2,6 @@ from django import forms
 from .models import Page
 from .models import Address, Rsvp, PhotoContent
 from .models import Wedding, Contact, Theme, UserProfile
-from tinymce.widgets import TinyMCE
-from photologue.models import Photo
 from localflavor.in_.forms import INStateSelect, INPhoneNumberField
 from django.forms.extras.widgets import SelectDateWidget
 from datetime import date
@@ -84,7 +82,8 @@ class AudioFileForm(forms.ModelForm):
 
     class Meta:
         model = AudioFile
-        fields = ('audio_file',)
+        #fields = ('audio_file',)
+        exclude = ('name', 'user',)
 
 
 class SiteAccessForm(forms.Form) :

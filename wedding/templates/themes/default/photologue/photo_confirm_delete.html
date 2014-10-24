@@ -1,5 +1,9 @@
 {% extends "themes/default/index.html" %}
 
+{% block title %}
+    - Photo Delete Confirmation
+{% endblock %}
+
 {% block sidebar %}
     {% for page in all_objects %}
         <a class='href_color' href="{% url 'page_detail' username=logged_user.username slug=page.slug %}">{{page.title}}</a><br>

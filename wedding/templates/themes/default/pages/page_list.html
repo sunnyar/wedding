@@ -1,6 +1,10 @@
 {% extends "themes/default/index.html" %}
 {% load date_diff %}
 
+{% block title %}
+    - {{object_list.values.0.title}}
+{% endblock %}
+
 {% block navbar_right %}
     {% if user.is_authenticated %}
         <li><a href="{% url 'account_logout' %}">Logout</a></li>
@@ -21,8 +25,15 @@
                     <h3 class="modal-title">Welcome {{logged_user.username}}</h3>
                 </div>
                 <div class="modal-body">
-                    <p class="text-warning"><large>Start Customzing your Website</large><br>
-                        We will soon be releasing <a href='#'>'How To Create Your Own Website'</a> video<br>
+                    <p class="text-warning"><large>Warning !! </large>
+                        In order to take full advantage of all features,
+                        this site could download some cookies on your computer.
+                        By using this site you agree to its use.
+                        The use of cookies enables us to offer you content more useful and relevant to you.
+                        For more information, please visit <a href='/privacy/'>Privacy Policy</a>.
+                    </p><br>
+                    <p class="text-success"><large>Start Customzing your Website</large><br>
+                        We will soon be releasing <a href='#'>'How To Create Your Own Website'</a> video and Premium Themes Section<br>
                         Till then you can check our <a href='#howToCreate'>'How to' Instructions</a>
                     </p>
                 </div>
@@ -50,7 +61,7 @@
 {% block content %}
 
     {% if object_list.values.0.title == 'HomePage' %}
-        <center><h1>Home Page</h1><br>
+        <i><center><h1>Home Page</h1><br>
         <p><font size="4"> Welcome to your wedding website portal !!</center><br><br>
             For all those who will be attending, all of the information they
             could ever want to know about you and your better half will be available here.<br>
@@ -63,11 +74,12 @@
             <u><b>Website Access to Family and Friends</b></u>
         </h3>
         <p>
-            <a target='_blank' href='/{{username}}/site_access'>Click Here</a></b><br><br>
+            Link       : <a target='_blank'>{{site_url}}/{{username}}/{{object_list.values.1.slug}}</a></b><br>
+            Access Key : {{access_key}}
         </p>
         <h3 id='howToCreate'><b><u>'How to' Instructions</u> :</b></h3><br>
         <a href='{{MEDIA_URL}}images/default/edit_info.jpg' target='_blank' title='Edit Instructions'><img class="img-responsive" src="{{MEDIA_URL}}images/default/edit_info.jpg" title='Edit Instructions'/></a>
-
+        </i>
     {% endif %}
 
 {% endblock content %}

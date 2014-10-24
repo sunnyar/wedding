@@ -1,6 +1,10 @@
 {% extends "themes/default/index.html" %}
 {% load photologue_tags %}
 
+{% block title %}
+    - {{object.title}}
+{% endblock %}
+
 {% block navbar_right %}
     {% if user.is_authenticated %}
         <li><a href="{% url 'account_logout' %}">Logout</a></li>
@@ -15,6 +19,40 @@
 {% block heading %}
     {% if logged_user == username %}
         <a href="{% url 'profile_form' username=username %}" class="btn btn-primary">Edit</a>
+    {% else %}
+        {% if access_granted == 'False' %}
+            <div id="myModal" class="modal fade" data-backdrop="static">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title">Site Access Form</h4>
+                        </div>
+                        <form method="post" action="">
+                            {% csrf_token %}
+                            <div class="modal-body">
+                                {% if error %}
+                                    <div class="alert alert-danger alert-error">
+                                        <strong>Error!</strong> {{error}}.
+                                    </div>
+                                {% endif %}
+                                <div class="control-group form-group">
+                                    <div class="controls form_control">
+                                        {% for field in form %}
+                                            {{ field.label_tag }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            {{ field }}<br><br>
+                                            (Enter the Access Key shared by the Wedding Couple)<br><br>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-primary">Submit</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
     {% endif %}
 {% endblock heading %}
 
@@ -27,7 +65,7 @@
                 <a class='href_color' href="{% url 'page_detail' username=username slug=page.slug %}">{{page.title}}</a><br>
             {% endif %}
         {% elif page.title != 'HomePage' %}
-            {% if access_granted == 'True' %}
+            {% if access_granted == 'True' or username == 'sunnyarora07' %}
                 {% if page.title == 'Photo Album' %}
                     <a class='href_color' href="{% url 'photo_list' username=username %}">{{page.title}}</a><br>
                 {% else %}
