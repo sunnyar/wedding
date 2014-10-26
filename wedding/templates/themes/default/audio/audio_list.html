@@ -68,14 +68,28 @@
 
 
         function changeIcon(audio_num) {
-            var icon = document.getElementById("icon_change_" + audio_num).className;
-            if  (icon == 'glyphicon glyphicon-play-circle')
+            var icon_class = document.getElementsByClassName('glyphicon');
+            var id_clicked = icon_class[audio_num].id;
+            var icon_clicked_class = document.getElementById(id_clicked).className;
+
+            for (i=0; i < icon_class.length; i ++)
             {
-                document.getElementById("icon_change_" + audio_num).className = 'glyphicon glyphicon-pause';
-            }
-            else
-            {
-                document.getElementById("icon_change_" + audio_num).className = 'glyphicon glyphicon-play-circle';
+                if (i == audio_num)
+                {
+                    if (icon_clicked_class == 'glyphicon glyphicon-play-circle')
+                    {
+                        document.getElementById(id_clicked).className = 'glyphicon glyphicon-pause';
+                    }
+                    else
+                    {
+                        document.getElementById(id_clicked).className = 'glyphicon glyphicon-play-circle';
+                    }
+                }
+                else
+                {
+                    var remaining_icon_id = document.getElementsByClassName('glyphicon')[i].id;
+                    document.getElementById(remaining_icon_id).className = 'glyphicon glyphicon-play-circle';
+                }
             }
         }
     </script>
@@ -167,14 +181,14 @@
             <div class="col-lg-3 col-md-4 col-sm-6 col-xs-8 thumb">
                 <a class='href_color' href='{{MEDIA_URL}}{{audio.audio_file}}'>{{audio.name}}</a><br>
                 <a class='href_color' href='{{MEDIA_URL}}{{audio.audio_file}}'>
-                    <span id='icon_change_{{forloop.counter}}' class="glyphicon glyphicon-play-circle" onclick="changeIcon({{forloop.counter}})"></span><br>
+                    <span id = 'icon_change_{{forloop.counter0}}' class="glyphicon glyphicon-play-circle" onclick="changeIcon({{forloop.counter0}})"></span><br>
                 </a>
                 {% if logged_user == username %}
-                    <form method="post" action="{% url 'audio_update' username=username pk=audio.pk %}">
+                    <form action="{% url 'audio_update' username=username pk=audio.pk %}">
                         {% csrf_token %}
                         <input type="submit" value="Edit Audio" class="btn btn-primary">
                     </form>
-                    <form method="post" action="">
+                    <form action="{% url 'audio_delete' username=username pk=audio.pk %}">
                         {% csrf_token %}
                         <input type="submit" value="Delete Audio" class="btn btn-primary">
                     </form>

@@ -4,7 +4,7 @@ from .views import PageDetailView, GalleryDetailView, AudioFileDeleteView
 from .views import PageListView, GalleryListView, AddressListView, AudioFileListView
 from .views import PageUpdateView, AddressUpdateView, PhotoUpdateView, AudioFileUpdateView
 from .views import PhotoCreateView, AudioFileCreateView
-from .views import PhotoDeleteView, HomePageFormView, RsvpFormView, SiteAccessFormView
+from .views import PhotoDeleteView, HomePageFormView, RsvpFormView
 from .views import ContactFormView, ThemeFormView, PaymentFormView
 from .views import rsvp_thanks, user_profile, homepage, about_us, contact_thanks
 from django.contrib.auth.decorators import login_required as auth

@@ -8,7 +8,7 @@ from .forms import PageForm, ThemeForm, AudioFileForm, PaymentForm, SiteAccessFo
 from .forms import AddressForm, RsvpForm, PhotoForm, WeddingForm, ContactForm
 from .cookiemixin import CookieMixin
 from django.core.urlresolvers import reverse
-from django.views.generic.edit import CreateView, FormMixin, ModelFormMixin
+from django.views.generic.edit import CreateView, FormMixin
 from django.views.generic.edit import DeleteView, FormView
 from photologue.views import PhotoListView, PhotoDetailView
 from django.utils.text import slugify
@@ -126,6 +126,7 @@ class ThemeFormView(FormView):
 
 
 
+'''
 class SiteAccessFormView(CookieMixin, FormView):
 
     template_name = 'site_access.html'
@@ -179,6 +180,7 @@ class SiteAccessFormView(CookieMixin, FormView):
     def form_valid(self, form):
         self.add_cookie('access_granted', 'True', max_age=3600)
         return super(SiteAccessFormView, self).form_valid(form)
+'''
 
 
 
@@ -406,43 +408,6 @@ class PageUpdateView(UpdateView) :
 
 
 
-class PhotoUpdateView(UpdateView) :
-    model = PhotoContent
-    form_class = PhotoForm
-
-    def get_template_names(self):
-        if Theme.objects.filter(user=self.request.user).exists() :
-            theme_selected = Theme.objects.filter(user=self.request.user)
-            template_name = 'themes/%s/photologue/photo_form.html' % (theme_selected.values()[0]['name'])
-        else :
-            template_name = 'themes/default/photologue/photo_form.html'
-        return [template_name]
-
-    def get_queryset(self) :
-        queryset = PhotoContent.objects.filter(user=self.request.user)
-        return queryset
-
-    def get_context_data(self, **kwargs):
-        context = super(PhotoUpdateView, self).get_context_data(**kwargs)
-        context['username'] = self.kwargs['username']
-        context['logged_user'] = self.request.user
-        if self.request.user.is_authenticated :
-            context['is_member'] = UserProfile.objects.filter(user__username=self.kwargs['username']).values()[0]['member']
-        context['all_objects'] = Page.objects.filter(user=self.request.user)
-        return context
-
-    def get_success_url(self):
-        return reverse('photo_list', kwargs={"username" : str(self.request.user)} )
-
-    def form_valid(self, form):
-        f = form.save(commit=False)
-        f.user = self.request.user
-        f.slug = slugify(f.title)
-        f.save()
-        return super(PhotoUpdateView, self).form_valid(form)
-
-
-
 class PhotoCreateView(CreateView):
     model = PhotoContent
     form_class = PhotoForm
@@ -475,38 +440,6 @@ class PhotoCreateView(CreateView):
 
     def get_success_url(self):
         return reverse('photo_list', kwargs={"username" : str(self.request.user)} )
-
-
-
-
-class PhotoDeleteView(DeleteView) :
-    model = PhotoContent
-    #success_url = reverse_lazy('photo_list', kwargs={"username" : str(request.user)})
-
-    def get_template_names(self):
-        if Theme.objects.filter(user=self.request.user).exists() :
-            theme_selected = Theme.objects.filter(user=self.request.user)
-            template_name = 'themes/%s/photologue/photo_confirm_delete.html' % (theme_selected.values()[0]['name'])
-        else :
-            template_name = 'themes/default/photologue/photo_confirm_delete.html'
-        return [template_name]
-
-    def get_queryset(self) :
-        queryset = PhotoContent.objects.filter(user=self.request.user)
-        return queryset
-
-    def get_context_data(self, **kwargs):
-        context = super(PhotoDeleteView, self).get_context_data(**kwargs)
-        context['logged_user'] = self.request.user
-        context['username'] = self.kwargs['username']
-
-        if self.request.user.is_authenticated :
-            context['is_member'] = UserProfile.objects.filter(user__username=self.kwargs['username']).values()[0]['member']
-        context['all_objects'] = Page.objects.filter(user=self.request.user)
-        return context
-
-    def get_success_url(self) :
-        return reverse('photo_list', kwargs={"username" : str(self.request.user)})
 
 
 
@@ -562,11 +495,11 @@ class GalleryListView(CookieMixin, FormMixin, PhotoListView) :
             wedding_done = 'True'
         context['wedding_done'] = wedding_done
 
-        context['username']     = username
+        context['username']        = username
 
         if logged_user.is_authenticated :
-            context['logged_user'] = str(logged_user)
-            context['is_member']   = UserProfile.objects.filter(user__username=username).values()[0]['member']
+            context['logged_user']     = str(logged_user)
+            context['is_member']       = UserProfile.objects.filter(user__username=username).values()[0]['member']
 
         return context
 
@@ -702,6 +635,79 @@ class GalleryDetailView(CookieMixin, FormMixin, PhotoDetailView) :
         if 'access_granted' not in self.request.COOKIES :
             response.set_cookie("access_granted", "False")
         return response
+
+
+
+
+
+class PhotoUpdateView(UpdateView) :
+    model = PhotoContent
+    form_class = PhotoForm
+
+    def get_template_names(self):
+        if Theme.objects.filter(user=self.request.user).exists() :
+            theme_selected = Theme.objects.filter(user=self.request.user)
+            template_name = 'themes/%s/photologue/photo_form.html' % (theme_selected.values()[0]['name'])
+        else :
+            template_name = 'themes/default/photologue/photo_form.html'
+        return [template_name]
+
+    def get_queryset(self) :
+        queryset = PhotoContent.objects.filter(user=self.request.user)
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super(PhotoUpdateView, self).get_context_data(**kwargs)
+        context['username'] = self.kwargs['username']
+        context['logged_user'] = self.request.user
+        if self.request.user.is_authenticated :
+            context['is_member'] = UserProfile.objects.filter(user__username=self.kwargs['username']).values()[0]['member']
+        context['all_objects'] = Page.objects.filter(user=self.request.user)
+        return context
+
+    def get_success_url(self):
+        return reverse('photo_list', kwargs={"username" : str(self.request.user)} )
+
+    def form_valid(self, form):
+        f = form.save(commit=False)
+        f.user = self.request.user
+        f.slug = slugify(f.title)
+        f.save()
+        isvalid = super(PhotoUpdateView, self).form_valid(form)
+        return isvalid
+
+
+
+
+class PhotoDeleteView(DeleteView) :
+    model = PhotoContent
+    #success_url = reverse_lazy('photo_list', kwargs={"username" : str(request.user)})
+
+    def get_template_names(self):
+        if Theme.objects.filter(user=self.request.user).exists() :
+            theme_selected = Theme.objects.filter(user=self.request.user)
+            template_name = 'themes/%s/photologue/photo_confirm_delete.html' % (theme_selected.values()[0]['name'])
+        else :
+            template_name = 'themes/default/photologue/photo_confirm_delete.html'
+        return [template_name]
+
+    def get_queryset(self) :
+        queryset = PhotoContent.objects.filter(user=self.request.user)
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super(PhotoDeleteView, self).get_context_data(**kwargs)
+        context['logged_user'] = self.request.user
+        context['username'] = self.kwargs['username']
+
+        if self.request.user.is_authenticated :
+            context['is_member'] = UserProfile.objects.filter(user__username=self.kwargs['username']).values()[0]['member']
+        context['all_objects'] = Page.objects.filter(user=self.request.user)
+        return context
+
+    def get_success_url(self) :
+        return reverse('photo_list', kwargs={"username" : str(self.request.user)})
+
 
 
 

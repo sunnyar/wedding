@@ -54,7 +54,11 @@
                                         {% for field in form %}
                                             {{ field.label_tag }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                             {{ field }}<br><br>
-                                            (Enter the Access Key shared by the Wedding Couple)<br><br>
+                                            {% if username == 'sunnyarora07' %}
+                                                (Enter the Access Key : 0000000)<br><br>
+                                            {% else %}
+                                                (Enter the Access Key shared by the Wedding Couple)<br><br>
+                                            {% endif %}
                                         {% endfor %}
                                     </div>
                                 </div>
@@ -97,11 +101,11 @@
                     <img src="{{ photo.get_thumbnail_url }}" alt="{{ photo.title }}"/><br>
                     {{photo.title}}
                     {% if logged_user == username %}
-                        <form method="post" action="{% url 'photo_update' username=username pk=photo.pk %}">
+                        <form action="{% url 'photo_update' username=username pk=photo.pk %}">
                             {% csrf_token %}
                             <input type="submit" value="Edit Photo" class="btn btn-primary">
                         </form>
-                        <form method="post" action="{% url 'photo_delete' username=username pk=photo.pk %}">
+                        <form action="{% url 'photo_delete' username=username pk=photo.pk %}">
                             {% csrf_token %}
                             <input type="submit" value="Delete Photo" class="btn btn-primary">
                         </form>
