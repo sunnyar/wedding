@@ -21,6 +21,7 @@ from audiofield.models import AudioFile
 import random, string
 from django.contrib.sites.models import Site
 from geopy import geocoders
+from allauth.account.views import LoginView
 
 
 
@@ -43,28 +44,77 @@ address_dict = OrderedDict([('Ceremony' ,['Kanha Continental', 'Kanpur', 'UP', '
 
 
 
+class MainPageView(LoginView) :
+
+    template_name = "landing_page.html"
+
+    def get_context_data(self, **kwargs):
+        context = super(MainPageView, self).get_context_data(**kwargs)
+
+        context['logged_user'] = self.request.user
+        return context
+
+
+    def render_to_response(self, context, **response_kwargs):
+        response = super(MainPageView, self).render_to_response(context, **response_kwargs)
+
+        visits = int(self.request.COOKIES.get('visits', '0'))
+        visit_time = datetime.strftime(datetime.strptime(str(datetime.now())[:-10], '%Y-%m-%d %H:%M'), '%b %d %Y %I:%M %p')
+
+        # Does the cookie last_visit exist?
+        if 'last_visit' in self.request.COOKIES:
+            # Yes it does! Get the cookie's value.
+            last_visit = self.request.COOKIES['last_visit']
+
+            # Cast the value to a Python date/time object.
+            last_visit_time = datetime.strptime(last_visit, '%b %d %Y %I:%M %p')
+
+            # If it's been more than a day since the last visit...
+            if (datetime.now() - last_visit_time).days > 0:
+                # ...reassign the value of the cookie to +1 of what it was before...
+                response.set_cookie('visits', visits+1)
+                # ...and update the last visit cookie, too.
+                response.set_cookie('last_visit', visit_time)
+        else:
+            # Cookie last_visit doesn't exist, so create it to the current date/time.
+            response.set_cookie('last_visit', visit_time)
+
+        return response
+
+
+
+
 def homepage(request) :
+
     logged_user = request.user
-    """
-    if request.session.get('last_visit'):
-        # The session has a value for the last visit
-        last_visit_time = request.session.get('last_visit')
-        visits = request.session.get('visits', 0)
 
-        if (datetime.now() - datetime.strptime(last_visit_time[:-7], "%Y-%m-%d %H:%M:%S")).days > 0:
-            request.session['visits'] = visits + 1
-            request.session['last_visit'] = str(datetime.now())
+    visits = int(request.COOKIES.get('visits', '0'))
+    response = render_to_response('landing_page.html', locals(), context_instance=RequestContext(request))
 
+    visit_time = datetime.strftime(datetime.strptime(str(datetime.now())[:-10], '%Y-%m-%d %H:%M'), '%b %d %Y %I:%M %p')
+
+    # Does the cookie last_visit exist?
+    if 'last_visit' in request.COOKIES:
+        # Yes it does! Get the cookie's value.
+        last_visit = request.COOKIES['last_visit']
+
+        # Cast the value to a Python date/time object.
+        last_visit_time = datetime.strptime(last_visit, '%b %d %Y %I:%M %p')
+
+        # If it's been more than a day since the last visit...
+        if (datetime.now() - last_visit_time).days > 0:
+            # ...reassign the value of the cookie to +1 of what it was before...
+            response.set_cookie('visits', visits+1)
+            # ...and update the last visit cookie, too.
+            response.set_cookie('last_visit', visit_time)
+
+        response.set_cookie('first_visit', 'False')
     else:
-        # The get returns None, and the session does not have a value for the last visit.
-        request.session['last_visit'] = str(datetime.now())
-        request.session['visits'] = 1
+        # Cookie last_visit doesn't exist, so create it to the current date/time.
+        response.set_cookie('last_visit', visit_time)
+        response.set_cookie('first_visit', 'True')
 
-    visits     = request.session['visits']
-    last_visit = datetime.strftime(datetime.strptime(request.session['last_visit'][:-10], '%Y-%m-%d %I:%M'), '%b %d %Y %I:%M %p')
-    """
-
-    return render_to_response('landing_page.html', locals(), context_instance=RequestContext(request))
+    return response
 
 
 

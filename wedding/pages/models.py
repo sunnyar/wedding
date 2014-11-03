@@ -15,7 +15,7 @@ class UserProfile(models.Model) :
     user_domain = models.CharField(max_length=20, default='jack-and-jill')
     member      = models.BooleanField(default=False)
     access_key  = models.CharField(max_length=10, default='0000000')
-    access_granted = models.BooleanField(default=False)
+    #access_granted = models.BooleanField(default=False)
 
     def __unicode__(self) :
         if self.member :

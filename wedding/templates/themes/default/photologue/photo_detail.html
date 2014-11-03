@@ -40,7 +40,11 @@
                                         {% for field in form %}
                                             {{ field.label_tag }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                             {{ field }}<br><br>
-                                            (Enter the Access Key shared by the Wedding Couple)<br><br>
+                                            {% if username == 'sunnyarora07' %}
+                                                (Enter the Access Key : 0000000)<br><br>
+                                            {% else %}
+                                                (Enter the Access Key shared by the Wedding Couple)<br><br>
+                                            {% endif %}
                                         {% endfor %}
                                     </div>
                                 </div>

@@ -5,7 +5,7 @@ from .views import PageListView, GalleryListView, AddressListView, AudioFileList
 from .views import PageUpdateView, AddressUpdateView, PhotoUpdateView, AudioFileUpdateView
 from .views import PhotoCreateView, AudioFileCreateView
 from .views import PhotoDeleteView, HomePageFormView, RsvpFormView
-from .views import ContactFormView, ThemeFormView, PaymentFormView
+from .views import ContactFormView, ThemeFormView, PaymentFormView, MainPageView
 from .views import rsvp_thanks, user_profile, homepage, about_us, contact_thanks
 from django.contrib.auth.decorators import login_required as auth
 
@@ -16,6 +16,7 @@ urlpatterns = patterns('',
         url(r'^contact/$', ContactFormView.as_view(), name='contact_form'),
         url(r'^contact/thanks/$', contact_thanks, name='contact_thanks'),
         url(r'^terms/$', TemplateView.as_view(template_name='terms.html')),
+        url(r'^cookie/$', TemplateView.as_view(template_name='cookie_policy.html')),
         url(r'^big_video/$', TemplateView.as_view(template_name='example-ambient.html')),
         url(r'^themes/$', TemplateView.as_view(template_name='themes/select_theme.html'), {'theme_range' : range(65)}),
         #url(r'^premium_themes/$', TemplateView.as_view(template_name='themes/select_premium_theme.html'), {'theme_range' : range(33)}),

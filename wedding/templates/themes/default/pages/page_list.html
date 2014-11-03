@@ -16,36 +16,6 @@
     {% endif %}
 {% endblock navbar_right %}
 
-{% block heading %}
-    <div id="myModal" class="modal fade">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h3 class="modal-title">Welcome {{logged_user.username}}</h3>
-                </div>
-                <div class="modal-body">
-                    <p class="text-warning"><large>Warning !! </large>
-                        In order to take full advantage of all features,
-                        this site could download some cookies on your computer.
-                        By using this site you agree to its use.
-                        The use of cookies enables us to offer you content more useful and relevant to you.
-                        For more information, please visit <a href='/privacy/'>Privacy Policy</a>.
-                    </p><br>
-                    <p class="text-success"><large>Start Customzing your Website</large><br>
-                        We will soon be releasing <a href='#'>'How To Create Your Own Website'</a> video and Premium Themes Section<br>
-                        Till then you can check our <a href='#howToCreate'>'How to' Instructions</a>
-                    </p>
-                </div>
-            </div>
-        </div>
-    </div>
-    {% if user.is_authenticated %}
-        <a href="{% url 'profile_form' username=username %}" class="btn btn-primary">Edit</a>
-    {% endif %}
-
-{% endblock %}
-
 
 {% block sidebar %}
     {% for page in object_list.values %}

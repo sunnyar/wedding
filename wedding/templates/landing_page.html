@@ -96,7 +96,7 @@
 
     </head>
 
-    <body>
+    <body onload=buttonClick();>
         <div class="container">
             <nav id="myNavbar" class="navbar navbar-default navbar-inverse navbar-fixed-top" role="navigation">
             <!-- Brand and toggle get grouped for better mobile display -->
@@ -115,6 +115,7 @@
                         {% if not logged_user.is_authenticated %}
                             <li class="active"><a href="{% url 'account_signup' %}">Join FREE</a></li>
                             <li class="active"><a href="{% url 'account_login' %}">Login</a></li>
+                            <!--li class="active"><button id="comment-button" class="btn btn-large">Or click here!</button></li-->
                         {% else %}
                             <li class="active"><a href="{% url 'account_login' %}">Your Website</a></li>
                             <li class="active"><a href="{% url 'account_logout' %}">Logout</a></li>
@@ -128,36 +129,55 @@
             </nav>
         </div>
 
-        <div class='container'>
-            <div class="row">
-                <div class="col-lg-12 col-md-4 col-sm-6 col-xs-12">
-                    <div id="myModal" class="modal fade">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                                    <h3 class="modal-title">Welcome {{logged_user.username}}</h3>
-                                </div>
-                                <div class="modal-body">
-                                    <p class="text-warning"><large>Warning !! </large>
-                                        In order to take full advantage of all features,
-                                        this site could download some cookies on your computer.
-                                        By using this site you agree to its use.
-                                        The use of cookies enables us to offer you content more useful and relevant to you.
-                                        For more information, please visit <a href='/privacy/'>Privacy Policy</a>.
-                                    </p><br>
+        {% if request.COOKIES.first_visit == 'True' %}
+            <div class='container'>
+                <div class='row'>
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        <div id="newModal" class="modal fade">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                        <h3 class="modal-title text-warning"><large>Warning !! </large></h3>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p class="text-warning">
+                                            Please be aware that this website relies on the use of cookies to function correctly
+                                            and involves some cookies being downloaded onto your device.
+                                            This helps us to improve the content of the website so that it is more useful and relevant to you.
+                                            For more information please see our <a target='_blank' href='/privacy/'>Privacy</a> &amp;
+                                            <a target='_blank' href='/cookie/'>Cookie</a> Policy
+                                        </p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
+
+                        <div id="form-modal" class="modal fade">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                        <h4 class="modal-title">Modal title</h4>
+                                    </div>
+                                    <div id="form-modal-body" class="modal-body">
+                                        <p>One fine body&hellip;</p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                    </div>
+                                </div><!-- /.modal-content -->
+                            </div><!-- /.modal-dialog -->
+                        </div><!-- /.modal -->
                     </div>
                 </div>
             </div>
-        </div>
+        {% endif %}
 
         <div class='container'>
             <div class='row'>
                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 body_color" style='font-style: italic;font-weight: bold;'>
-                    <p class="pull-right">Last Visited Time : {{last_visit}}</p><br>
+                    <br><br><p class="pull-right">Last Visited Time : {{request.COOKIES.last_visit}}</p>
                     <!--p class="pull-right">No. of Visits : {{visits}} </p-->
                 </div>
             </div>
@@ -170,6 +190,8 @@
                     <b><p>Wedding Bells is a revolutionary new way of organising your wedding with your guests.<br>
                         Share your wedding with your guests, tell your story, upload photos by creating a fun, secure and innovative website. Easy to create, and fully customisable to match your wedding theme - you will love it!
                     </p></b>
+                    <br>
+                    <a href="#newModal" class="btn btn-lg btn-primary hidden hiddenButton" data-toggle="modal">Launch Demo Modal</a>
                 </div>
             </div>
         </div>
@@ -322,7 +344,7 @@
                 <a target='_blank' href="https://facebook.com/sunnyarora29"><i class="fa fa-facebook-square fa-2x"></i></a>
                 <a target='_blank' href="https://www.linkedin.com/pub/sunny-arora/3a/a5/670"><i class="fa fa-linkedin-square fa-2x"></i></a>
                 <a target='_blank' href="#"><i class="fa fa-twitter-square fa-2x"></i></a>
-                <a target='_blank' href="https://github.com/sunnyar/wedding"><i class="fa fa-github-square fa-2x"></i></a>
+                <!--a target='_blank' href="https://github.com/sunnyar/wedding"><i class="fa fa-github-square fa-2x"></i></a-->
         	    <a href="/">Home</a>
             	<a href="/terms/">Terms</a>
             	<a href="/privacy/">Privacy</a>
@@ -336,12 +358,6 @@
         <!-- Bootstrap Core JavaScript -->
         <script src="{{STATIC_URL}}js/bootstrap.min.js"></script>
         <script src="http://api.html5media.info/1.1.5/html5media.min.js"></script>
-
-        <script type="text/javascript">
-        	$(document).ready(function(){
-        		$("#myModal").modal('show');
-        	});
-        </script>
 
         <!-- BigVideo Dependencies -->
         <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
@@ -372,6 +388,58 @@
                     $('#big-video-wrap').fadeIn();
                 });
              });
+        </script>
+
+        <script>
+            function buttonClick(){
+                document.getElementsByClassName("hiddenButton")[0].click();
+            }
+        </script>
+
+        <script>
+            var formAjaxSubmit = function(form, modal) {
+                $(form).submit(function (e) {
+                    e.preventDefault();
+                    $.ajax({
+                        type: $(this).attr('method'),
+                        url: $(this).attr('action'),
+                        data: $(this).serialize(),
+                        success: function (xhr, ajaxOptions, thrownError) {
+                            if ( $(xhr).find('.has-error').length > 0 ) {
+                                $(modal).find('.modal-body').html(xhr);
+                                formAjaxSubmit(form, modal);
+                            } else {
+                                $(modal).modal('toggle');
+                            }
+                        },
+                        error: function (xhr, ajaxOptions, thrownError) {
+                        }
+                    });
+                });
+            }
+            $('#comment-button').click(function() {
+                $('#form-modal-body').load("{% url 'account_signup' %}", function () {
+                    $('#form-modal').modal('toggle');
+                    formAjaxSubmit('#form-modal-body form', '#form-modal');
+                });
+            });
+        </script>
+
+        <script type="text/javascript">
+            $(document).ready(function(){
+
+                //Check if the current URL contains '#'
+                if(document.URL.indexOf("#")==-1)
+                {
+                // Set the URL to whatever it was plus "#".
+                url = document.URL+"#";
+                location = "#";
+
+                //Reload the page
+                location.reload(true);
+
+                }
+            });
         </script>
     </body>
 </html>

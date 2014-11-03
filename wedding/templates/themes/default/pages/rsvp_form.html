@@ -20,11 +20,6 @@
     {% endif %}
 {% endblock navbar_right %}
 
-{% block heading %}
-    {% if logged_user == username %}
-        <a href="{% url 'profile_form' username=username %}" class="btn btn-primary">Edit</a>
-    {% endif %}
-{% endblock heading %}
 
 {% block sidebar %}
     {% for page in all_objects %}

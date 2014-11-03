@@ -50,7 +50,7 @@
                 color: #fff;
             }
             div.form_content_color {
-                color: #000;
+                color: #fff;
             }
             div.text_align
             {
@@ -150,8 +150,73 @@
                             • {{wedding_objects.values.0.wedding_date | date_diff}} day{{wedding_objects.values.0.wedding_date | date_diff|pluralize}} to go !!
                         {% endif %}
                     </h2>
-                    {% block heading %}
-                    {% endblock %}<br><br>
+                    {% if logged_user.is_authenticated or logged_user == username %}
+                        {% if object_list.values.0.title == 'HomePage' %}
+                            <div id="myModal" class="modal fade">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                            <h3 class="modal-title">Welcome {{logged_user.username}}</h3>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p class="text-warning"><large>Warning !! </large>
+                                                Please be aware that this website relies on the use of cookies to function correctly
+                                                and involves some cookies being downloaded onto your device.
+                                                This helps us to improve the content of the website so that it is more useful and relevant to you.
+                                                For more information please see our <a target='_blank' href='/privacy/'>Privacy</a> &amp;
+                                                <a target='_blank' href='/cookie/'>Cookie</a> Policy
+                                            </p><br>
+                                            <p class="text-success"><large>Start Customzing your Website</large><br>
+                                                We will soon be releasing <a href='#'>'How To Create Your Own Website'</a> video and Premium Themes Section<br>
+                                                Till then you can check our <a href='#howToCreate'>'How to' Instructions</a>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+                        <a href="{% url 'profile_form' username=username %}" class="btn btn-primary">Edit</a>
+                    {% else %}
+                        {% if access_granted == 'False' %}
+                            <div id="myModal" class="modal fade" data-backdrop="static">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h4 class="modal-title">Site Access Form</h4>
+                                        </div>
+                                        <form method="post" action="">
+                                            {% csrf_token %}
+                                            <div class="modal-body">
+                                                {% if error %}
+                                                    <div class="alert alert-danger alert-error">
+                                                        <strong>Error!</strong> {{error}}.
+                                                    </div>
+                                                {% endif %}
+                                                <div class="control-group form-group">
+                                                    <div class="controls form_control">
+                                                        {% for field in form %}
+                                                            {{ field.label_tag }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                            {{ field }}<br><br>
+                                                            {% if username == 'sunnyarora07' %}
+                                                                (Enter the Access Key : 0000000)<br><br>
+                                                            {% else %}
+                                                                (Enter the Access Key shared by the Wedding Couple)<br><br>
+                                                            {% endif %}
+                                                        {% endfor %}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="submit" class="btn btn-primary">Submit</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+                    {% endif %}
+                    <br><br>
                 </div>
                 <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 text_align body_color">
                     {% if form.non_field_errors %}

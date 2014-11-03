@@ -126,7 +126,7 @@
                                                 <div class="fieldgroup" style='margin-left: 2em;'>
                                                     <span class="radio">{{ choice.tag }} {{ choice.choice_label }}</span>
                                                     <br>
-                                                    <button type="submit" class="btn btn-primary">Select</button><br><br>>br>
+                                                    <button type="submit" class="btn btn-primary">Select</button><br><br><br>
                                                 </div>
                                             {% endfor %}
                                         {% else %}
@@ -149,12 +149,16 @@
                 </div>
             </div>
         {% else %}
-            <br><br><button onclick="goBack()" type="submit" class="btn btn-primary">Go Back</button>
-            <br><br>
-            <h1><u>Free & Premium Themes</u></h1>
             <div class='container'>
                 <div class="row">
-                    <div class="col-lg-8 col-lg-offset-2 col-md-12 col-md-offset-2 col-sm-8 col-sm-offset-2 col-xs-12 text_align thumb">
+                    <div class="col-lg-10 col-lg-offset-2 col-md-12 col-md-offset-2 col-sm-8 col-sm-offset-2 col-xs-12 text_align thumb">
+                        <br><br><button onclick="goBack()" type="submit" class="btn btn-primary">Go Back</button>
+                        <br><br>
+                        <h1><u>Free & Premium Themes</u></h1>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-10 col-lg-offset-2 col-md-12 col-md-offset-2 col-sm-8 col-sm-offset-2 col-xs-12 text_align thumb">
                         <h2 id='free_themes' class="page-header">Free Themes</h2>
                         {% for i in theme_range|slice:":31" %}
                             <div class="fieldgroup" style='margin-left: 2em;'>
@@ -166,7 +170,7 @@
             </div>
             <div class='container'>
                 <div class="row">
-                    <div class="col-lg-8 col-lg-offset-2 col-md-12 col-md-offset-2 col-sm-12 col-sm-offset-2 col-xs-12 text_align thumb">
+                    <div class="col-lg-10 col-lg-offset-2 col-md-12 col-md-offset-2 col-sm-12 col-sm-offset-2 col-xs-12 text_align thumb">
                         <h2 id='premium_themes' class="page-header">Premium Themes</h2>
                         {% for i in theme_range|slice:"31:64" %}
                             <div class="fieldgroup" style='margin-left: 2em;'>

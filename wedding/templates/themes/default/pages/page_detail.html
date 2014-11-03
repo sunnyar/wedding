@@ -4,30 +4,6 @@
     - {{object.title}}
 {% endblock %}
 
-{% block head %}
-    {% if not logged_user == username %}
-        <script>
-            function prompt_access_key(){
-                alert(logged_user);
-                var access_key = prompt("Please enter the access key", "");
-                var count = 0;
-                if (access_key != 'password') {
-                    while(count < 2) {
-                    alert("Incorrect access key !!");
-                    access_key = prompt("Please enter the access key", "");
-                    count ++;
-                    }
-                    window.location.replace("/");
-                }
-                else {
-
-                    window.location.replace("#");
-                }
-            }
-            window.onload = prompt_access_key;
-        </script>
-    {% endif %}
-{% endblock head %}
 
 {% block navbar_right %}
     {% if logged_user == username and page.title != 'HomePage' %}
@@ -41,49 +17,6 @@
     {% endif %}
 {% endblock navbar_right %}
 
-{% block heading %}
-
-    {% if logged_user == username %}
-        <a href="{% url 'profile_form' username=username %}" class="btn btn-primary">Edit</a>
-    {% else %}
-        {% if access_granted == 'False' %}
-            <div id="myModal" class="modal fade" data-backdrop="static">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h4 class="modal-title">Site Access Form</h4>
-                        </div>
-                        <form method="post" action="">
-                            {% csrf_token %}
-                            <div class="modal-body">
-                                {% if error %}
-                                    <div class="alert alert-danger alert-error">
-                                        <strong>Error!</strong> {{error}}.
-                                    </div>
-                                {% endif %}
-                                <div class="control-group form-group">
-                                    <div class="controls form_control">
-                                        {% for field in form %}
-                                            {{ field.label_tag }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                            {{ field }}<br><br>
-                                            (Enter the Access Key shared by the Wedding Couple)<br><br>
-                                        {% endfor %}
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="submit" class="btn btn-primary">Submit</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        {% endif %}
-    {% endif %}
-
-{% endblock heading %}
-
-{% block brand %}<a href='/' class="navbar-brand">Wedding Bells</a>{% endblock %}
 
 {% block sidebar %}
     {% for page in all_objects %}
